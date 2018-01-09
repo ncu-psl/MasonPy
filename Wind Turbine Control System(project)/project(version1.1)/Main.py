@@ -59,6 +59,17 @@ rpm   = Parameter.RPM
 power = Parameter.Power 
 
 
+
+TsrStack     = Parameter.TsrStack
+CpStack      = Parameter.CpStack
+TbStack      = Parameter.TbStack
+TgStack      = Parameter.TgStack
+TmStack      = Parameter.TmStack
+TtotalStack  = Parameter.TtotalStack
+eff_gStack   = Parameter.eff_gStack
+eff_eStack   = Parameter.eff_eStack
+
+
 Paint.PaintDiagram("Speed-Time Diagram", "WindSpeed", Parameter.TimeSeries, Parameter.WindSpeed)
 Paint.PaintDiagram("RPM-Time Diagram", "RPM", Parameter.TimeSeries, Parameter.RPM)
 Paint.PaintDiagram("Power-Time Diagram", "Power", Parameter.TimeSeries, Parameter.Power)

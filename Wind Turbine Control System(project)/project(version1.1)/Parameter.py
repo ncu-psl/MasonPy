@@ -72,6 +72,23 @@ LastMode = ""
 PresentMode = ""
 
 
+
+
+# temp stack
+TsrStack = []
+CpStack  = []
+TbStack  = []
+TgStack  = []
+TmStack  = []
+TtotalStack  = []
+eff_gStack = []
+eff_eStack = []
+
+
+
+
+
+
 # Create Table
 
 # Mode_ThreePhaseShortCircuit
@@ -81,6 +98,8 @@ eff_e_ThreePhaseShortCircuit     = []
 
 RPM_ThreePhaseShortCircuit       = []
 Tg_ThreePhaseShortCircuit        = []
+
+
 
 Tsr_ThreePhaseShortCircuit       = []
 Cp_ThreePhaseShortCircuit        = []

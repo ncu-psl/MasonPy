@@ -26,73 +26,44 @@ def ReadWindSpeepData():
 
 
 
-def ReadData_ThreePhaseShortCircuit():        
-    file=open("dataThreePhaseShortCircuit.txt")
+def readData(filename):
+    file=open(filename)
     next(file)        # skip comment out (first row )
-    Clear_ThreePhaseShortCircuit()
+    domainlist = []
+    rangelist  = []
     for line in file:
         line=line[:len(line)-1].split(",")    
-        Parameter.WindSpeed_ThreePhaseShortCircuit.append(float(line[0]))
-        Parameter.eff_g_ThreePhaseShortCircuit.append(float(line[1]))
-        Parameter.eff_e_ThreePhaseShortCircuit.append(float(line[2]))
-        
-        Parameter.RPM_ThreePhaseShortCircuit.append(float(line[3]))
-        Parameter.Tg_ThreePhaseShortCircuit.append(float(line[4]))
+        domainlist.append(float(line[0]))
+        rangelist.append(float(line[1]))
     file.close()
-    Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit = ReadData_MaxTorqueCurrent()
-    return Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit, Parameter.eff_e_ThreePhaseShortCircuit,  Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit
+    return domainlist, rangelist
+
+
+
+def ReadData_ThreePhaseShortCircuit():        
+    Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit =  readData("data_WindspeedToEff_g.txt")
+    # Parameter.eff_e__ThreePhaseShortCircuit setting in Parameter.py
+    Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit          =  readData("dataThreePhaseShortCircuit_RPMToTg.txt")
+    Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit          =  readData("data_TsrToCp.txt") 
+    return Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit,  Parameter.eff_e_ThreePhaseShortCircuit, Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit
 
 
 
 def ReadData_MaxPower():        
-    file=open("dataMaxPower.txt")
-    next(file)        # skip comment out (first row )
-    Clear__MaxPower()
-    for line in file:
-        line=line[:len(line)-1].split(",")    
-        Parameter.WindSpeed_MaxPower.append(float(line[0]))
-        Parameter.eff_g_MaxPower.append(float(line[1]))
-        Parameter.eff_e_MaxPower.append(float(line[2]))
-        
-        Parameter.RPM_MaxPower.append(float(line[3]))
-        Parameter.Tg_MaxPower.append(float(line[4]))
-    file.close()
-    Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower = ReadData_MaxTorqueCurrent()
-    return Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower,Parameter.RPM_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
+    Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower   =  readData("data_WindspeedToEff_g.txt")
+    # Parameter.eff_e_MaxPower setting in Parameter.py
+    Parameter.RPM_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
+    Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower                      =  readData("data_TsrToCp.txt") 
+    return Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower, Parameter.RPM_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
 
 
 
 def ReadData_MaxTorqueCurrent():        
-    file=open("dataMaxTorqueCurrent.txt")
-    next(file)        # skip comment out (first row )
-    Clear__MaxTorqueCurrent()
-    for line in file:
-        line=line[:len(line)-1].split(",")    
-        Parameter.Tsr__MaxTorqueCurrent.append(float(line[0]))
-        Parameter.Cp_MaxTorqueCurrent.append(float(line[1]))
-        
-    file.close()
-    return Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent
+    # Parameter.eff_g_MaxTorqueCurrent setting in Parameter.py
+    # Parameter.eff_e_MaxTorqueCurrent setting in Parameter.py
+    Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent = readData("data_TsrToCp.txt")
+    return Parameter.eff_g_MaxTorqueCurrent, Parameter.eff_e_MaxTorqueCurrent, Parameter.TorqueGenerator_MaxTorqueCurrent, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent
 
-
-def Clear_ThreePhaseShortCircuit():
-    Parameter.WindSpeed_ThreePhaseShortCircuit = []
-    Parameter.eff_g_ThreePhaseShortCircuit     = []
-    Parameter.eff_e_ThreePhaseShortCircuit     = []        
-    Parameter.RPM_ThreePhaseShortCircuit       = []
-    Parameter.Tg_ThreePhaseShortCircuit        = []
-    
-def Clear__MaxPower():  
-    Parameter.WindSpeed_MaxPower = []
-    Parameter.RPM_MaxPower       = []
-    Parameter.Cp_MaxPower        = []
-    Parameter.eff_g_MaxPower     = []
-    Parameter.eff_e_MaxPower     = []
-    Parameter.Tg_MaxPower        = []
-
-def Clear__MaxTorqueCurrent():
-    Parameter.Tsr__MaxTorqueCurrent = []
-    Parameter.Cp_MaxTorqueCurrent   = []
 
 if __name__=='__main__':
     
@@ -110,33 +81,36 @@ if __name__=='__main__':
 
 
 
-    # ReadData_ThreePhaseShortCircuit    
-    WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
-    
-    print("WindSpeed_ThreePhaseShortCircuit")
-    print(WindSpeed_ThreePhaseShortCircuit)
-    print("eff_g_ThreePhaseShortCircuit")
-    print(eff_g_ThreePhaseShortCircuit)
-    print("eff_e_ThreePhaseShortCircuit")
-    print(eff_e_ThreePhaseShortCircuit)
-    
-    print("RPM_ThreePhaseShortCircuit")
-    print(RPM_ThreePhaseShortCircuit)
-    print("Tg_ThreePhaseShortCircuit")
-    print(Tg_ThreePhaseShortCircuit)
-    
-    print("Tsr_ThreePhaseShortCircuit")
-    print(Tsr_ThreePhaseShortCircuit)
-    print("Cp_ThreePhaseShortCircuit")
-    print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
+#     # ReadData_ThreePhaseShortCircuit    
+#     WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
+#     
+#     print("WindSpeed_ThreePhaseShortCircuit")
+#     print(WindSpeed_ThreePhaseShortCircuit)
+#     print("eff_g_ThreePhaseShortCircuit")
+#     print(eff_g_ThreePhaseShortCircuit)
+#     print("eff_e_ThreePhaseShortCircuit")
+#     print(eff_e_ThreePhaseShortCircuit)
+#     
+#     print("RPM_ThreePhaseShortCircuit")
+#     print(RPM_ThreePhaseShortCircuit)
+#     print("Tg_ThreePhaseShortCircuit")
+#     print(Tg_ThreePhaseShortCircuit)
+#     
+#     print("Tsr_ThreePhaseShortCircuit")
+#     print(Tsr_ThreePhaseShortCircuit)
+#     print("Cp_ThreePhaseShortCircuit")
+#     print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
     
     
     
     # ReadData_MaxPower   
-    Wind_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
     
-    print("Wind_MaxPower")
-    print(Wind_MaxPower)
+    WindSpeed_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
+    
+    print("WindSpeed_MaxPower")
+    print(WindSpeed_MaxPower)
     print("eff_g_MaxPower")
     print(eff_g_MaxPower)
     print("eff_e_MaxPower")
@@ -153,10 +127,20 @@ if __name__=='__main__':
     print("Cp_MaxPower")
     print(Cp_MaxPower)
     
-    #ReadData_MaxTorqueCurrent    
-    Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
-    
-    print("Tsr__MaxTorqueCurrent")
-    print(Tsr__MaxTorqueCurrent)
-    print("Cp_MaxTorqueCurrent")
-    print(Cp_MaxTorqueCurrent)
+#==============================================================================
+#     #ReadData_MaxTorqueCurrent    
+#     eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
+#     print("eff_g_MaxTorqueCurrent")
+#     print(eff_g_MaxTorqueCurrent)
+#     print("eff_e_MaxTorqueCurrent")
+#     print(eff_e_MaxTorqueCurrent)
+#     
+#     print("Tg_MaxTorqueCurrent")
+#     print(Tg_MaxTorqueCurrent)
+#     
+#     print("Tsr__MaxTorqueCurrent")
+#     print(Tsr__MaxTorqueCurrent)
+#     print("Cp_MaxTorqueCurrent")
+#     print(Cp_MaxTorqueCurrent)
+#==============================================================================
+
