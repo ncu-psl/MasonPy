@@ -20,6 +20,7 @@ linemode = 0
 paintarray = []
 linearray = []                                          #(startbutton, endbutton, linetype)
 linetype = 'true'
+linenum = 0
 
 windspeed = np.ones(100)
 
@@ -27,9 +28,11 @@ buttonlist = []
 
 class Process_Button(QPushButton):
     
+    inputline = []
     dragable = 0
     string = 'a'
-    next_index = 1
+    next_index = 'a'
+    nodenum = 0
     position = QPoint()
     mode = 'process'
     
@@ -73,10 +76,12 @@ class Process_Button(QPushButton):
         
 class Decision_Button(QPushButton):
    
+    inputline = []
     dragable = 0
     string = 'b'
-    true_index = 1
-    false_index = 1
+    true_index = 'a'
+    false_index = 'a'
+    nodenum = 0
     position = QPoint()
     mode = 'decision'
     
@@ -120,10 +125,12 @@ class Decision_Button(QPushButton):
         
 class Roop_Button(QPushButton):
     
+    inputline = []
     dragable = 0
     string = 'a'
-    cont_index = 1
-    break_index = 1
+    cont_index = 'a'
+    break_index = 'a'
+    nodenum = 0
     roop_time = 0
     position = QPoint()
     mode = 'roop'
@@ -180,7 +187,7 @@ class Example(QWidget):
         
         self.button = Process_Button('Start', self)
         self.button.string = 'Start'
-        self.button.next_index = 1
+        self.button.next_index = 'a'
         self.button.move(100, 65)
 
         buttonlist.append(self.button)
@@ -193,6 +200,7 @@ class Example(QWidget):
         global paintarray
         global linearray
         global linetype
+        global linenum
         
         painter = QPainter(self)
         
@@ -244,7 +252,9 @@ class Example(QWidget):
         
         if linemode == 1:
             if len(paintarray) == 2:
-                linearray.append([paintarray[0], paintarray[1], linetype])
+                linename = 'line' + str(linenum)
+                linearray.append([paintarray[0], paintarray[1], linetype,linename])
+                linenum = linenum + 1
                 x = painter.drawLine(paintarray[0].position, paintarray[1].position)
                 paintarray = []
 
@@ -306,49 +316,49 @@ class HelloWindow(QMainWindow):
         toolbarBox = QtWidgets.QToolBar(self)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
         
+        add_ThreePhaseShortCircuit_action = toolbarBox.addAction('ThreePhaseShortCircuit')
+        add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
+        
+        add_MaxMagBreak_action = toolbarBox.addAction('MaxMagBreak')
+        add_MaxMagBreak_action.triggered.connect(self.add_MaxMagBreak)
+        
+        add_MaxWindSpeed_ThreePhaseShortCircuit_action = toolbarBox.addAction('MaxWindSpeed_ThreePhaseShortCircuit')
+        add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
+        
+        add_MaxPower_action = toolbarBox.addAction('MaxPower')
+        add_MaxPower_action.triggered.connect(self.add_MaxPower)
+        
+        add_MaxWindSpeed_ThreePhaseShortCircuit_action = toolbarBox.addAction('MaxWindSpeed_ThreePhaseShortCircuit')
+        add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
+        
+        add_CutOut_action = toolbarBox.addAction('CutOut')
+        add_CutOut_action.triggered.connect(self.add_CutOut)
+        
+        add_MaxTorqueCurrent_action = toolbarBox.addAction('MaxTorqueCurrent')
+        add_MaxTorqueCurrent_action.triggered.connect(self.add_MaxTorqueCurrent)
+        
+        add_RPM_Increase_action = toolbarBox.addAction('RPM_Increase')
+        add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase)
+        
+        add_MaxTorqueCurrent_MagBreak_action = toolbarBox.addAction('MaxTorqueCurrent_MagBreak')
+        add_MaxTorqueCurrent_MagBreak_action.triggered.connect(self.add_MaxTorqueCurrent_MagBreak)
+        
+        add_ThreePhaseShortCircuit_MagBreak_action = toolbarBox.addAction('ThreePhaseShortCircuit_MagBreak')
+        add_ThreePhaseShortCircuit_MagBreak_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBreak)
+        
+        add_line_action = toolbarBox.addAction('true line')
+        add_line_action.triggered.connect(self.add_line)
+        
+        add_fline_action = toolbarBox.addAction('false line')
+        add_fline_action.triggered.connect(self.add_false_line)
+        
         menu = self.menuBar().addMenu('Action for quit')
         action = menu.addAction('Quit')
         action.triggered.connect(QtWidgets.QApplication.quit)
         
         add_button_menu = self.menuBar().addMenu('Button')
         
-        add_ThreePhaseShortCircuit_action = add_button_menu.addAction('ThreePhaseShortCircuit')
-        add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
-        
-        add_MaxMagBreak_action = add_button_menu.addAction('MaxMagBreak')
-        add_MaxMagBreak_action.triggered.connect(self.add_MaxMagBreak)
-        
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action = add_button_menu.addAction('MaxWindSpeed_ThreePhaseShortCircuit')
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
-        
-        add_MaxPower_action = add_button_menu.addAction('MaxPower')
-        add_MaxPower_action.triggered.connect(self.add_MaxPower)
-        
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action = add_button_menu.addAction('MaxWindSpeed_ThreePhaseShortCircuit')
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
-        
-        add_CutOut_action = add_button_menu.addAction('CutOut')
-        add_CutOut_action.triggered.connect(self.add_CutOut)
-        
-        add_MaxTorqueCurrent_action = add_button_menu.addAction('MaxTorqueCurrent')
-        add_MaxTorqueCurrent_action.triggered.connect(self.add_MaxTorqueCurrent)
-        
-        add_RPM_Increase_action = add_button_menu.addAction('RPM_Increase')
-        add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase)
-        
-        add_MaxTorqueCurrent_MagBreak_action = add_button_menu.addAction('MaxTorqueCurrent_MagBreak')
-        add_MaxTorqueCurrent_MagBreak_action.triggered.connect(self.add_MaxTorqueCurrent_MagBreak)
-        
-        add_ThreePhaseShortCircuit_MagBreak_action = add_button_menu.addAction('ThreePhaseShortCircuit_MagBreak')
-        add_ThreePhaseShortCircuit_MagBreak_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBreak)
-        
         add_line_menu = self.menuBar().addMenu('Line')
-        
-        add_line_action = add_line_menu.addAction('true line')
-        add_line_action.triggered.connect(self.add_line)
-        
-        add_fline_action = add_line_menu.addAction('false line')
-        add_fline_action.triggered.connect(self.add_false_line)
         
         add_draw_action = self.menuBar().addAction('draw')
         add_draw_action.triggered.connect(self.start_draw)
@@ -410,103 +420,135 @@ class HelloWindow(QMainWindow):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Process_Button('ThreePhaseShortCircuit', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'Mode_ThreePhaseShortCircuit'
-        leftwidget.button.nextindex = 2
+        for i in buttonlist:
+            if i.string == 'Mode_ThreePhaseShortCircuit':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_MaxMagBreak(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Decision_Button('MaxMagBreak', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'check_MaxMagBreak'
-        leftwidget.button.true_index = 9
-        leftwidget.button.false_index = 3
+        for i in buttonlist:
+            if i.string == 'check_MaxMagBreak':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
     
     def add_MaxWindSpeed_ThreePhaseShortCircuit(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Decision_Button('MaxWindSpeed_ThreePhaseShortCircuit', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'check_MaxWindSpeed_ThreePhaseShortCircuit'
-        leftwidget.button.true_index = 4
-        leftwidget.button.false_index = 1
+        for i in buttonlist:
+            if i.string == 'check_MaxWindSpeed_ThreePhaseShortCircuit':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_MaxPower(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Process_Button('MaxPower', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'Mode_MaxPower'
-        leftwidget.button.nextindex = 5
+        for i in buttonlist:
+            if i.string == 'Mode_MaxPower':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_CutOut(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Decision_Button('CutOut', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'check_CutOut'
-        leftwidget.button.true_index = 6
-        leftwidget.button.false_index = 4
+        for i in buttonlist:
+            if i.string == 'check_CutOut':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
     
     def add_MaxTorqueCurrent(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Process_Button('MaxTorqueCurrent', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'Mode_MaxTorqueCurrent'
-        leftwidget.button.nextindex = 7
+        for i in buttonlist:
+            if i.string == 'Mode_MaxTorqueCurrent':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_RPM_Increase(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Decision_Button('RPM_Increase', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'check_RPM_Increase'
-        leftwidget.button.true_index = 9
-        leftwidget.button.false_index = 6
+        for i in buttonlist:
+            if i.string == 'check_RPM_Increase':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_MaxTorqueCurrent_MagBreak(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Process_Button('MaxTorqueCurrent_MagBreak', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'Mode_MaxTorqueCurrent_MagBreak'
-        leftwidget.button.nextindex = 10
+        for i in buttonlist:
+            if i.string == 'Mode_MaxTorqueCurrent_MagBreak':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
     
     def add_ThreePhaseShortCircuit_MagBreak(self):
         global leftlayout
         global leftwidget
         global buttonlist
+        count = 0
         
         leftwidget.button = Process_Button('ThreePhaseShortCircuit_MagBreak', self)
-        buttonlist.append(leftwidget.button)
         leftwidget.button.string = 'Mode_ThreePhaseShortCircuit_MagBreak'
-        leftwidget.button.nextindex = 1
+        for i in buttonlist:
+            if i.string == 'Mode_ThreePhaseShortCircuit_MagBreak':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
         leftlayout.addWidget(leftwidget.button)
         
     def add_line(self):
@@ -546,92 +588,53 @@ class HelloWindow(QMainWindow):
         global linearray
         
         finallist = []
-        inlist = 0
         
-        finallist.append(buttonlist[0])
-        
-        for i in range(len(buttonlist)):
-            if finallist[i].mode == 'process': 
+        for i in buttonlist:
+            a = []
+            if i.mode == 'process': 
                 for j in range(len(linearray)):
-                    if linearray[j][0] == finallist[i]:                              #找線
-                        
-                        for z in range(len(finallist)):                             #找終點
-                            if linearray[j][1] == finallist[z]:
-                                finallist[i].next_index = z
-                                inlist = 1
-                        if(inlist == 0):
-                            finallist.append(linearray[j][1])
-                            finallist[i].next_index = i+1
-                            inlist = 0
-                        else:
-                            inlist = 0
+                    if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
+                        a.append(linearray[j][3])
+                    if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
+                        i.next_index = linearray[j][3]
     
-            if finallist[i].mode == 'decision': 
-                a = 0                                                               #這動作的append次數
+            if i.mode == 'decision': 
                 for j in range(len(linearray)):
-                    if linearray[j][0] == finallist[i]:                              #找線
+                    if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
+                        a.append(linearray[j][3])
+                    if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
                         
                         if linearray[j][2] == 'true':
-                            for z in range(len(finallist)):                             #找終點
-                                if linearray[j][1] == finallist[z]:
-                                    finallist[i].true_index = z
-                                    inlist = 1
-                            if(inlist == 0):
-                                finallist.append(linearray[j][1])
-                                finallist[i].true_index = i+a+1
-                                a += 1
-                                inlist = 0
-                            else:
-                                inlist = 0
+                            i.true_index = linearray[j][3]
+                                
                         else:
-                            for z in range(len(finallist)):                             #找終點
-                                if linearray[j][1] == finallist[z]:
-                                    finallist[i].false_index = z
-                                    inlist = 1
-                            if(inlist == 0):
-                                finallist.append(linearray[j][1])
-                                finallist[i].false_index = i+a+1
-                                a += 1
-                                inlist = 0
-                            else:
-                                inlist = 0
-            if finallist[i].mode == 'roop': 
-                a = 0                                                               #這動作的append次數
+                            i.false_index = linearray[j][3]
+                            
+            if i.mode == 'roop': 
                 for j in range(len(linearray)):
-                    if linearray[j][0] == finallist[i]:                              #找線
+                    if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
+                        a.append(linearray[j][3])
+                    if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
                         
                         if linearray[j][2] == 'true':
-                            for z in range(len(finallist)):                             #找終點
-                                if linearray[j][1] == finallist[z]:
-                                    finallist[i].cont_index = z
-                                    inlist = 1
-                            if(inlist == 0):
-                                finallist.append(linearray[j][1])
-                                finallist[i].cont_index = i+a+1
-                                a += 1
-                                inlist = 0
-                            else:
-                                inlist = 0
+                            i.cont_index = linearray[j][3]
+                                
                         else:
-                            for z in range(len(finallist)):                             #找終點
-                                if linearray[j][1] == finallist[z]:
-                                    finallist[i].break_index = z
-                                    inlist = 1
-                            if(inlist == 0):
-                                finallist.append(linearray[j][1])
-                                finallist[i].break_index = i+a+1
-                                a += 1
-                                inlist = 0
-                            else:
-                                inlist = 0
+                            i.break_index = linearray[j][3]
+            i.inputline = a
+        for i in buttonlist:
+            if i.mode == 'process':
+                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.next_index]
+            if i.mode == 'decision': 
+                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.true_index, i.false_index]
+            if i.mode == 'roop':
+                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.cont_index, i.break_index]
+            finallist.append(pac)
+            
+        
         for i in finallist:
-            print(i.string)
-        
-        
-        
-        
-        
-        
+            print(i)
+            
  
 if __name__ == "__main__":
     def run_app():
