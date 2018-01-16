@@ -352,9 +352,11 @@ class HelloWindow(QMainWindow):
         add_fline_action = toolbarBox.addAction('false line')
         add_fline_action.triggered.connect(self.add_false_line)
         
-        menu = self.menuBar().addMenu('Action for quit')
-        action = menu.addAction('Quit')
-        action.triggered.connect(QtWidgets.QApplication.quit)
+        menu = self.menuBar().addMenu('File')
+        write_action = menu.addAction('Write File')
+        write_action.triggered.connect(self.Write_File)
+        read_action = menu.addAction('Read File')
+#        read_action.triggered.connect(self.Read_File)
         
         add_button_menu = self.menuBar().addMenu('Button')
         
@@ -404,6 +406,11 @@ class HelloWindow(QMainWindow):
         rightlayout.addWidget(right_low_widget)
         
         rightwidget.setLayout(rightlayout)
+        
+    def Write_File(self):
+        f = open('windele.txt', 'w')
+        f.write('132\n')
+        f.write('105')
         
     def add_button(self):
         global leftlayout
