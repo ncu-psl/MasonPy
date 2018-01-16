@@ -333,7 +333,7 @@ def Check_CutOut():
 #get the values
 def IncreaseTime(LastTime):
     CurrentTime = LastTime + 1
-    return Current
+    return CurrentTime
 
 def sizeData():
     return len(Parameter.WindSpeed)
