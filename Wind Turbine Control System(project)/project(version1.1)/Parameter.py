@@ -62,7 +62,8 @@ CutOutRPM       = 400
 CutOutPower     = 3300
 MaxMagBrake     = 42
 Rho             = 1.293
-A               = 3.7
+D               = 3.7
+A               = 3.7**2*pi
 TorqueMachine   = 175
 
 
@@ -94,7 +95,7 @@ eff_eStack = []
 # Mode_ThreePhaseShortCircuit
 WindSpeed_ThreePhaseShortCircuit = []
 eff_g_ThreePhaseShortCircuit     = []
-eff_e_ThreePhaseShortCircuit     = []
+eff_e_ThreePhaseShortCircuit     = 0.9
 
 RPM_ThreePhaseShortCircuit       = []
 Tg_ThreePhaseShortCircuit        = []
@@ -109,7 +110,7 @@ Cp_ThreePhaseShortCircuit        = []
 # Mode_MaxPower
 WindSpeed_MaxPower = []
 eff_g_MaxPower     = []
-eff_e_MaxPower     = []
+eff_e_MaxPower     = 0.9
 
 RPM_MaxPower       = []
 Tg_MaxPower        = []
