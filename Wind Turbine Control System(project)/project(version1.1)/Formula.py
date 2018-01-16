@@ -73,91 +73,95 @@ def appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e):
 
 # five modes
 
-def Mode_ThreePhaseShortCircuit():
-    Tsr   = TSR()
-    Cp    = Cp_ThreePhaseShortCircuit(Tsr)
-    Tb    = TorqueBlade(Cp)
-    Tg    = Tg_ThreePhaseShortCircuit()
+def Mode_ThreePhaseShortCircuit(LastTime,LastWindSpeed, LastRPM, LastPower):
+    CurrentTime = IncreaseTime(LastTime)
+    CurrentWindSpeed = Parameter.WindSpeed[CurrentTime]
+    Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
+    Cp    = CP(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
+    Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
+    Tg    = TorqueGenerator(LastRPM, Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
     Tm    = 0
-    Tt    = TotalTorque(Tb, Tg)
-    CalculateRPM(Tt)
-    #print("TSR",Tsr,"CP",Cp,"Tb",Tb,"Tg",Tg,"Tt",Tt)
-    eff_g = eff_g_ThreePhaseShortCircuit()
+    Tt    = TotalTorque(Tb, Tg, Tm)
+    CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
+    eff_g = EFF_g(CurrentWindSpeed, Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
     eff_e = Parameter.eff_e_ThreePhaseShortCircuit
-    CalculatePower(eff_g, eff_e, Tg)
-    #Parameter.CurrentTime += 1
+    CurrentPower = 0
+    Parameter.Power.append(CurrnetPower)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
-    #print("TSR",Tsr,"CP",Cp,"Tb",Tb,"Tg",Tg,"Tt",Tt)
-    return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
+    return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
     
 
-def Mode_MaxPower():
-    Tsr   = TSR()
-    Cp    = Cp_MaxPower(Tsr)
-    Tb    = TorqueBlade(Cp)
-    Tg    = Tg_MaxPower()
+def Mode_MaxPower(LastTime,LastWindSpeed, LastRPM, LastPower):
+    CurrentTime = IncreaseTime(LastTime)
+    CurrentWindSpeed = Parameter.WindSpeed[CurrentTime]
+    Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
+    Cp    = CP(Tsr, Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower)
+    Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
+    Tg    = TorqueGenerator(LastRPM, Parameter.RPM_MaxPower, Parameter.Tg_MaxPower) 
     Tm    = 0
     Tt    = TotalTorque(Tb, Tg)
-    #print("Tb", Tb)
-    #print("Tg", Tg)
-    CalculateRPM(Tt)
-    #print("rpm", rpm)
-  #  print("CP",Cp,"Tb",Tb,"Tg",Tg,"Tt",Tt)
-    eff_g = eff_g_MaxPower()
+    CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
+    eff_g = EFF_g(CurrentWindSpeed, Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
     eff_e = Parameter.eff_e_MaxPower
-    Parameter.Power.append(power = 0)
-    #CalculatePower(eff_g, eff_e, Tg)              
-    #Parameter.CurrentTime += 1
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
-    return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
+    return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
     
     
     
-def Mode_MaxTorqueCurrent():
-    Tsr   = TSR()
-    Cp    = Cp_MaxTorqueCurrent(Tsr)
-    Tb    = TorqueBlade(Cp)
+def Mode_MaxTorqueCurrent(LastTime,LastWindSpeed, LastRPM, LastPower):
+    CurrentTime = IncreaseTime(LastTime)
+    CurrentWindSpeed = Parameter.WindSpeed[CurrentTime]
+    Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
+    Cp    = CP(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
+    Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
+    
     Tg    = Parameter.TorqueGenerator_MaxTorqueCurrent
     Tm     = 0
     Tt    = TotalTorque(Tb, Tg)
-    CalculateRPM(Tt)
+    CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
+    
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CalculatePower(eff_g, eff_e, Tg)
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
-    return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
+    return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
     
 
-def Mode_MaxTorqueCurrent_MagBrake():
-    Tsr   = TSR()
-    Cp    = Cp_MaxTorqueCurrent(Tsr)
-    Tb    = TorqueBlade(Cp)
+def Mode_MaxTorqueCurrent_MagBrake(LastTime,LastWindSpeed, LastRPM, LastPower):
+    CurrentTime = IncreaseTime(LastTime)
+    CurrentWindSpeed = Parameter.WindSpeed[CurrentTime]
+    Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
+    Cp    = CP(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
+    Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
+    
     Tg    = Parameter.TorqueGenerator_MaxTorqueCurrent
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
-    CalculateRPM(Tt)
+    CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CalculatePower(eff_g, eff_e, Tg)
-    #Parameter.CurrentTime += 1
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
-    return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
+    return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
     
-def Mode_ThreePhaseShortCircuit_MagBrake():
-    Tsr   = TSR()
-    Cp    = Cp_ThreePhaseShortCircuit(Tsr)
-    Tb    = TorqueBlade(Cp)
-    Tg    = Tg_ThreePhaseShortCircuit()
+def Mode_ThreePhaseShortCircuit_MagBrake(LastTime,LastWindSpeed, LastRPM, LastPower):
+    CurrentTime = IncreaseTime(LastTime)
+    CurrentWindSpeed = Parameter.WindSpeed[CurrentTime]
+    Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
+    Cp    = CP(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
+    Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
+    Tg    = TorqueGenerator(LastRPM, Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
-    CalculateRPM(Tt)
-    eff_g = eff_g_ThreePhaseShortCircuit()
+    CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
+    eff_g = EFF_g(CurrentWindSpeed, Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
     eff_e = Parameter.eff_e_ThreePhaseShortCircuit
-    CalculatePower(eff_g, eff_e, Tg)
-    #Parameter.CurrentTime += 1
+    CurrnetPower = 0
+    Parameter.Power.append(CurrnetPower)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
-    return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
+    return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
 
 
 
@@ -165,81 +169,105 @@ def Mode_ThreePhaseShortCircuit_MagBrake():
 
 
 
-# Moae_ThreePhaseShortCircuit()
-def Cp_ThreePhaseShortCircuit(Tsr):
-    Cp = getApproximation(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
-    return Cp
-    
-def Tg_ThreePhaseShortCircuit():
-    Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
-    if Tg < 0:
-        Tg = 0
-    return Tg
+#==============================================================================
+# # Moae_ThreePhaseShortCircuit()
+# def Cp_ThreePhaseShortCircuit(Tsr):
+#     #Cp = getApproximation(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
+#     Cp = getApproximation(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
+#     return Cp
+#     
+# def Tg_ThreePhaseShortCircuit():
+#     Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
+#     if Tg < 0:
+#         Tg = 0
+#     return Tg
+# 
+# def eff_g_ThreePhaseShortCircuit():
+#     eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
+#     return eff_g
+# 
+# 
+# 
+# # Mode_MaxPower()
+# def Cp_MaxPower(Tsr):
+#     Cp = getApproximation(Tsr, Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower)
+#     #Cp = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime-1], Parameter.WindSpeed_MaxPower, Parameter.Cp_MaxPower)
+#     return Cp
+# 
+# def Tg_MaxPower():
+#     Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_MaxPower, Parameter.Tg_MaxPower)
+#     if Tg < 0:
+#         Tg = 0
+#     return Tg
+# 
+# def eff_g_MaxPower():
+#     eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
+#     return eff_g
+# 
+# 
+# 
+# 
+# # Mode_MaxTorqueCurrent
+# def Cp_MaxTorqueCurrent(Tsr):
+#     Cp = getApproximation(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
+#     return Cp
+#==============================================================================
 
-def eff_g_ThreePhaseShortCircuit():
-    eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
-    return eff_g
 
-
-
-
-
-
-# Mode_MaxPower()
-def Cp_MaxPower(Tsr):
-    Cp = getApproximation(Tsr, Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower)
-    #Cp = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime-1], Parameter.WindSpeed_MaxPower, Parameter.Cp_MaxPower)
-    return Cp
-
-def Tg_MaxPower():
-    Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_MaxPower, Parameter.Tg_MaxPower)
-    if Tg < 0:
-        Tg = 0
-    return Tg
-
-def eff_g_MaxPower():
-    eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
-    return eff_g
-
-
-# Mode_MaxTorqueCurrent
-def Cp_MaxTorqueCurrent(Tsr):
-    Cp = getApproximation(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
-    return Cp
-
-
-# all modes
-
+#define public formulas for all mode.
 def TotalTorque(TorqueBlade, TorqueGenerator, TorqueMachine = 0):  
     totaltorque = TorqueBlade - TorqueGenerator - TorqueMachine
     return totaltorque    
 
-def CalculateRPM(TorqueTotal):
-    rpm= Parameter.RPM[Parameter.CurrentTime-1] + ( TorqueTotal * Parameter.TimeDelta / Parameter.MonmentIntertia ) * 60 / ( 2 * pi )
+def CalculateRPM(TorqueTotal, LastRPM, TimeDelta, MonmentIntertia):
+    #rpm = Parameter.RPM[Parameter.CurrentTime-1] + ( TorqueTotal * Parameter.TimeDelta / Parameter.MonmentIntertia ) * 60 / ( 2 * pi )
+    rpm = LastRPM + ( TorqueTotal * TimeDelta / MonmentIntertia ) * 60 / ( 2 * pi )
     if rpm <= 0:
         rpm = 0.0000001
     Parameter.RPM.append(rpm)
-    return Parameter.RPM[Parameter.CurrentTime]
+    return rpm #Parameter.RPM[Parameter.CurrentTime]
 
 
-def CalculatePower(eff_g, eff_e, TorqueGenerator):
-    power = 2 * pi * Parameter.RPM[Parameter.CurrentTime]/60 * TorqueTotal * eff_g * eff_e
+def CalculatePower(CurrentRPM, eff_g, eff_e, TorqueGenerator):
+    #power = 2 * pi * Parameter.RPM[Parameter.CurrentTime]/60 * TorqueGenerator * eff_g * eff_e
+    power = 2 * pi * CurrentRPM/60 * TorqueGenerator * eff_g * eff_e
     if power < 0:
         power=0                              
     Parameter.Power.append(power)
-    return Parameter.Power[Parameter.CurrentTime]
+    return power #Parameter.Power[Parameter.CurrentTime]
 
 
-def TSR():
-    Tsr = 2 * pi * (Parameter.RPM[Parameter.CurrentTime-1] / 60) * (Parameter.D / 2) / Parameter.WindSpeed[Parameter.CurrentTime]
+  
+def TSR(LastWindSpeed, D , CurrentWindSpeed):
+    #Tsr = 2 * pi * (Parameter.RPM[Parameter.CurrentTime-1] / 60) * (Parameter.D / 2) / Parameter.WindSpeed[Parameter.CurrentTime]
+    Tsr = 2 * pi * (LastWindSpeed / 60) * (D / 2) / CurrentWindSpeed
     return Tsr
+
+def CP(indexTsr, RefenerceTsr, RefenerceCp):
+    Cp = getApproximation(indexTsr, RefenerceTsr, RefenerceCp)
+    return Cp
     
-def TorqueBlade(Cp):
-    TorqueBlade = Cp * 0.5 * Parameter.Rho * Parameter.A * (Parameter.WindSpeed[Parameter.CurrentTime]**3) / (2 * pi * (Parameter.RPM[Parameter.CurrentTime-1] / 60))
+def TorqueBlade(Cp, Rho, A, CurrentWindSpeed, LastRPM):
+    #TorqueBlade = Cp * 0.5 * Parameter.Rho * Parameter.A * (Parameter.WindSpeed[Parameter.CurrentTime]**3) / (2 * pi * (Parameter.RPM[Parameter.CurrentTime-1] / 60))
+    TorqueBlade = Cp * 0.5 * Rho * A * (CurrentWindSpeed**3) / (2 * pi * (LastRPM / 60))
     return TorqueBlade
 
+def TorqueGenerator(indexLastRPM, refenceRPM, refenceTg):
+    #EX:  Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
+    Tg = getApproximation(indexLastRPM, refenceRPM, refenceTg)
+    return Tg
+
+def EFF_g(indexCurrentWindSpeed, refencetWindSpeed, refenceeff_g):
+    #EX: eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
+    eff_g = getApproximation(indexCurrentWindSpeed, refencetWindSpeed, refenceeff_g)
+    return eff_g
 
 
+#==============================================================================
+
+
+
+# Find approximation
 def getApproximation(index, domainlist, rangelist):
     indexleft, indexright = getMargin(index, domainlist)
     leftx    = domainlist[indexleft]
@@ -284,6 +312,7 @@ def getpointinLinearEquation(startx, starty, endx, endy, pointx):
     return pointy
 
 
+# Check the value
 def Check_MaxWindSpeed_ThreePhaseShortCircuit():
     return Parameter.WindSpeed[Parameter.CurrentTime] < Parameter.MaxWindSpeed_ThreePhaseShortCircuit
 
@@ -298,6 +327,13 @@ def Check_MaxMagBrake():
 def Check_CutOut():
     return (Parameter.RPM[Parameter.CurrentTime] > Parameter.CutOutRPM or Parameter.Power[Parameter.CurrentTime] > Parameter.CutOutPower)
 
+#==============================================================================
+
+
+#get the values
+def IncreaseTime(LastTime):
+    CurrentTime = LastTime + 1
+    return Current
 
 def sizeData():
     return len(Parameter.WindSpeed)
