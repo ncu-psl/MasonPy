@@ -12,6 +12,7 @@
 # @parameter CutOutRPM                           : The rpm of cut out.
 # @parameter CutOutPower                         : The power of cut out.
 # @parameter Rho                                 : 'ρ'
+# @parameter A                                   : The area of fan blades.
 # @parameter A                                   : The diameter of fan blades.
 # @parameter TorqueMachine                       : The torque of machine.
 # 
