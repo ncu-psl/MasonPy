@@ -135,7 +135,6 @@ def Mode_MaxTorqueCurrent_MagBrake(LastTime,LastWindSpeed, LastRPM, LastPower):
     Tsr   = TSR(LastWindSpeed, Parameter.D , CurrentWindSpeed)
     Cp    = CP(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
     Tb    = TorqueBlade(Cp, Parameter.Rho, Parameter.A, CurrentWindSpeed, LastRPM)
-    
     Tg    = Parameter.TorqueGenerator_MaxTorqueCurrent
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
