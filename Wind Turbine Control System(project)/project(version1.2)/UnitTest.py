@@ -24,22 +24,22 @@ OpenFile.ReadData_MaxTorqueCurrent()
 #     print(Cp)
 #==============================================================================
     
+for i in range(3):
+    print("3phase")
+    speed, pwm, power = Formula.Mode_ThreePhaseShortCircuit()
+    print("speed",speed,"pwm",pwm,"power",power)
+    Parameter.CurrentTime += 1
+    
+#speed, rpm, power = CompileBlock.evalDecision("Mode_ThreePhaseShortCircuit")    
 #==============================================================================
-# for i in range(200):
-#     #print("3phase")
-#     speed, pwm, power = Formula.Mode_ThreePhaseShortCircuit()
+# Parameter.RPM[0]=100
+# Parameter.CurrentTime += 1
+# for i in range(500):
+#     print("Maxpower")
+#     speed, pwm, power = Formula.Mode_MaxPower()
 #     print("speed",speed,"pwm",pwm,"power",power)
 #     Parameter.CurrentTime += 1
 #==============================================================================
-    
-#speed, rpm, power = CompileBlock.evalDecision("Mode_ThreePhaseShortCircuit")    
-Parameter.RPM[0]=100
-Parameter.CurrentTime += 1
-for i in range(500):
-    print("Maxpower")
-    speed, pwm, power = Formula.Mode_MaxPower()
-    print("speed",speed,"pwm",pwm,"power",power)
-    Parameter.CurrentTime += 1
 
 #==============================================================================
 # for i in range(200):

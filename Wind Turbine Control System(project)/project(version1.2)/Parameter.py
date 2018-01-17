@@ -63,7 +63,7 @@ CutOutPower     = 3300
 MaxMagBrake     = 42
 Rho             = 1.293
 D               = 3.7
-A               = 3.7**2*pi
+A               = 10.74665
 TorqueMachine   = 175
 
 

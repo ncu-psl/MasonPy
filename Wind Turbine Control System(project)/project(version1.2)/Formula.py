@@ -86,7 +86,7 @@ def Mode_ThreePhaseShortCircuit(LastTime,LastWindSpeed, LastRPM, LastPower):
     eff_g = EFF_g(CurrentWindSpeed, Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
     eff_e = Parameter.eff_e_ThreePhaseShortCircuit
     CurrentPower = 0
-    Parameter.Power.append(CurrnetPower)
+    Parameter.Power.append(CurrentPower)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
     
