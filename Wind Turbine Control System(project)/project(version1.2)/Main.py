@@ -19,6 +19,8 @@ import Formula
 import Paint
 import time
 import CompileBlock
+import ExportData
+
 start = time.time()
 
 
@@ -73,6 +75,8 @@ eff_eStack   = Parameter.eff_eStack
 Paint.PaintDiagram("Speed-Time Diagram", "WindSpeed", Parameter.TimeSeries, Parameter.WindSpeed)
 Paint.PaintDiagram("RPM-Time Diagram", "RPM", Parameter.TimeSeries, Parameter.RPM)
 Paint.PaintDiagram("Power-Time Diagram", "Power", Parameter.TimeSeries, Parameter.Power)
+
+
 
 end = time.time()
 print("execution time(s) = %f "%(end-start))

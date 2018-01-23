@@ -13,15 +13,26 @@ import Parameter
 
 def ReadWindSpeepData():        
     file=open("1speed.txt")
+    OriginalTimeSeries = []
+    OriginalWindSpeed  = []
+    
     while 1:
             line=file.readline()
             if line=="":
                     break
-            line=line[:len(line)-1].split(",")
+            line=line[:len(line)-1].split(",")   
+            OriginalTimeSeries.append(int(line[0]))
+            OriginalWindSpeed.append(float(line[1]))
+            
             for i in range(0,100):     
                 Parameter.TimeSeries.append(int(line[0])*100+i)
                 Parameter.WindSpeed.append(float(line[1]))
+                
+            
     file.close()
+    
+    
+    
     return size(Parameter.WindSpeed), Parameter.TimeSeries, Parameter.WindSpeed
 
 
