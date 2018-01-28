@@ -25,7 +25,7 @@ def ReadWindSpeepData():
             OriginalWindSpeed.append(float(line[1]))
             
             for i in range(0,100):     
-                Parameter.TimeSeries.append(int(line[0])*100+i)
+                Parameter.TimeSeries.append(int(line[0])*100 + i)
                 Parameter.WindSpeed.append(float(line[1]))
                 
             
@@ -33,7 +33,7 @@ def ReadWindSpeepData():
     
     
     
-    return size(Parameter.WindSpeed), Parameter.TimeSeries, Parameter.WindSpeed
+    return size(Parameter.TimeSeries), Parameter.TimeSeries, Parameter.WindSpeed
 
 
 
@@ -78,12 +78,12 @@ def ReadData_MaxTorqueCurrent():
 
 if __name__=='__main__':
     
+    # ReadWindSpeepData
+    TimeSeries = [] 
+    WindSpeed = []
+    Number, TimeSeries, WindSpeed = ReadWindSpeepData()
+    print('資料數',Number,'筆')   # print Number of data
 #==============================================================================
-#     # ReadWindSpeepData
-#     TimeSeries = [] 
-#     WindSpeed = []
-#     Number, TimeSeries, WindSpeed = ReadWindSpeepData()
-#     print('資料數',Number,'筆')   # print Number of data
 #     print("TimeSeries")
 #     print(TimeSeries)
 #     print("WindSpeed")
@@ -116,27 +116,29 @@ if __name__=='__main__':
     
     
     
-    # ReadData_MaxPower   
-    
-    WindSpeed_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
-    
-    print("WindSpeed_MaxPower")
-    print(WindSpeed_MaxPower)
-    print("eff_g_MaxPower")
-    print(eff_g_MaxPower)
-    print("eff_e_MaxPower")
-    print(eff_e_MaxPower)
-    
-    print("RPM_MaxPower")
-    print(RPM_MaxPower)
-    print("Tg_MaxPower")
-    print(Tg_MaxPower)
-    
-    
-    print("Tsr_MaxPower")
-    print(Tsr_MaxPower)
-    print("Cp_MaxPower")
-    print(Cp_MaxPower)
+#==============================================================================
+#     # ReadData_MaxPower   
+#     
+#     WindSpeed_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
+#     
+#     print("WindSpeed_MaxPower")
+#     print(WindSpeed_MaxPower)
+#     print("eff_g_MaxPower")
+#     print(eff_g_MaxPower)
+#     print("eff_e_MaxPower")
+#     print(eff_e_MaxPower)
+#     
+#     print("RPM_MaxPower")
+#     print(RPM_MaxPower)
+#     print("Tg_MaxPower")
+#     print(Tg_MaxPower)
+#     
+#     
+#     print("Tsr_MaxPower")
+#     print(Tsr_MaxPower)
+#     print("Cp_MaxPower")
+#     print(Cp_MaxPower)
+#==============================================================================
     
 #==============================================================================
 #     #ReadData_MaxTorqueCurrent    
