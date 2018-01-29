@@ -7,8 +7,7 @@ import OpenFile
 
 
 def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
-
-    
+ 
     book = xlwt.Workbook(encoding="utf-8")    
     sheet1 = book.add_sheet("number 1~50,000")
     sheet1.write(0, 0, "number")            #sheet1.write(0, A, "Time (ms)")
@@ -65,11 +64,11 @@ def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
 #==============================================================================
     
     i = 1
-    for n in range(1,size(TimeSeries)+1):
+    for n in range(0, size(TimeSeries)):
         if n % NumberofSheet == 0:
             i = 1
             
-        if n <= NumberofSheet:
+        if n < NumberofSheet:
             i = i+1
             sheet1.write(i, 0, n)
             sheet1.write(i, 1, round(TimeSeries[n], 5))
@@ -77,11 +76,7 @@ def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
             sheet1.write(i, 3, round(RPM[n], 5))
             sheet1.write(i, 4, round(Power[n], 5))
             sheet1.write(i, 5, Mode[n])
-
-
-
-
-        elif n <= NumberofSheet*2:
+        elif n < NumberofSheet*2:
             i = i+1
             sheet2.write(i, 0, n)
             sheet2.write(i, 1, round(TimeSeries[n], 5))
@@ -89,7 +84,7 @@ def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
             sheet2.write(i, 3, round(RPM[n], 5))
             sheet2.write(i, 4, round(Power[n], 5))
             sheet2.write(i, 5, Mode[n])
-        elif n <= NumberofSheet*3:
+        elif n < NumberofSheet*3:
             i = i+1
             sheet3.write(i, 0, n)
             sheet3.write(i, 1, round(TimeSeries[n], 5))
@@ -97,7 +92,7 @@ def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
             sheet3.write(i, 3, round(RPM[n], 5))
             sheet3.write(i, 4, round(Power[n], 5))
             sheet3.write(i, 5, Mode[n])
-        elif n <= NumberofSheet*4:
+        elif n < NumberofSheet*4:
             i = i+1
             sheet4.write(i, 0, n)
             sheet4.write(i, 1, round(TimeSeries[n], 5))
@@ -105,7 +100,7 @@ def ExportExcelData(TimeSeries, WindSpeed, RPM, Power, Mode):
             sheet4.write(i, 3, round(RPM[n], 5))
             sheet4.write(i, 4, round(Power[n], 5))
             sheet4.write(i, 5, Mode[n])
-        elif n <= NumberofSheet*5:
+        elif n < NumberofSheet*5:
             i = i+1
             sheet5.write(i, 0, n)
             sheet5.write(i, 1, round(TimeSeries[n], 5))
