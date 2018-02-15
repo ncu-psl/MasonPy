@@ -109,7 +109,7 @@ def Mode_MaxPower():
   #  print("CP",Cp,"Tb",Tb,"Tg",Tg,"Tt",Tt)
     eff_g = eff_g_MaxPower()
     eff_e = Parameter.eff_e_MaxPower
-    CalculatePower(eff_g, eff_e, Tb)              
+    CalculatePower(eff_g, eff_e, Tg)              
    # Parameter.CurrentTime += 1
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
@@ -126,7 +126,7 @@ def Mode_MaxTorqueCurrent():
     CalculateRPM(Tt)
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CalculatePower(eff_g, eff_e, Tb)
+    CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
@@ -142,7 +142,7 @@ def Mode_MaxTorqueCurrent_MagBrake():
     CalculateRPM(Tt)
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CalculatePower(eff_g, eff_e, Tb)
+    CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
@@ -198,13 +198,13 @@ def Cp_MaxPower(Tsr):
     return Cp
 
 def Tg_MaxPower():
-    Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_MaxPower, Parameter.Tg_MaxPower)
+    Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower)
     if Tg < 0:
         Tg = 0
     return Tg
 
 def eff_g_MaxPower():
-    eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
+    eff_g = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower)
     return eff_g
 
 def eff_e_MaxPower(): 

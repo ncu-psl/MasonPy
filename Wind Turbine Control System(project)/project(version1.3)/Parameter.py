@@ -47,15 +47,19 @@ RPM        = []
 Power      = []
 # # Append the Reference initial value
 TimeSeries.append(0)
-WindSpeed.append(0.01)
-RPM.append(0.0000001)
+WindSpeed.append(0)
+RPM.append(0.0001)
 Power.append(0)
-
-
+#==============================================================================
+# # 
+# RPM.append(0.0001)
+# Power.pop(0)
+# 
+#==============================================================================
 
 #parameter
 MaxWindSpeed_ThreePhaseShortCircuit = 8
-CurrentTime     = 0
+CurrentTime     = 1
 TimeDelta       = 0.01
 MonmentIntertia = 0.7
 CutOutRPM       = 400
@@ -108,11 +112,11 @@ Cp_ThreePhaseShortCircuit        = []
 
 
 # Mode_MaxPower
-WindSpeed_MaxPower = []
+RPMtoEffg_MaxPower = []
 eff_g_MaxPower     = []
 eff_e_MaxPower     = 0.9
 
-RPM_MaxPower       = []
+RPMtoTG_MaxPower       = []
 Tg_MaxPower        = []
 
 Tsr_MaxPower       = []

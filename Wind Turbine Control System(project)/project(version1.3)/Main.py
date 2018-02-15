@@ -30,21 +30,26 @@ OpenFile.ReadData_MaxPower()
 OpenFile.ReadData_MaxTorqueCurrent()
 
 
+Parameter.RPM.append(0.0001)
+Parameter.Power.append(0)
+
 list=[
-        ["Start", 1], 
-        ["Mode_ThreePhaseShortCircuit", 2],
-        ["Check_MaxMagBrake", 10, 3],   
-        ["Check_MaxWindSpeed_ThreePhaseShortCircuit", 4, 1],
-        ["Loop", 5, 1, 200, 0],
-        ["Mode_MaxPower", 6],
-        ["Check_CutOut", 7, 5],
-        ["Mode_MaxTorqueCurrent", 8],
-        ["Check_MaxMagBrake", 9, 1],
-        ["Check_RPM_Increase", 10, 7],
-        ["Mode_MaxTorqueCurrent_MagBrake", 11],
-        ["Check_MaxMagBrake", 10, 12],
-        ["Mode_ThreePhaseShortCircuit_MagBrake", 13],
-        ["Loop", 1, 12, 2080, 0]
+        ["Start", 1],                                        #0
+        ["Mode_ThreePhaseShortCircuit", 2],                  #1
+        ["Check_MaxMagBrake", 12, 3],                        #2
+        ["Check_MaxWindSpeed_ThreePhaseShortCircuit", 4, 1], #3
+        ["Loop", 5, 1, 200, 0],                              #4
+        ["Mode_MaxPower", 6],                                #5 
+        ["Check_CutOut", 7, 5],                              #6
+        ["Mode_MaxTorqueCurrent", 8],                        #7
+        ["Check_MaxMagBrake", 9, 1],                         #8
+        ["Check_RPM_Increase", 10, 7],                       #9 
+        ["Mode_MaxTorqueCurrent", 11],                       #10
+        ["Loop", 12, 10, 8, 0],                              #11
+        ["Mode_MaxTorqueCurrent_MagBrake", 13],              #12
+        ["Check_MaxMagBrake", 12, 14],                       #13  
+        ["Mode_ThreePhaseShortCircuit_MagBrake", 15],        #14 
+        ["Loop", 1, 14, 2080, 0]                             #15
     ]
 
                 
@@ -55,7 +60,9 @@ Parameter.WindSpeed.pop(0)
 Parameter.RPM.pop(0)
 Parameter.Power.pop(0)
 
-Mode  = Parameter.listMode
+Mode  = []
+Mode.append("default value")
+Mode = Mode + Parameter.listMode
 speed = Parameter.WindSpeed                
 rpm   = Parameter.RPM
 power = Parameter.Power 

@@ -103,7 +103,7 @@ def Mode_MaxPower(LastTime,LastWindSpeed, LastRPM, LastPower):
     CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
     eff_g = EFF_g(CurrentWindSpeed, Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
     eff_e = Parameter.eff_e_MaxPower
-    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tb)
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime] 
     
@@ -122,7 +122,7 @@ def Mode_MaxTorqueCurrent(LastTime,LastWindSpeed, LastRPM, LastPower):
     
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tb)
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
     
@@ -138,7 +138,7 @@ def Mode_MaxTorqueCurrent_MagBrake(LastTime,LastWindSpeed, LastRPM, LastPower):
     CurrentRPM = CalculateRPM(Tt, LastRPM, Parameter.TimeDelta, Parameter.MonmentIntertia)
     eff_g = Parameter.eff_g_MaxTorqueCurrent
     eff_e = Parameter.eff_e_MaxTorqueCurrent
-    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tb)
+    CurrentPower = CalculatePower(CurrentRPM, eff_g, eff_e, Tg)
     appendStack(Tsr, Cp, Tb, Tg, Tm, Tt, eff_g, eff_e)
     return CurrentTime, CurrentWindSpeed, CurrentRPM, CurrentPower #Parameter.WindSpeed[Parameter.CurrentTime], Parameter.RPM[Parameter.CurrentTime], Parameter.Power[Parameter.CurrentTime]
     
@@ -224,9 +224,9 @@ def CalculateRPM(TorqueTotal, LastRPM, TimeDelta, MonmentIntertia):
     return rpm #Parameter.RPM[Parameter.CurrentTime]
 
 
-def CalculatePower(CurrentRPM, eff_g, eff_e, Torque_Blade):
+def CalculatePower(CurrentRPM, eff_g, eff_e, Torque):
     #power = 2 * pi * Parameter.RPM[Parameter.CurrentTime]/60 * TorqueGenerator * eff_g * eff_e
-    power = 2 * pi * CurrentRPM/60 * Torque_Blade * eff_g * eff_e
+    power = 2 * pi * CurrentRPM/60 * Torque * eff_g * eff_e
     if power < 0:
         power = 0                              
     Parameter.Power.append(power)
