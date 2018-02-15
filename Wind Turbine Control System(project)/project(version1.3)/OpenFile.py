@@ -87,11 +87,11 @@ def ReadData_ThreePhaseShortCircuit():
 
 
 def ReadData_MaxPower():        
-    Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower   =  readData("data_WindspeedToEff_g.txt")
+    Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower   =  readData("data_MaxPower_RPMToEff_g.txt")
     # Parameter.eff_e_MaxPower setting in Parameter.py
-    Parameter.RPM_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
+    Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
     Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower                      =  readData("data_TsrToCp.txt") 
-    return Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower, Parameter.RPM_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
+    return Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower, Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
 
 
 
@@ -147,17 +147,17 @@ if __name__=='__main__':
 #     
 #     # ReadData_MaxPower   
 #     
-#     WindSpeed_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
+#     RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
 #     
-#     print("WindSpeed_MaxPower")
-#     print(WindSpeed_MaxPower)
+#     print("RPMtoEffg_MaxPower")
+#     print(RPMtoEffg_MaxPower)
 #     print("eff_g_MaxPower")
 #     print(eff_g_MaxPower)
 #     print("eff_e_MaxPower")
 #     print(eff_e_MaxPower)
 #     
-#     print("RPM_MaxPower")
-#     print(RPM_MaxPower)
+#     print("RPMtoTG_MaxPower")
+#     print(RPMtoTG_MaxPower)
 #     print("Tg_MaxPower")
 #     print(Tg_MaxPower)
 #     
