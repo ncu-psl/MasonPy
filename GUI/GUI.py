@@ -18,7 +18,7 @@ rightwidget = QWidget()
 label = QLabel()
 linemode = 0
 paintarray = []
-linearray = []                                          #(startbutton, endbutton, linetype)
+linearray = []                                          #(startbutton, endbutton, linetype, linename)
 linetype = 'true'
 linenum = 0
 
@@ -252,7 +252,7 @@ class Example(QWidget):
         
         if linemode == 1:
             if len(paintarray) == 2:
-                linename = 'line' + str(linenum)
+                linename = 'line_' + str(linenum)
                 linearray.append([paintarray[0], paintarray[1], linetype,linename])
                 linenum = linenum + 1
                 x = painter.drawLine(paintarray[0].position, paintarray[1].position)
@@ -309,7 +309,7 @@ class HelloWindow(QMainWindow):
         
         finallayout = QHBoxLayout()
         finallayout.addWidget(leftwidget)
-        #finallayout.addWidget(rightwidget)
+        finallayout.addWidget(rightwidget)
         
         centralWidget.setLayout(finallayout)                                   #set final layout
         
@@ -356,7 +356,7 @@ class HelloWindow(QMainWindow):
         write_action = menu.addAction('Write File')
         write_action.triggered.connect(self.Write_File)
         read_action = menu.addAction('Read File')
-#        read_action.triggered.connect(self.Read_File)
+        read_action.triggered.connect(self.Read_File)
         
         add_button_menu = self.menuBar().addMenu('Button')
         
@@ -408,10 +408,168 @@ class HelloWindow(QMainWindow):
         rightwidget.setLayout(rightlayout)
         
     def Write_File(self):
-        f = open('windele.txt', 'w')
-        f.write('132\n')
-        f.write('105')
+        global buttonlist
         
+        self.start_draw()
+        f = open('windele.txt', 'w')
+        for i in buttonlist:
+            f.write(i.string+' ')
+            f.write(i.mode+' ')
+            f.write(str(i.position)+' ')
+            if i.mode == 'process':
+                f.write(i.next_index+' ')
+                f.write('[')
+                for j in i.inputline:
+                    f.write(j+',')
+                f.write(']')
+            if i.mode == 'decision':
+                f.write(i.true_index+' ')
+                f.write(i.false_index+' ')
+                f.write('[')
+                for j in i.inputline:
+                    f.write(j+',')
+                f.write(']')
+            if i.mode == 'roop':
+                f.write(i.cont_index+' ')
+                f.write(i.break_index+' ')
+                f.write('[')
+                for j in i.inputline:
+                    f.write(j+',')
+                f.write(']')
+            f.write('\n')
+            
+    def Read_File(self):
+        global linearray
+        global buttonlist
+        
+        linearray = []
+        buttonlist = []
+        count = 1                                   #number of line
+        true_line_added = 'false'                   #check if line is in linearray
+        false_line_added = 'false'
+        
+        f = open('windele.txt', 'r')    
+        for line in f:
+            temp = line.strip().split(' ')
+            print(temp)
+            if(temp[0] == 'Start'):
+                print(temp)
+                #self.add_+'temp[0]'()
+                buttonlist[0].string = temp[0]
+                buttonlist[0].next_index = temp[4]
+                linearray.append([buttonlist[0],'null','true',temp[4]])
+                
+                if(len(temp[5]) != 2):
+                    input_line = temp[5][1:-2].split(',')
+                    for j in input_line:
+                        for i in linearray:
+                            if j == i[3]:
+                                i[1] = buttonlist[0]
+                                true_line_added = 'true'
+                        if(true_line_added == 'false'):
+                            linearray.append(['null',buttonlist[0],'null',j])
+                        true_line_added = 'false'
+                                    
+                        
+            else:
+                name = temp[0].split('_')
+                print(name[1])
+                #self.add_+'name[1]'()
+                
+                if(temp[1] == 'process'):
+                    buttonlist[count].string = temp[0]
+                    buttonlist[count].next_index = temp[4]
+                    
+                    for i in linearray:
+                        if temp[4] == i[3]:
+                            i[0] = buttonlist[count]
+                            i[3] = 'true'
+                            true_line_added = 'true'
+                    if(true_line_added == 'false'):
+                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                    true_line_added = 'false'
+                    
+                    if(len(temp[5]) != 2):
+                        input_line = temp[5][1:-2].split(',')
+                        for j in input_line:
+                            for i in linearray:
+                                if j == i[3]:
+                                    i[1] = buttonlist[count]
+                                    true_line_added = 'true'
+                            if(true_line_added == 'false'):
+                                linearray.append(['null',buttonlist[count],'null',j])
+                            true_line_added = 'false'
+                        
+                    count += 1
+                    
+                if(temp[1] == 'decision'):
+                    buttonlist[count].string = temp[0]
+                    buttonlist[count].true_index = temp[4]
+                    buttonlist[count].false_index = temp[5]
+                    
+                    for i in linearray:
+                        if temp[4] == i[3]:
+                            i[0] = buttonlist[count]
+                            i[3] = 'true'
+                            true_line_added = 'true'
+                        if temp[5] == i[3]:
+                            i[0] = buttonlist[count]
+                            i[3] = 'false'
+                            false_line_added = 'true'
+                    if(true_line_added == 'false'):
+                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                    if(false_line_added == 'false'):
+                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                    true_line_added = 'false'
+                    false_line_added = 'false'
+                    
+                    if(len(temp[6]) != 2):
+                        input_line = temp[6][1:-2].split(',')
+                        for j in input_line:
+                            for i in linearray:
+                                if j == i[3]:
+                                    i[1] = buttonlist[count]
+                                    true_line_added = 'true'
+                            if(true_line_added == 'false'):
+                                linearray.append(['null',buttonlist[count],'null',j])
+                            true_line_added = 'false'
+                        
+                    count += 1
+                    
+                if(temp[1] == 'roop'):
+                    buttonlist[count].string = temp[0]
+                    buttonlist[count].cont_index = temp[4]
+                    buttonlist[count].break_index = temp[5]
+                    
+                    for i in linearray:
+                        if temp[4] == i[3]:
+                            i[0] = buttonlist[count]
+                            i[3] = 'true'
+                            true_line_added = 'true'
+                        if temp[5] == i[3]:
+                            i[0] = buttonlist[count]
+                            i[3] = 'false'
+                            false_line_added = 'true'
+                    if(true_line_added == 'false'):
+                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                    if(false_line_added == 'false'):
+                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                    true_line_added = 'false'
+                    false_line_added = 'false'
+                    
+                    if(len(temp[6]) != 2):
+                        input_line = temp[6][1:-2].split(',')
+                        for j in input_line:
+                            for i in linearray:
+                                if j == i[3]:
+                                    i[1] = buttonlist[count]
+                                    true_line_added = 'true'
+                            if(true_line_added == 'false'):
+                                linearray.append(['null',buttonlist[count],'null',j])
+                            true_line_added = 'false'
+                        
+                    count += 1
+            
     def add_button(self):
         global leftlayout
         global leftwidget
