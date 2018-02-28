@@ -78,8 +78,8 @@ def readData(filename):
 
 
 def ReadData_ThreePhaseShortCircuit():        
-    Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit =  readData("data_WindspeedToEff_g.txt")
-    # Parameter.eff_e__ThreePhaseShortCircuit setting in Parameter.py
+    
+    # Parameter.eff_g_ThreePhaseShortCircuit and Parameter.eff_e__ThreePhaseShortCircuit setting in Parameter.py
     Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit          =  readData("dataThreePhaseShortCircuit_RPMToTg.txt")
     Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit          =  readData("data_TsrToCp.txt") 
     return Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit,  Parameter.eff_e_ThreePhaseShortCircuit, Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit
@@ -87,7 +87,7 @@ def ReadData_ThreePhaseShortCircuit():
 
 
 def ReadData_MaxPower():        
-    Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower   =  readData("data_MaxPower_RPMToEff_g.txt")
+    Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower   =  readData("dataMaxPower_RPMToEff_g.txt")
     # Parameter.eff_e_MaxPower setting in Parameter.py
     Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
     Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower                      =  readData("data_TsrToCp.txt") 
@@ -96,7 +96,8 @@ def ReadData_MaxPower():
 
 
 def ReadData_MaxTorqueCurrent():        
-    # Parameter.eff_g_MaxTorqueCurrent setting in Parameter.py
+    Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent =  readData("dataMaxTorqueCurrent_RPMToEff_g.txt")
+    #  setting in Parameter.py
     # Parameter.eff_e_MaxTorqueCurrent setting in Parameter.py
     Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent = readData("data_TsrToCp.txt")
     return Parameter.eff_g_MaxTorqueCurrent, Parameter.eff_e_MaxTorqueCurrent, Parameter.TorqueGenerator_MaxTorqueCurrent, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent

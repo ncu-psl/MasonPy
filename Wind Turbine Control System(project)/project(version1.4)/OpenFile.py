@@ -13,29 +13,55 @@ import Parameter
 
 def ReadWindSpeepData():        
     file=open("1speed.txt")
+    #file=open("testWindSpeed.txt")
+    
     OriginalTimeSeries = []
     OriginalWindSpeed  = []
     
     while 1:
-            line=file.readline()
-            if line=="":
-                    break
-            line=line[:len(line)-1].split(",")   
-            OriginalTimeSeries.append(int(line[0]))
-            OriginalWindSpeed.append(float(line[1]))
-            
-            for i in range(0,100):     
-                Parameter.TimeSeries.append(int(line[0])*100 + i)
-                Parameter.WindSpeed.append(float(line[1]))
-                
-            
-    file.close()
+        line=file.readline()
+        if line=="":
+                break
+        line=line[:len(line)-1].split(",")   
+        OriginalTimeSeries.append(int(line[0]))
+        OriginalWindSpeed.append(float(line[1]))
+    file.close()        
     
+    
+    extendTimeSeries, extendWindSpeed  = extentWindSpeepData(size(OriginalTimeSeries), OriginalTimeSeries, OriginalWindSpeed)          
+    
+#==============================================================================
+#     # 1s
+#     Parameter.TimeSeries =  Parameter.TimeSeries + OriginalTimeSeries
+#     Parameter.WindSpeed  =  Parameter.WindSpeed + OriginalWindSpeed
+#==============================================================================
+                    
+    # 1ms
+    Parameter.TimeSeries =  Parameter.TimeSeries + extendTimeSeries
+    Parameter.WindSpeed  =  Parameter.WindSpeed  + extendWindSpeed
     
     
     return size(Parameter.TimeSeries), Parameter.TimeSeries, Parameter.WindSpeed
 
 
+
+def extentWindSpeepData(number, OriginalTimeSeries, OriginalWindSpeed):
+    extendTimeSeries = []
+    extendWindSpeed  = []
+    extendTimeSeries.append(OriginalTimeSeries[0]*100)
+    extendWindSpeed.append(OriginalWindSpeed[0])
+    
+    for i in range(0, number-1):
+        detaWindSpeed = OriginalWindSpeed[i+1] - OriginalWindSpeed[i]
+        for j in range(1,101):
+            extendTimeSeries.append(OriginalTimeSeries[i]*100 + j)
+        for k in range(1,101):  # extendWindSpeed
+            extendWindSpeed.append(OriginalWindSpeed[i] + detaWindSpeed*k/100)
+    return extendTimeSeries, extendWindSpeed    
+            
+            
+        
+    
 
 def readData(filename):
     file=open(filename)
@@ -52,8 +78,7 @@ def readData(filename):
 
 
 def ReadData_ThreePhaseShortCircuit():        
-    Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit =  readData("data_WindspeedToEff_g.txt")
-    # Parameter.eff_e__ThreePhaseShortCircuit setting in Parameter.py
+    # Parameter.eff_e__ThreePhaseShortCircuit and Parameter.eff_g_ThreePhaseShortCircuit setting in Parameter.py
     Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit          =  readData("dataThreePhaseShortCircuit_RPMToTg.txt")
     Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit          =  readData("data_TsrToCp.txt") 
     return Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit,  Parameter.eff_e_ThreePhaseShortCircuit, Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit
@@ -61,16 +86,16 @@ def ReadData_ThreePhaseShortCircuit():
 
 
 def ReadData_MaxPower():        
-    Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower   =  readData("data_WindspeedToEff_g.txt")
+    Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower   =  readData("dataMaxPower_RPMToEff_g.txt")
     # Parameter.eff_e_MaxPower setting in Parameter.py
-    Parameter.RPM_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
+    Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower            =  readData("dataMaxPower_RPMToTg.txt")
     Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower                      =  readData("data_TsrToCp.txt") 
-    return Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower, Parameter.RPM_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
+    return Parameter.RPMtoEffg_MaxPower, Parameter.eff_g_MaxPower, Parameter.eff_e_MaxPower, Parameter.RPMtoTG_MaxPower, Parameter.Tg_MaxPower,Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower
 
 
 
 def ReadData_MaxTorqueCurrent():        
-    # Parameter.eff_g_MaxTorqueCurrent setting in Parameter.py
+    Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent =  readData("dataMaxTorqueCurrent_RPMToEff_g.txt")
     # Parameter.eff_e_MaxTorqueCurrent setting in Parameter.py
     Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent = readData("data_TsrToCp.txt")
     return Parameter.eff_g_MaxTorqueCurrent, Parameter.eff_e_MaxTorqueCurrent, Parameter.TorqueGenerator_MaxTorqueCurrent, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent
@@ -86,10 +111,12 @@ if __name__=='__main__':
 #==============================================================================
 #     print("TimeSeries")
 #     print(TimeSeries)
+#==============================================================================
+#==============================================================================
 #     print("WindSpeed")
 #     print(WindSpeed)
+# 
 #==============================================================================
-
 
 
 #==============================================================================
@@ -115,21 +142,21 @@ if __name__=='__main__':
 #==============================================================================
     
     
-    
 #==============================================================================
+#     
 #     # ReadData_MaxPower   
 #     
-#     WindSpeed_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPM_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
+#     RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
 #     
-#     print("WindSpeed_MaxPower")
-#     print(WindSpeed_MaxPower)
+#     print("RPMtoEffg_MaxPower")
+#     print(RPMtoEffg_MaxPower)
 #     print("eff_g_MaxPower")
 #     print(eff_g_MaxPower)
 #     print("eff_e_MaxPower")
 #     print(eff_e_MaxPower)
 #     
-#     print("RPM_MaxPower")
-#     print(RPM_MaxPower)
+#     print("RPMtoTG_MaxPower")
+#     print(RPMtoTG_MaxPower)
 #     print("Tg_MaxPower")
 #     print(Tg_MaxPower)
 #     

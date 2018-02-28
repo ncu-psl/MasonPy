@@ -83,7 +83,7 @@ Paint.PaintDiagram("Speed-Time Diagram", "WindSpeed", Parameter.TimeSeries, Para
 Paint.PaintDiagram("RPM-Time Diagram", "RPM", Parameter.TimeSeries, Parameter.RPM)
 Paint.PaintDiagram("Power-Time Diagram", "Power", Parameter.TimeSeries, Parameter.Power)
 
-ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Mode)
+ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, CpStack, eff_gStack, Parameter.Power, Mode)
 
 
 end = time.time()

@@ -82,7 +82,7 @@ def Mode_ThreePhaseShortCircuit():
     Tt    = TotalTorque(Tb, Tg)
     CalculateRPM(Tt)
     #print("TSR",Tsr,"CP",Cp,"Tb",Tb,"Tg",Tg,"Tt",Tt)
-    eff_g = eff_g_ThreePhaseShortCircuit()
+    eff_g = Parameter.eff_g_ThreePhaseShortCircuit
     eff_e = Parameter.eff_e_ThreePhaseShortCircuit
     #CalculatePower(eff_g, eff_e, Tg)
     power = 0
@@ -124,7 +124,7 @@ def Mode_MaxTorqueCurrent():
     Tm     = 0
     Tt    = TotalTorque(Tb, Tg)
     CalculateRPM(Tt)
-    eff_g = Parameter.eff_g_MaxTorqueCurrent
+    eff_g = eff_gp_MaxTorqueCurrent()
     eff_e = Parameter.eff_e_MaxTorqueCurrent
     CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
@@ -140,7 +140,7 @@ def Mode_MaxTorqueCurrent_MagBrake():
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
     CalculateRPM(Tt)
-    eff_g = Parameter.eff_g_MaxTorqueCurrent
+    eff_g = eff_gp_MaxTorqueCurrent()
     eff_e = Parameter.eff_e_MaxTorqueCurrent
     CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
@@ -155,7 +155,7 @@ def Mode_ThreePhaseShortCircuit_MagBrake():
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
     CalculateRPM(Tt)
-    eff_g = eff_g_ThreePhaseShortCircuit()
+    eff_g = Parameter.eff_g_ThreePhaseShortCircuit
     eff_e = Parameter.eff_e_ThreePhaseShortCircuit
     #CalculatePower(eff_g, eff_e, Tg)
     power = 0
@@ -216,6 +216,10 @@ def eff_e_MaxPower():
 def Cp_MaxTorqueCurrent(Tsr):
     Cp = getApproximation(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
     return Cp
+
+def eff_gp_MaxTorqueCurrent():
+    eff_g = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent)
+    return eff_g
 
 
 # all modes

@@ -161,55 +161,6 @@ def Mode_ThreePhaseShortCircuit_MagBrake(LastTime,LastWindSpeed, LastRPM, LastPo
 
 
 
-
-
-
-
-#==============================================================================
-# # Moae_ThreePhaseShortCircuit()
-# def Cp_ThreePhaseShortCircuit(Tsr):
-#     #Cp = getApproximation(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
-#     Cp = getApproximation(Tsr, Parameter.Tsr_ThreePhaseShortCircuit, Parameter.Cp_ThreePhaseShortCircuit)
-#     return Cp
-#     
-# def Tg_ThreePhaseShortCircuit():
-#     Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_ThreePhaseShortCircuit, Parameter.Tg_ThreePhaseShortCircuit)
-#     if Tg < 0:
-#         Tg = 0
-#     return Tg
-# 
-# def eff_g_ThreePhaseShortCircuit():
-#     eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_ThreePhaseShortCircuit, Parameter.eff_g_ThreePhaseShortCircuit)
-#     return eff_g
-# 
-# 
-# 
-# # Mode_MaxPower()
-# def Cp_MaxPower(Tsr):
-#     Cp = getApproximation(Tsr, Parameter.Tsr_MaxPower, Parameter.Cp_MaxPower)
-#     #Cp = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime-1], Parameter.WindSpeed_MaxPower, Parameter.Cp_MaxPower)
-#     return Cp
-# 
-# def Tg_MaxPower():
-#     Tg = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM_MaxPower, Parameter.Tg_MaxPower)
-#     if Tg < 0:
-#         Tg = 0
-#     return Tg
-# 
-# def eff_g_MaxPower():
-#     eff_g = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_MaxPower, Parameter.eff_g_MaxPower)
-#     return eff_g
-# 
-# 
-# 
-# 
-# # Mode_MaxTorqueCurrent
-# def Cp_MaxTorqueCurrent(Tsr):
-#     Cp = getApproximation(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
-#     return Cp
-#==============================================================================
-
-
 #define public formulas for all mode.
 def TotalTorque(TorqueBlade, TorqueGenerator, TorqueMachine = 0):  
     totaltorque = TorqueBlade - TorqueGenerator - TorqueMachine
@@ -324,6 +275,13 @@ def Check_CutOut():
     return (Parameter.RPM[Parameter.CurrentTime] > Parameter.CutOutRPM or Parameter.Power[Parameter.CurrentTime] > Parameter.CutOutPower)
 
 #==============================================================================
+
+
+
+
+
+
+
 
 
 #get the values

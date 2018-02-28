@@ -95,7 +95,7 @@ eff_eStack = []
 
 # Mode_ThreePhaseShortCircuit
 WindSpeed_ThreePhaseShortCircuit = []
-eff_g_ThreePhaseShortCircuit     = []
+eff_g_ThreePhaseShortCircuit     = 0 
 eff_e_ThreePhaseShortCircuit     = 0.9
 
 RPM_ThreePhaseShortCircuit       = []
@@ -125,7 +125,8 @@ Cp_MaxPower        = []
 Tsr_MaxTorqueCurrent = []
 Cp_MaxTorqueCurrent   = []
 
-eff_g_MaxTorqueCurrent = 0.85
+RPM__MaxTorqueCurrent = []
+eff_g_MaxTorqueCurrent = []
 eff_e_MaxTorqueCurrent = 0.9
 
 TorqueGenerator_MaxTorqueCurrent = 110
