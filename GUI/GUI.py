@@ -448,16 +448,18 @@ class HelloWindow(QMainWindow):
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
+        null_button = Process_Button('123', self)
+        
         f = open('windele.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
             print(temp)
             if(temp[0] == 'Start'):
                 print(temp)
-                #self.add_+'temp[0]'()
+                exec("self.add_"+temp[0]+"()")
                 buttonlist[0].string = temp[0]
                 buttonlist[0].next_index = temp[4]
-                linearray.append([buttonlist[0],'null','true',temp[4]])
+                linearray.append([buttonlist[0],null_button,'true',temp[4]])
                 
                 if(len(temp[5]) != 2):
                     input_line = temp[5][1:-2].split(',')
@@ -467,14 +469,19 @@ class HelloWindow(QMainWindow):
                                 i[1] = buttonlist[0]
                                 true_line_added = 'true'
                         if(true_line_added == 'false'):
-                            linearray.append(['null',buttonlist[0],'null',j])
+                            linearray.append([null_button,buttonlist[0],'null',j])
                         true_line_added = 'false'
                                     
                         
             else:
                 name = temp[0].split('_')
-                print(name[1])
-                #self.add_+'name[1]'()
+                exe_name = ''
+                for i in name:
+                    if(i!='check'):
+                        if(i!='Mode'):
+                            exe_name = exe_name + '_' + i
+                print(exe_name)
+                exec("self.add"+exe_name+"()")
                 
                 if(temp[1] == 'process'):
                     buttonlist[count].string = temp[0]
@@ -486,7 +493,8 @@ class HelloWindow(QMainWindow):
                             i[3] = 'true'
                             true_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        if(temp[4] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     true_line_added = 'false'
                     
                     if(len(temp[5]) != 2):
@@ -497,7 +505,7 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
@@ -510,16 +518,18 @@ class HelloWindow(QMainWindow):
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
-                            i[3] = 'true'
+                            i[2] = 'true'
                             true_line_added = 'true'
                         if temp[5] == i[3]:
                             i[0] = buttonlist[count]
-                            i[3] = 'false'
+                            i[2] = 'false'
                             false_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        if(temp[4] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                        if(temp[5] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'false',temp[5]])
                     true_line_added = 'false'
                     false_line_added = 'false'
                     
@@ -531,7 +541,7 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
@@ -551,9 +561,9 @@ class HelloWindow(QMainWindow):
                             i[3] = 'false'
                             false_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                        linearray.append([buttonlist[count],null_button,'false',temp[4]])
                     true_line_added = 'false'
                     false_line_added = 'false'
                     
@@ -565,11 +575,12 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
-            
+        print(linearray)
+        
     def add_button(self):
         global leftlayout
         global leftwidget
@@ -579,7 +590,15 @@ class HelloWindow(QMainWindow):
         buttonlist.append(leftwidget.button0)
         
         leftlayout.addWidget(leftwidget.button0)
+    
+    def add_Start(self):
+        global leftlayout
+        global leftwidget
+        global buttonlist
         
+        leftwidget.button0 = Process_Button('Start', self)
+        buttonlist.append(leftwidget.button0)
+        leftlayout.addWidget(leftwidget.button0)
         
     def add_ThreePhaseShortCircuit(self):
         global leftlayout
