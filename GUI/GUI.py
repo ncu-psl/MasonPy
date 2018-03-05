@@ -31,7 +31,7 @@ class Process_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'a'
-    next_index = 'a'
+    next_index = 'null'
     nodenum = 0
     position = QPoint()
     mode = 'process'
@@ -79,8 +79,8 @@ class Decision_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'b'
-    true_index = 'a'
-    false_index = 'a'
+    true_index = 'null'
+    false_index = 'null'
     nodenum = 0
     position = QPoint()
     mode = 'decision'
@@ -128,8 +128,8 @@ class Roop_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'a'
-    cont_index = 'a'
-    break_index = 'a'
+    cont_index = 'null'
+    break_index = 'null'
     nodenum = 0
     roop_time = 0
     position = QPoint()
@@ -477,7 +477,7 @@ class HelloWindow(QMainWindow):
                 name = temp[0].split('_')
                 exe_name = ''
                 for i in name:
-                    if(i!='check'):
+                    if(i!='Check'):
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
                 print(exe_name)
@@ -622,9 +622,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('MaxMagBreak', self)
-        leftwidget.button.string = 'check_MaxMagBreak'
+        leftwidget.button.string = 'Check_MaxMagBreak'
         for i in buttonlist:
-            if i.string == 'check_MaxMagBreak':
+            if i.string == 'Check_MaxMagBreak':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -637,9 +637,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('MaxWindSpeed_ThreePhaseShortCircuit', self)
-        leftwidget.button.string = 'check_MaxWindSpeed_ThreePhaseShortCircuit'
+        leftwidget.button.string = 'Check_MaxWindSpeed_ThreePhaseShortCircuit'
         for i in buttonlist:
-            if i.string == 'check_MaxWindSpeed_ThreePhaseShortCircuit':
+            if i.string == 'Check_MaxWindSpeed_ThreePhaseShortCircuit':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -667,9 +667,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('CutOut', self)
-        leftwidget.button.string = 'check_CutOut'
+        leftwidget.button.string = 'Check_CutOut'
         for i in buttonlist:
-            if i.string == 'check_CutOut':
+            if i.string == 'Check_CutOut':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -697,9 +697,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('RPM_Increase', self)
-        leftwidget.button.string = 'check_RPM_Increase'
+        leftwidget.button.string = 'Check_RPM_Increase'
         for i in buttonlist:
-            if i.string == 'check_RPM_Increase':
+            if i.string == 'Check_RPM_Increase':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -808,11 +808,11 @@ class HelloWindow(QMainWindow):
             i.inputline = a
         for i in buttonlist:
             if i.mode == 'process':
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.next_index]
+                pac = [i.string, i.inputline, i.next_index]
             if i.mode == 'decision': 
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.true_index, i.false_index]
+                pac = [i.string, i.inputline, [i.true_index, i.false_index]]
             if i.mode == 'roop':
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.cont_index, i.break_index]
+                pac = [i.string, i.inputline, [i.cont_index, i.break_index]]
             finallist.append(pac)
             
         
