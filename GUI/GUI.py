@@ -31,7 +31,7 @@ class Process_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'a'
-    next_index = 'a'
+    next_index = 'null'
     nodenum = 0
     position = QPoint()
     mode = 'process'
@@ -79,8 +79,8 @@ class Decision_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'b'
-    true_index = 'a'
-    false_index = 'a'
+    true_index = 'null'
+    false_index = 'null'
     nodenum = 0
     position = QPoint()
     mode = 'decision'
@@ -128,8 +128,8 @@ class Roop_Button(QPushButton):
     inputline = []
     dragable = 0
     string = 'a'
-    cont_index = 'a'
-    break_index = 'a'
+    cont_index = 'null'
+    break_index = 'null'
     nodenum = 0
     roop_time = 0
     position = QPoint()
@@ -448,16 +448,18 @@ class HelloWindow(QMainWindow):
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
+        null_button = Process_Button('123', self)
+        
         f = open('windele.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
             print(temp)
             if(temp[0] == 'Start'):
                 print(temp)
-                #self.add_+'temp[0]'()
+                exec("self.add_"+temp[0]+"()")
                 buttonlist[0].string = temp[0]
                 buttonlist[0].next_index = temp[4]
-                linearray.append([buttonlist[0],'null','true',temp[4]])
+                linearray.append([buttonlist[0],null_button,'true',temp[4]])
                 
                 if(len(temp[5]) != 2):
                     input_line = temp[5][1:-2].split(',')
@@ -467,14 +469,19 @@ class HelloWindow(QMainWindow):
                                 i[1] = buttonlist[0]
                                 true_line_added = 'true'
                         if(true_line_added == 'false'):
-                            linearray.append(['null',buttonlist[0],'null',j])
+                            linearray.append([null_button,buttonlist[0],'null',j])
                         true_line_added = 'false'
                                     
                         
             else:
                 name = temp[0].split('_')
-                print(name[1])
-                #self.add_+'name[1]'()
+                exe_name = ''
+                for i in name:
+                    if(i!='Check'):
+                        if(i!='Mode'):
+                            exe_name = exe_name + '_' + i
+                print(exe_name)
+                exec("self.add"+exe_name+"()")
                 
                 if(temp[1] == 'process'):
                     buttonlist[count].string = temp[0]
@@ -486,7 +493,8 @@ class HelloWindow(QMainWindow):
                             i[3] = 'true'
                             true_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        if(temp[4] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     true_line_added = 'false'
                     
                     if(len(temp[5]) != 2):
@@ -497,7 +505,7 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
@@ -510,16 +518,18 @@ class HelloWindow(QMainWindow):
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
-                            i[3] = 'true'
+                            i[2] = 'true'
                             true_line_added = 'true'
                         if temp[5] == i[3]:
                             i[0] = buttonlist[count]
-                            i[3] = 'false'
+                            i[2] = 'false'
                             false_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        if(temp[4] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                        if(temp[5] != 'a'):
+                            linearray.append([buttonlist[count],null_button,'false',temp[5]])
                     true_line_added = 'false'
                     false_line_added = 'false'
                     
@@ -531,7 +541,7 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
@@ -551,9 +561,9 @@ class HelloWindow(QMainWindow):
                             i[3] = 'false'
                             false_line_added = 'true'
                     if(true_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','true',temp[4]])
+                        linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        linearray.append([buttonlist[count],'null','false',temp[4]])
+                        linearray.append([buttonlist[count],null_button,'false',temp[4]])
                     true_line_added = 'false'
                     false_line_added = 'false'
                     
@@ -565,11 +575,12 @@ class HelloWindow(QMainWindow):
                                     i[1] = buttonlist[count]
                                     true_line_added = 'true'
                             if(true_line_added == 'false'):
-                                linearray.append(['null',buttonlist[count],'null',j])
+                                linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
                         
                     count += 1
-            
+        print(linearray)
+        
     def add_button(self):
         global leftlayout
         global leftwidget
@@ -579,7 +590,15 @@ class HelloWindow(QMainWindow):
         buttonlist.append(leftwidget.button0)
         
         leftlayout.addWidget(leftwidget.button0)
+    
+    def add_Start(self):
+        global leftlayout
+        global leftwidget
+        global buttonlist
         
+        leftwidget.button0 = Process_Button('Start', self)
+        buttonlist.append(leftwidget.button0)
+        leftlayout.addWidget(leftwidget.button0)
         
     def add_ThreePhaseShortCircuit(self):
         global leftlayout
@@ -603,9 +622,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('MaxMagBreak', self)
-        leftwidget.button.string = 'check_MaxMagBreak'
+        leftwidget.button.string = 'Check_MaxMagBreak'
         for i in buttonlist:
-            if i.string == 'check_MaxMagBreak':
+            if i.string == 'Check_MaxMagBreak':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -618,9 +637,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('MaxWindSpeed_ThreePhaseShortCircuit', self)
-        leftwidget.button.string = 'check_MaxWindSpeed_ThreePhaseShortCircuit'
+        leftwidget.button.string = 'Check_MaxWindSpeed_ThreePhaseShortCircuit'
         for i in buttonlist:
-            if i.string == 'check_MaxWindSpeed_ThreePhaseShortCircuit':
+            if i.string == 'Check_MaxWindSpeed_ThreePhaseShortCircuit':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -648,9 +667,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('CutOut', self)
-        leftwidget.button.string = 'check_CutOut'
+        leftwidget.button.string = 'Check_CutOut'
         for i in buttonlist:
-            if i.string == 'check_CutOut':
+            if i.string == 'Check_CutOut':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -678,9 +697,9 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Decision_Button('RPM_Increase', self)
-        leftwidget.button.string = 'check_RPM_Increase'
+        leftwidget.button.string = 'Check_RPM_Increase'
         for i in buttonlist:
-            if i.string == 'check_RPM_Increase':
+            if i.string == 'Check_RPM_Increase':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -789,11 +808,11 @@ class HelloWindow(QMainWindow):
             i.inputline = a
         for i in buttonlist:
             if i.mode == 'process':
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.next_index]
+                pac = [i.string, i.inputline, i.next_index]
             if i.mode == 'decision': 
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.true_index, i.false_index]
+                pac = [i.string, i.inputline, [i.true_index, i.false_index]]
             if i.mode == 'roop':
-                pac = [i.string + str(i.nodenum), i.mode, i.string, i.inputline, i.cont_index, i.break_index]
+                pac = [i.string, i.inputline, [i.cont_index, i.break_index]]
             finallist.append(pac)
             
         
