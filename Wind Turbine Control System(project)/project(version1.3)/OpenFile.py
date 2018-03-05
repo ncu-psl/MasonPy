@@ -100,7 +100,7 @@ def ReadData_MaxTorqueCurrent():
     #  setting in Parameter.py
     # Parameter.eff_e_MaxTorqueCurrent setting in Parameter.py
     Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent = readData("data_TsrToCp.txt")
-    return Parameter.eff_g_MaxTorqueCurrent, Parameter.eff_e_MaxTorqueCurrent, Parameter.TorqueGenerator_MaxTorqueCurrent, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent
+    return Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent, Parameter.eff_e_MaxTorqueCurrent, Parameter.TorqueGenerator_MaxTorqueCurrent, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent
 
 
 if __name__=='__main__':
@@ -144,8 +144,8 @@ if __name__=='__main__':
 #==============================================================================
     
     
+    
 #==============================================================================
-#     
 #     # ReadData_MaxPower   
 #     
 #     RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = ReadData_MaxPower()
@@ -169,20 +169,20 @@ if __name__=='__main__':
 #     print(Cp_MaxPower)
 #==============================================================================
     
-#==============================================================================
-#     #ReadData_MaxTorqueCurrent    
-#     eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
-#     print("eff_g_MaxTorqueCurrent")
-#     print(eff_g_MaxTorqueCurrent)
-#     print("eff_e_MaxTorqueCurrent")
-#     print(eff_e_MaxTorqueCurrent)
-#     
-#     print("Tg_MaxTorqueCurrent")
-#     print(Tg_MaxTorqueCurrent)
-#     
-#     print("Tsr__MaxTorqueCurrent")
-#     print(Tsr__MaxTorqueCurrent)
-#     print("Cp_MaxTorqueCurrent")
-#     print(Cp_MaxTorqueCurrent)
-#==============================================================================
+    #ReadData_MaxTorqueCurrent    
+    RPM__MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
+    print("RPM__MaxTorqueCurrent")
+    print(RPM__MaxTorqueCurrent)
+    print("eff_g_MaxTorqueCurrent")
+    print(eff_g_MaxTorqueCurrent)
+    print("eff_e_MaxTorqueCurrent")
+    print(eff_e_MaxTorqueCurrent)
+    
+    print("Tg_MaxTorqueCurrent")
+    print(Tg_MaxTorqueCurrent)
+    
+    print("Tsr__MaxTorqueCurrent")
+    print(Tsr__MaxTorqueCurrent)
+    print("Cp_MaxTorqueCurrent")
+    print(Cp_MaxTorqueCurrent)
 

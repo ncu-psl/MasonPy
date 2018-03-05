@@ -124,7 +124,7 @@ def Mode_MaxTorqueCurrent():
     Tm     = 0
     Tt    = TotalTorque(Tb, Tg)
     CalculateRPM(Tt)
-    eff_g = eff_gp_MaxTorqueCurrent()
+    eff_g = eff_g_MaxTorqueCurrent()
     eff_e = Parameter.eff_e_MaxTorqueCurrent
     CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
@@ -140,7 +140,7 @@ def Mode_MaxTorqueCurrent_MagBrake():
     Tm    = Parameter.TorqueMachine
     Tt    = TotalTorque(Tb, Tg, Tm)
     CalculateRPM(Tt)
-    eff_g = eff_gp_MaxTorqueCurrent()
+    eff_g = eff_g_MaxTorqueCurrent()
     eff_e = Parameter.eff_e_MaxTorqueCurrent
     CalculatePower(eff_g, eff_e, Tg)
     #Parameter.CurrentTime += 1
@@ -217,7 +217,7 @@ def Cp_MaxTorqueCurrent(Tsr):
     Cp = getApproximation(Tsr, Parameter.Tsr__MaxTorqueCurrent, Parameter.Cp_MaxTorqueCurrent)
     return Cp
 
-def eff_gp_MaxTorqueCurrent():
+def eff_g_MaxTorqueCurrent():
     eff_g = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent)
     return eff_g
 
