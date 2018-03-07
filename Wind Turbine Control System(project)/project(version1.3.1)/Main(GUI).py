@@ -858,27 +858,16 @@ class HelloWindow(QMainWindow):
 
         Parameter.RemoveDefaultValue()
         
-        Mode  = Parameter.ModeStack
-        speed = Parameter.WindSpeed                
-        rpm   = Parameter.RPM
-        power = Parameter.Power 
         
-        TsrStack     = Parameter.TsrStack
-        CpStack      = Parameter.CpStack
-        TbStack      = Parameter.TbStack
-        TgStack      = Parameter.TgStack
-        TmStack      = Parameter.TmStack
-        TtotalStack  = Parameter.TtotalStack
-        eff_gStack   = Parameter.eff_gStack
-        eff_eStack   = Parameter.eff_eStack
         
-        Paint.PaintDiagram("Speed-Time Diagram", "WindSpeed", Parameter.TimeSeries, Parameter.WindSpeed)
-        Paint.PaintDiagram("RPM-Time Diagram", "RPM", Parameter.TimeSeries, Parameter.RPM)
-        Paint.PaintDiagram("Power-Time Diagram", "Power", Parameter.TimeSeries, Parameter.Power)
+        isPaintWindSpeed = True
+        isPaintRPM       = True
+        isPaintPower     = True  
+        Paint.PaintDiagram("name", "WindSpeed (m/s)", "RPM", "Power  (W)", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
         
-        ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Mode)
+        ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
-        end = time.time()
+        
         
         for i in finallist:
             print(i)
