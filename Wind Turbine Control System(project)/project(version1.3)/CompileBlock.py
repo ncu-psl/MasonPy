@@ -98,6 +98,8 @@ def FindNextBlock(list, Connectionline):
         if Connectionline in list[i][2]: # intputlist          
             index = i
             break;
+    if index == -1:
+        print("Error: Some lines are missing!")    
     return index
             
         
@@ -124,13 +126,10 @@ def execBlockChart(list):
     lastBlock =""
     if list[0][1] == "Start":
         Connectionline = list[0][3][0]
-        print(Connectionline)
         flag = FindNextBlock(list, Connectionline)
-        print(flag)
-        lastBlock = list[1][0]
-        
+        lastBlock = list[1][0]    
         str = list[flag][1]
-        print(str)
+    
         
     while 1:
         
@@ -141,7 +140,7 @@ def execBlockChart(list):
             if (Parameter.CurrentTime == (len(Parameter.TimeSeries)-1)):
              break
          
-            Parameter.listMode.append(str)
+            Parameter.ModeStack.append(str)
             Parameter.CurrentTime += 1
             
             if lastBlock != "Loop":

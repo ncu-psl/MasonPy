@@ -30,8 +30,7 @@ OpenFile.ReadData_MaxPower()
 OpenFile.ReadData_MaxTorqueCurrent()
 
 
-Parameter.RPM.append(0.0001)
-Parameter.Power.append(0)
+
 
 #==============================================================================
 # list=[
@@ -83,7 +82,7 @@ list=[
         ["Mode1", "Mode_ThreePhaseShortCircuit",["L1", "L5", "L7", "L25"], ["L2"]],                  #1
         ["Check1", "Check_MaxMagBrake", ["L2"], ["L3", "L4"]],                        #2     
         ["Check2", "Check_MaxWindSpeed_ThreePhaseShortCircuit", ["L4"], ["L6", "L5"]], #3
-        ["Loop1","Loop", ["L6"], ["L8", "L7"], 0, 200],                              #4     
+        ["Loop1","Loop", ["L6"], ["L7", "L8"], 0, 200],                              #4     
         ["Mode2", "Mode_MaxPower",["L8", "L11"],["L9"]],                                #5 
         ["Check3", "Check_CutOut",["L9"], ["L10", "L11"]],                              #6
         ["Mode3", "Mode_MaxTorqueCurrent",["L10", "L15"], ["L12"]],                        #7
@@ -91,7 +90,7 @@ list=[
         ["Check5", "Check_RPM_Increase",["L14"], ["L16", "L15"]],                       #9      
         ["Mode4", "Mode_MaxTorqueCurrent",["L16", "L18"], ["L17"]],                       #10     
         ["Loop2", "Loop", ["L17"], ["L19", "L18"], 0, 8],                              #11   # 持續8秒
-        ["Mode5", "Mode_MaxTorqueCurrent_MagBrake",["L19", "L22"], ["L20"]],              #12     
+        ["Mode5", "Mode_MaxTorqueCurrent_MagBrake",["L3", "L19", "L22"], ["L20"]],              #12     
         ["Check6", "Check_MaxMagBrake", ["L20"], ["L22", "L21"]],                       #13  
         ["Mode6", "Mode_ThreePhaseShortCircuit_MagBrake", ["L21", "L24"], ["L23"]],        #14      
         ["Loop3", "Loop", ["L23"], ["L25", "L24"], 0, 2080]                             #15  
@@ -119,14 +118,10 @@ CompileBlock.execBlockChart(list)
 
 
 
-Parameter.TimeSeries.pop(0)
-Parameter.WindSpeed.pop(0)
-Parameter.RPM.pop(0)
-Parameter.Power.pop(0)
+Parameter.RemoveDefaultValue()
 
-Mode  = []
-Mode.append("default value")
-Mode = Mode + Parameter.listMode
+
+Mode  = Parameter.ModeStack
 speed = Parameter.WindSpeed                
 rpm   = Parameter.RPM
 power = Parameter.Power 
@@ -147,7 +142,7 @@ Paint.PaintDiagram("Speed-Time Diagram", "WindSpeed", Parameter.TimeSeries, Para
 Paint.PaintDiagram("RPM-Time Diagram", "RPM", Parameter.TimeSeries, Parameter.RPM)
 Paint.PaintDiagram("Power-Time Diagram", "Power", Parameter.TimeSeries, Parameter.Power)
 
-ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, CpStack, eff_gStack, Mode)
+ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Mode)
 
 
 end = time.time()

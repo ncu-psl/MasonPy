@@ -45,11 +45,41 @@ TimeSeries = []
 WindSpeed  = []
 RPM        = []
 Power      = []
+
+
+
 # # Append the Reference initial value
 TimeSeries.append(0)
 WindSpeed.append(0)
 RPM.append(0.0001)
 Power.append(0)
+RPM.append(0.0001)
+Power.append(0)
+
+# temp stack
+ModeStack  = []
+TsrStack = []
+CpStack  = []
+TbStack  = []
+TgStack  = []
+TmStack  = []
+TtotalStack  = []
+eff_gStack = []
+eff_eStack = []
+
+ModeStack.append("default value")
+TsrStack.append(0)
+CpStack.append(0)
+TbStack.append(0)
+TgStack.append(0)
+TmStack.append(0)
+TtotalStack.append(0)
+eff_gStack.append(0)
+eff_eStack.append(0)
+
+
+
+
 #==============================================================================
 # # 
 # RPM.append(0.0001)
@@ -70,34 +100,6 @@ Rho             = 1.293
 D               = 3.7
 A               = 10.74665
 TorqueMachine   = 175
-
-
-# test
-listMode = []
-LastMode = ""
-PresentMode = ""
-
-
-
-
-# temp stack
-TsrStack = []
-CpStack  = []
-TbStack  = []
-TgStack  = []
-TmStack  = []
-TtotalStack  = []
-eff_gStack = []
-eff_eStack = []
-
-TsrStack.append(0)
-CpStack.append(0)
-TbStack.append(0)
-TgStack.append(0)
-TmStack.append(0)
-TtotalStack.append(0)
-eff_gStack.append(0)
-eff_eStack.append(0)
 
 
 
@@ -144,3 +146,11 @@ eff_e_MaxTorqueCurrent = 0.9
 
 TorqueGenerator_MaxTorqueCurrent = 110
 
+
+
+
+def RemoveDefaultValue():
+    TimeSeries.pop(0)
+    WindSpeed.pop(0)
+    RPM.pop(0)
+    Power.pop(0)
