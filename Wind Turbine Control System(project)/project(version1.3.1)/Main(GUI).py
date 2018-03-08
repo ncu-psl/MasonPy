@@ -314,7 +314,6 @@ class HelloWindow(QMainWindow):
         
         
         self.setleftwidget()
-        self.setrightwidget()
         
         finallayout = QHBoxLayout()
         finallayout.addWidget(leftwidget)
@@ -384,36 +383,7 @@ class HelloWindow(QMainWindow):
         
         leftwidget.setLayout(leftlayout)
     
-    def setrightwidget(self):                                       #set drow area layout
-        global rightwidget
-        global label
-        global windspeed
-        
-        x = np.arange(0,100)
-        y = windspeed[x]
-
-        plt.plot(x,y) 
-
-        plt.xlim(-30,390)
-        plt.ylim(-1.5,1.5)
-
-        plt.xlabel("x-axis") 
-        plt.ylabel("y-axis") 
-        plt.title("The Title") 
-        plt.show()
-
-        rightlowlayout = QVBoxLayout()
-        rightlowlayout.addWidget(plt.show())
-        
-        label.setText("1235497")
-        right_low_widget = QWidget()
-        right_low_widget.setLayout(rightlowlayout)
-        
-        rightlayout = QVBoxLayout()
-        rightlayout.addWidget(label)
-        rightlayout.addWidget(right_low_widget)
-        
-        rightwidget.setLayout(rightlayout)
+  
         
     def Write_File(self):
         global buttonlist
@@ -862,8 +832,8 @@ class HelloWindow(QMainWindow):
         
         isPaintWindSpeed = True
         isPaintRPM       = True
-        isPaintPower     = True  
-        Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        isPaintPower     = True 
+        Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed  (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
         
         ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
