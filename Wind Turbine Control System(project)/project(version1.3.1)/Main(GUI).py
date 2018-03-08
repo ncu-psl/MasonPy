@@ -194,12 +194,12 @@ class Example(QWidget):
         
         global buttonlist
         
-        self.button = Process_Button('Start', self)
-        self.button.string = 'Start'
-        self.button.next_index = 'null'
-        self.button.move(100, 65)
+     #   self.button = Process_Button('Start', self)
+      #  self.button.string = 'Start'
+       # self.button.next_index = 'null'
+        #self.button.move(100, 65)
 
-        buttonlist.append(self.button)
+     #   buttonlist.append(self.button)
     
         self.setWindowTitle('Click or Move')
         self.setGeometry(300, 300, 280, 150)
@@ -310,7 +310,7 @@ class HelloWindow(QMainWindow):
         centralWidget = QWidget(self)          
         self.setCentralWidget(centralWidget)  
         
-        self.setWindowTitle("風電") 
+        self.setWindowTitle("Wind turbine control system") 
         
         
         self.setleftwidget()
@@ -324,6 +324,9 @@ class HelloWindow(QMainWindow):
         
         toolbarBox = QtWidgets.QToolBar(self)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
+        
+        add_Start_action = toolbarBox.addAction('Start')
+        add_Start_action.triggered.connect(self.add_Start)
         
         add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
         add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
@@ -365,10 +368,10 @@ class HelloWindow(QMainWindow):
         add_fline_action.triggered.connect(self.add_false_line)
         
         menu = self.menuBar().addMenu('File')
+        read_action = menu.addAction('Import')
+        read_action.triggered.connect(self.Read_File)
         write_action = menu.addAction('Export')
         write_action.triggered.connect(self.Write_File)
-        read_action = menu.addAction('Inport')
-        read_action.triggered.connect(self.Read_File)
         
         add_draw_action = self.menuBar().addAction('draw')
         add_draw_action.triggered.connect(self.start_draw)
@@ -388,29 +391,16 @@ class HelloWindow(QMainWindow):
         global rightwidget
         global label
         global windspeed
-        
-        x = np.arange(0,100)
-        y = windspeed[x]
-
-        plt.plot(x,y) 
-
-        plt.xlim(-30,390)
-        plt.ylim(-1.5,1.5)
-
-        plt.xlabel("x-axis") 
-        plt.ylabel("y-axis") 
-        plt.title("The Title") 
-        plt.show()
 
         rightlowlayout = QVBoxLayout()
         rightlowlayout.addWidget(plt.show())
         
-        label.setText("1235497")
+        #label.setText("1235497")
         right_low_widget = QWidget()
         right_low_widget.setLayout(rightlowlayout)
         
         rightlayout = QVBoxLayout()
-        rightlayout.addWidget(label)
+        #rightlayout.addWidget(label)
         rightlayout.addWidget(right_low_widget)
         
         rightwidget.setLayout(rightlayout)
