@@ -314,6 +314,7 @@ class HelloWindow(QMainWindow):
         
         
         self.setleftwidget()
+        self.setrightwidget()
         
         finallayout = QHBoxLayout()
         finallayout.addWidget(leftwidget)
@@ -386,9 +387,6 @@ class HelloWindow(QMainWindow):
         
         leftwidget.setLayout(leftlayout)
     
-<<<<<<< HEAD
-  
-=======
     def setrightwidget(self):                                       #set drow area layout
         global rightwidget
         global label
@@ -406,7 +404,6 @@ class HelloWindow(QMainWindow):
         rightlayout.addWidget(right_low_widget)
         
         rightwidget.setLayout(rightlayout)
->>>>>>> bca8bfb04886608bc6cbebc4a114d65e3974cc3d
         
     def Write_File(self):
         global buttonlist
@@ -855,8 +852,8 @@ class HelloWindow(QMainWindow):
         
         isPaintWindSpeed = True
         isPaintRPM       = True
-        isPaintPower     = True 
-        Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed  (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        isPaintPower     = True  
+        Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
         
         ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
