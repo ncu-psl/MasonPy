@@ -78,7 +78,7 @@ OpenFile.ReadData_MaxTorqueCurrent()
 
 
 list=[
-        ["Start", "Start",["Null"] ,["L1"]],                                        #0
+        ["Start", "Start",["Null"] ,["L100"]],                                        #0
         ["Mode1", "Mode_ThreePhaseShortCircuit",["L1", "L5", "L7", "L25"], ["L2"]],                  #1
         ["Check1", "Check_MaxMagBrake", ["L2"], ["L3", "L4"]],                        #2     
         ["Check2", "Check_MaxWindSpeed_ThreePhaseShortCircuit", ["L4"], ["L6", "L5"]], #3

@@ -36,7 +36,7 @@ def PaintDiagram(str_name, str_xlabel, str_ylabel_1,  str_ylabel_2,  str_ylabel_
     
     
     
-    
-    
-    plt.show()
+    plt.savefig("filename.png")
+    return fig
+    #plt.show()
     
