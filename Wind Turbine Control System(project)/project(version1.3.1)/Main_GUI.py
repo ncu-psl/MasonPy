@@ -11,6 +11,9 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QWidget, QApplication, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
+import random
 
 import OpenFile
 import Parameter
@@ -30,6 +33,7 @@ paintarray = []
 linearray = []                                          #(startbutton, endbutton, linetype, linename)
 linetype = 'true'
 linenum = 0
+figure = plt.figure()
 
 windspeed = np.ones(100)
 
@@ -180,6 +184,36 @@ class Loop_Button(QPushButton):
         
         print('r')
         
+class rightcanvas(QWidget):
+    def __init__(self):
+        super().__init__()
+    
+        global figure
+        
+        self.button1 = QtWidgets.QPushButton('fresh')
+        self.button1.clicked.connect(self.paintEvent)
+        
+#        self.axes = figure.add_subplot(111)
+#        self.axes.hold(False)
+        
+#        data = [random.random() for i in range(25)]
+#        self.axes.plot(data, '*-')
+        
+        self.canvas = FigureCanvas(figure)
+        
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.canvas)
+        layout.addWidget(self.button1)
+        
+        self.setLayout(layout)
+        
+    
+    def paintEvent(self, e):
+        self.canvas.draw()
+        
+    def mouseReleaseEvent(self, e):
+        self.repaint()
+        
 class Example(QWidget):
     
     def __init__(self):
@@ -204,7 +238,7 @@ class Example(QWidget):
         self.setWindowTitle('Click or Move')
         self.setGeometry(300, 300, 280, 150)
         
-    def paintEvent(self, event):
+    def paintEvent(self, e):
         global linemode
         global paintarray
         global linearray
@@ -393,19 +427,24 @@ class HelloWindow(QMainWindow):
         global rightwidget
         global label
         global windspeed
+        global figure
 
-        rightlowlayout = QVBoxLayout()
-        rightlowlayout.addWidget(plt.show())
+        #rightlowlayout = QVBoxLayout()
+        #self.canvas.draw()
+        
+        #self.toolbar = NavigationToolbar(self.canvas, self)
+        #self.toolbar.hide()
         
         #label.setText("1235497")
-        right_low_widget = QWidget()
-        right_low_widget.setLayout(rightlowlayout)
+        #right_low_widget = QWidget()
+        #right_low_widget.setLayout(rightlowlayout)
+        rightwidget = rightcanvas()
         
-        rightlayout = QVBoxLayout()
+        #rightlayout = QVBoxLayout()
+        
         #rightlayout.addWidget(label)
-        rightlayout.addWidget(right_low_widget)
         
-        rightwidget.setLayout(rightlayout)
+        #rightwidget.setLayout(rightlayout)
         
     def Write_File(self):
         global buttonlist
@@ -747,6 +786,7 @@ class HelloWindow(QMainWindow):
         global leftlayout
         global leftwidget
         global buttonlist
+        global figure
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
@@ -763,6 +803,7 @@ class HelloWindow(QMainWindow):
         global linemode
         global paintarray
         global linetype
+        global figure
         
         if linemode == 0:
             linemode = 1
@@ -774,6 +815,14 @@ class HelloWindow(QMainWindow):
             else:
                 linemode = 0
                 paintarray = []
+                
+        #Example.repaint()
+        
+        self.axes = figure.add_subplot(111)
+        self.axes.hold(False)
+        
+        data = [random.random() for i in range(25)]
+        self.axes.plot(data, '*-')
     
     def add_false_line(self):
         global linemode
@@ -794,6 +843,7 @@ class HelloWindow(QMainWindow):
     def start_draw(self):
         global buttonlist
         global linearray
+        global figure
         
         
         finallist = []
@@ -855,10 +905,43 @@ class HelloWindow(QMainWindow):
         isPaintWindSpeed = True
         isPaintRPM       = True
         isPaintPower     = True  
-        Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        #figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        str_ylabel_2 = "RPM"
+        str_ylabel_3 = "Power   ( W )"
+        y2X10  = [i*10 for i in Parameter.WindSpeed]
+    
+        ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
+        if isPaintRPM is True:
+            ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
+            str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
+        else:
+            str_ylabel_2 = ""
         
-        ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
+        if isPaintPower is True:
+            ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
+            str_ylabel_3 = str_ylabel_3 + "\n"
+        else:
+            str_ylabel_3 = ""
         
+    
+        ax1.set_title("Wind Turbine Control System")
+        ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
+        ax1.set_xlabel("Time (s)")
+        ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
+        ax1.legend(loc=2) # upper left
+        ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+    
+        if isPaintWindSpeed is True:  
+            ax2 = ax1.twinx()
+            ax2.plot(Parameter.TimeSeries, Parameter.WindSpeed, label = "WindSpeed (m/s)", color='g')
+            ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+            ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
+            ax2.set_ylabel("WindSpeed (m/s)")
+            ax2.legend(loc=1) # upper right
+            
+        plt.savefig("123")
+        
+       # ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
         
         for i in finallist:
