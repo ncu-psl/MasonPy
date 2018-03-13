@@ -327,6 +327,8 @@ class HelloWindow(QMainWindow):
         
         add_Start_action = toolbarBox.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
+        add_test_action = toolbarBox.addActions('test')
+        add_test_action.triggered.connect(add_Start_action.add_Start)
         
         add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
         add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
