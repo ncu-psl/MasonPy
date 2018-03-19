@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QWidget, QApplication, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
+from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -175,8 +175,8 @@ class Loop_Button(QPushButton):
         else :
             if e.buttons() == Qt.RightButton:
                 self.dragable = 1
-            #else:
-                
+            else:
+                self.showdialog()
       
             QPushButton.mousePressEvent(self, e)
         
@@ -186,16 +186,43 @@ class Loop_Button(QPushButton):
         self.dragable = 0
         
         print('r')
+    
+    def showdialog(self):
+        temp, result = QInputDialog.getInt(self, 'Loop Time', 'Loop Time:')
+        if result == True:
+            self.loop_time = temp
+        
         
 class rightcanvas(QWidget):
+    
     def __init__(self):
         super().__init__()
     
         global figure
         
-        self.button1 = QtWidgets.QPushButton('fresh')
-        self.button1.clicked.connect(self.paintEvent)
+        button_widget = QWidget()
+        layout2 = QtWidgets.QHBoxLayout()
+        button_widget.setLayout(layout2)
+        wind_check = QCheckBox('Wind Speed', self)
+        wind_check.setCheckState(QtCore.Qt.Checked)
+        wind_check.stateChanged.connect(self.wind_show)
+        rpm_check = QCheckBox('RPM', self)
+        rpm_check.setCheckState(QtCore.Qt.Checked)
+        rpm_check.stateChanged.connect(self.rpm_show)
+        power_check = QCheckBox('Power', self)
+        power_check.setCheckState(QtCore.Qt.Checked)
+        power_check.stateChanged.connect(self.power_show)
         
+        layout2.addWidget(wind_check)
+        layout2.addWidget(rpm_check)
+        layout2.addWidget(power_check)
+        
+        
+# =============================================================================
+#         self.button1 = QtWidgets.QPushButton('fresh')
+#         self.button1.clicked.connect(self.paintEvent)
+#         
+# =============================================================================
 #        self.axes = figure.add_subplot(111)
 #        self.axes.hold(False)
         
@@ -206,22 +233,34 @@ class rightcanvas(QWidget):
         
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.canvas)
-        layout.addWidget(self.button1)
+        layout.addWidget(button_widget)
         
         self.setLayout(layout)
         
-    
     def paintEvent(self, e):
-        
-        
-        
-        
-        
-        
         self.canvas.draw()
         
     def mouseReleaseEvent(self, e):
         self.repaint()
+    def wind_show(self, state):
+        #HelloWindow.draw_fig(state == QtCore.Qt.Checked, )
+        if state == QtCore.Qt.Checked:
+            super.HelloWindow.start_draw.isPaintWindSpeed = True
+            print(super.HelloWindow.start_draw.isPaintWindSpeed)
+            print(super.HelloWindow.start_draw.isPaintRPM)
+            print(super.HelloWindow.start_draw.isPaintPower)
+        else:
+            HelloWindow.start_draw.isPaintWindSpeed = False
+    def rpm_show(self, state):
+        if state == QtCore.Qt.Checked:
+            HelloWindow.start_draw.isPaintRPM = True
+        else:
+            HelloWindow.start_draw.isPaintRPM = False
+    def power_show(self, state):
+        if state == QtCore.Qt.Checked:
+            HelloWindow.start_draw.isPaintPower = True
+        else:
+            HelloWindow.start_draw.isPaintPower = False
         
 class Example(QWidget):
     
@@ -1053,31 +1092,30 @@ class HelloWindow(QMainWindow):
                     f.write("0, ")
                     f.write(str(buttonlist[i].loop_time))
                     f.write("],\n")
-            
-            
+                    
         OpenFile.ReadWindSpeepData()
         OpenFile.ReadData_ThreePhaseShortCircuit()
         OpenFile.ReadData_MaxPower()
         OpenFile.ReadData_MaxTorqueCurrent()
-
+            
         CompileBlock.execBlockChart(finallist)
 
         Parameter.RemoveDefaultValue()
         
         
         isPaintWindSpeed = True
-        isPaintRPM       = False
-        isPaintPower     = False 
-        figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        isPaintRPM       = True
+        isPaintPower     = True 
+        #figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
         print('print figure',figure)
 
 
-
-#==============================================================================
+        self.draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower)
+# =============================================================================
 #         str_ylabel_2 = "RPM"
 #         str_ylabel_3 = "Power   ( W )"
 #         y2X10  = [i*10 for i in Parameter.RPM]
-#     
+#      
 #         ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
 #         if isPaintRPM is True:
 #             ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
@@ -1090,8 +1128,8 @@ class HelloWindow(QMainWindow):
 #             str_ylabel_3 = str_ylabel_3 + "\n"
 #         else:
 #             str_ylabel_3 = ""
-#         
-#     
+#          
+#      
 #         ax1.set_title("Wind Turbine Control System")
 #         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
 #         ax1.set_xlabel("Time (s)")
@@ -1106,7 +1144,7 @@ class HelloWindow(QMainWindow):
 #             ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
 #             ax2.set_ylabel("WindSpeed (m/s)")
 #             ax2.legend(loc=1) # upper right
-#==============================================================================
+# =============================================================================
             
 #        plt.savefig("123")
         
@@ -1115,7 +1153,41 @@ class HelloWindow(QMainWindow):
         
         for i in finallist:
             print(i)
-            
+    def draw_fig(self, isPaintWindSpeed, isPaintRPM, isPaintPower):
+        global figure
+        
+        str_ylabel_2 = "RPM"
+        str_ylabel_3 = "Power   ( W )"
+        y2X10  = [i*10 for i in Parameter.RPM]
+     
+        ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
+        if isPaintRPM is True:
+            ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
+            str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
+        else:
+            str_ylabel_2 = ""
+        
+        if isPaintPower is True:
+            ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
+            str_ylabel_3 = str_ylabel_3 + "\n"
+        else:
+            str_ylabel_3 = ""
+         
+     
+        ax1.set_title("Wind Turbine Control System")
+        ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
+        ax1.set_xlabel("Time (s)")
+        ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
+        ax1.legend(loc=2) # upper left
+        ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+    
+        if isPaintWindSpeed is True:  
+            ax2 = ax1.twinx()
+            ax2.plot(Parameter.TimeSeries, Parameter.WindSpeed, label = "WindSpeed (m/s)", color='g')
+            ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+            ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
+            ax2.set_ylabel("WindSpeed (m/s)")
+            ax2.legend(loc=1) # upper right        
  
 if __name__ == "__main__":
     def run_app():
