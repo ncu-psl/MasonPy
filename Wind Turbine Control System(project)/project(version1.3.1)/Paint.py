@@ -20,7 +20,9 @@ def PaintDiagram(str_name, str_xlabel, str_ylabel_1,  str_ylabel_2,  str_ylabel_
     
     
     ax1.set_title(str_name)
+    
     ax1.set_ylim(min(min(y2X10), min(y3)),max(max(y2X10), max(y3)))
+    
     ax1.set_xlabel(str_xlabel)
     ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
     ax1.legend(loc=2) # upper left
