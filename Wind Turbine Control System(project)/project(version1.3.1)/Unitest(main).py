@@ -78,7 +78,6 @@ OpenFile.ReadData_MaxTorqueCurrent()
 
 
 list=[
-<<<<<<< HEAD
         ['Start0', 'Start', [], ['line_0']],
 ['Mode_ThreePhaseShortCircuit0', 'Mode_ThreePhaseShortCircuit', ['line_0', 'line_16', 'line_17', 'line_19', 'line_24'], ['line_1']],
 ['Check_MaxMagBrake0', 'Check_MaxMagBrake', ['line_1'], ['line_2', 'line_15']],
@@ -95,24 +94,6 @@ list=[
 ['Check_MaxMagBrake2', 'Check_MaxMagBrake', ['line_12'], ['line_14', 'line_22']],
 ['Mode_ThreePhaseShortCircuit_MagBrake0', 'Mode_ThreePhaseShortCircuit_MagBrake', ['line_22', 'line_23'], ['line_13']],
 ['Loop2', 'Loop', ['line_13'], ['line_24', 'line_23'], 0, 200]                         #15  
-=======
-        ["Start", "Start",["Null"] ,["L1"]],                                             #0
-        ["Mode1", "Mode_ThreePhaseShortCircuit",["L1", "L5", "L7", "L25"], ["L2"]],      #1
-        ["Check1", "Check_MaxMagBrake", ["L2"], ["L3", "L4"]],                           #2     
-        ["Check2", "Check_MaxWindSpeed_ThreePhaseShortCircuit", ["L4"], ["L6", "L5"]],   #3
-        ["Loop1","Loop", ["L6"], ["L7", "L8"], 0, 200],                                  #4     
-        ["Mode2", "Mode_MaxPower",["L8", "L11"],["L9"]],                                 #5 
-        ["Check3", "Check_CutOut",["L9"], ["L10", "L11"]],                               #6
-        ["Mode3", "Mode_MaxTorqueCurrent",["L10", "L15"], ["L12"]],                      #7
-        ["Check4", "Check_MaxMagBrake",["L12"], ["L14", "L13"]],                         #8
-        ["Check5", "Check_RPM_Increase",["L14"], ["L16", "L15"]],                        #9      
-        ["Mode4", "Mode_MaxTorqueCurrent",["L16", "L18"], ["L17"]],                      #10     
-        ["Loop2", "Loop", ["L17"], ["L19", "L18"], 0, 8],                                #11   # 持續8秒
-        ["Mode5", "Mode_MaxTorqueCurrent_MagBrake",["L3", "L19", "L22"], ["L20"]],       #12     
-        ["Check6", "Check_MaxMagBrake", ["L20"], ["L22", "L21"]],                        #13  
-        ["Mode6", "Mode_ThreePhaseShortCircuit_MagBrake", ["L21", "L24"], ["L23"]],      #14      
-        ["Loop3", "Loop", ["L23"], ["L25", "L24"], 0, 2080]                              #15  
->>>>>>> 23bf9c636b9260579d259e73b2250b3cd4868c7d
     ]
 
 
