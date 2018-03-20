@@ -33,8 +33,7 @@ paintarray = []
 linearray = []                                          #(startbutton, endbutton, linetype, linename)
 linetype = 'true'
 linenum = 0
-figure = plt.figure(0)
-plt.close(0)
+figure = plt.figure()
 
 windspeed = np.ones(100)
 
@@ -231,9 +230,9 @@ class rightcanvas(QWidget):
         
         self.canvas = FigureCanvas(figure)
         
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.canvas)
-        layout.addWidget(button_widget)
+        layout = QtWidgets.QGridLayout()
+        layout.addWidget(self.canvas, 0 , 0, 10, 1)
+        layout.addWidget(button_widget, 10, 0)
         
         self.setLayout(layout)
         
@@ -245,22 +244,32 @@ class rightcanvas(QWidget):
     def wind_show(self, state):
         #HelloWindow.draw_fig(state == QtCore.Qt.Checked, )
         if state == QtCore.Qt.Checked:
-            super.HelloWindow.start_draw.isPaintWindSpeed = True
-            print(super.HelloWindow.start_draw.isPaintWindSpeed)
-            print(super.HelloWindow.start_draw.isPaintRPM)
-            print(super.HelloWindow.start_draw.isPaintPower)
+            HelloWindow.isPaintWindSpeed = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
         else:
-            HelloWindow.start_draw.isPaintWindSpeed = False
+            HelloWindow.isPaintWindSpeed = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
     def rpm_show(self, state):
         if state == QtCore.Qt.Checked:
-            HelloWindow.start_draw.isPaintRPM = True
+            HelloWindow.isPaintRPM = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
         else:
-            HelloWindow.start_draw.isPaintRPM = False
+            HelloWindow.isPaintRPM = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
     def power_show(self, state):
         if state == QtCore.Qt.Checked:
-            HelloWindow.start_draw.isPaintPower = True
+            HelloWindow.isPaintPower = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
         else:
-            HelloWindow.start_draw.isPaintPower = False
+            HelloWindow.isPaintPower = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+        
         
 class Example(QWidget):
     
@@ -383,6 +392,9 @@ class Example(QWidget):
         self.repaint()
     
 class HelloWindow(QMainWindow):
+    isPaintWindSpeed = True
+    isPaintRPM       = True
+    isPaintPower     = True 
     def __init__(self):
         super().__init__()
         
@@ -1103,14 +1115,16 @@ class HelloWindow(QMainWindow):
         Parameter.RemoveDefaultValue()
         
         
-        isPaintWindSpeed = True
-        isPaintRPM       = True
-        isPaintPower     = True 
+# =============================================================================
+#         isPaintWindSpeed = True
+#         isPaintRPM       = True
+#         isPaintPower     = True 
+# =============================================================================
         #figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
         print('print figure',figure)
 
 
-        self.draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower)
+        HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
 # =============================================================================
 #         str_ylabel_2 = "RPM"
 #         str_ylabel_3 = "Power   ( W )"
@@ -1153,8 +1167,10 @@ class HelloWindow(QMainWindow):
         
         for i in finallist:
             print(i)
-    def draw_fig(self, isPaintWindSpeed, isPaintRPM, isPaintPower):
+    def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
         global figure
+        
+        figure.clf()
         
         str_ylabel_2 = "RPM"
         str_ylabel_3 = "Power   ( W )"
@@ -1188,6 +1204,7 @@ class HelloWindow(QMainWindow):
             ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
             ax2.set_ylabel("WindSpeed (m/s)")
             ax2.legend(loc=1) # upper right        
+        plt.savefig("123")
  
 if __name__ == "__main__":
     def run_app():
