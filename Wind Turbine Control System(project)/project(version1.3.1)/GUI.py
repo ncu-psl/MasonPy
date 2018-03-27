@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QWidget, QApplication, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
+from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -33,8 +33,7 @@ paintarray = []
 linearray = []                                          #(startbutton, endbutton, linetype, linename)
 linetype = 'true'
 linenum = 0
-figure = plt.figure(0)
-plt.close(0)
+figure = plt.figure()
 
 windspeed = np.ones(100)
 
@@ -74,19 +73,19 @@ class Process_Button(QPushButton):
         if linemode == 1:
             paintarray.append(self)
             
-            print(self.position)
+            #print(self.position)
         else :
             if e.buttons() == Qt.RightButton:
                 self.dragable = 1
       
             QPushButton.mousePressEvent(self, e)
         
-            print(self.string)
+            #print(self.string)
         
     def mouseReleaseEvent(self, e):
         self.dragable = 0
         
-        print('r')
+        #print('r')
         
 class Decision_Button(QPushButton):
    
@@ -130,12 +129,12 @@ class Decision_Button(QPushButton):
       
             QPushButton.mousePressEvent(self, e)
         
-            print(self.string)
+            #print(self.string)
         
     def mouseReleaseEvent(self, e):
         self.dragable = 0
         
-        print('r')
+        #print('r')
         
 class Loop_Button(QPushButton):
     
@@ -175,27 +174,54 @@ class Loop_Button(QPushButton):
         else :
             if e.buttons() == Qt.RightButton:
                 self.dragable = 1
-            #else:
-                
+            else:
+                self.showdialog()
       
             QPushButton.mousePressEvent(self, e)
         
-            print(self.string)
+            #print(self.string)
         
     def mouseReleaseEvent(self, e):
         self.dragable = 0
         
-        print('r')
+        #print('r')
+    
+    def showdialog(self):
+        temp, result = QInputDialog.getInt(self, 'Loop Time', 'Loop Time:')
+        if result == True:
+            self.loop_time = temp
+        
         
 class rightcanvas(QWidget):
+    
     def __init__(self):
         super().__init__()
     
         global figure
         
-        self.button1 = QtWidgets.QPushButton('fresh')
-        self.button1.clicked.connect(self.paintEvent)
+        button_widget = QWidget()
+        layout2 = QtWidgets.QHBoxLayout()
+        button_widget.setLayout(layout2)
+        wind_check = QCheckBox('Wind Speed', self)
+        wind_check.setCheckState(QtCore.Qt.Checked)
+        wind_check.stateChanged.connect(self.wind_show)
+        rpm_check = QCheckBox('RPM', self)
+        rpm_check.setCheckState(QtCore.Qt.Checked)
+        rpm_check.stateChanged.connect(self.rpm_show)
+        power_check = QCheckBox('Power', self)
+        power_check.setCheckState(QtCore.Qt.Checked)
+        power_check.stateChanged.connect(self.power_show)
         
+        layout2.addWidget(wind_check)
+        layout2.addWidget(rpm_check)
+        layout2.addWidget(power_check)
+        
+        
+# =============================================================================
+#         self.button1 = QtWidgets.QPushButton('fresh')
+#         self.button1.clicked.connect(self.paintEvent)
+#         
+# =============================================================================
 #        self.axes = figure.add_subplot(111)
 #        self.axes.hold(False)
         
@@ -204,24 +230,46 @@ class rightcanvas(QWidget):
         
         self.canvas = FigureCanvas(figure)
         
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(self.canvas)
-        layout.addWidget(self.button1)
+        layout = QtWidgets.QGridLayout()
+        layout.addWidget(self.canvas, 0 , 0, 10, 1)
+        layout.addWidget(button_widget, 10, 0)
         
         self.setLayout(layout)
         
-    
     def paintEvent(self, e):
-        
-        
-        
-        
-        
-        
         self.canvas.draw()
         
     def mouseReleaseEvent(self, e):
         self.repaint()
+    def wind_show(self, state):
+        #HelloWindow.draw_fig(state == QtCore.Qt.Checked, )
+        if state == QtCore.Qt.Checked:
+            HelloWindow.isPaintWindSpeed = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+        else:
+            HelloWindow.isPaintWindSpeed = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+    def rpm_show(self, state):
+        if state == QtCore.Qt.Checked:
+            HelloWindow.isPaintRPM = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+        else:
+            HelloWindow.isPaintRPM = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+    def power_show(self, state):
+        if state == QtCore.Qt.Checked:
+            HelloWindow.isPaintPower = True
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+        else:
+            HelloWindow.isPaintPower = False
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            self.canvas.draw()
+        
         
 class Example(QWidget):
     
@@ -344,6 +392,9 @@ class Example(QWidget):
         self.repaint()
     
 class HelloWindow(QMainWindow):
+    isPaintWindSpeed = True
+    isPaintRPM       = True
+    isPaintPower     = True 
     def __init__(self):
         super().__init__()
         
@@ -502,9 +553,9 @@ class HelloWindow(QMainWindow):
         f = open('windele.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
-            print(temp)
+            #print(temp)
             if(temp[0] == 'Start'):
-                print(temp)
+                #print(temp)
                 exec("self.add_"+temp[0]+"()")
                 buttonlist[0].string = temp[0]
                 buttonlist[0].next_index = temp[4]
@@ -529,7 +580,7 @@ class HelloWindow(QMainWindow):
                     if(i!='Check'):
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
-                print(exe_name)
+                #print(exe_name)
                 exec("self.add"+exe_name+"()")
                 
                 if(temp[1] == 'process'):
@@ -630,7 +681,7 @@ class HelloWindow(QMainWindow):
                             true_line_added = 'false'
                         
                     count += 1
-        print(linearray)
+        #print(linearray)
         
     def add_button(self):
         global leftlayout
@@ -907,177 +958,180 @@ class HelloWindow(QMainWindow):
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], 0, i.loop_time]
             finallist.append(pac)
         
-        f = open('list_useinunitest.txt', 'w')
-        for i in range(0, len(buttonlist)):
-            if(i == len(buttonlist)-1):
-                if buttonlist[i].mode == 'process':
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].next_index)
-                    f.write("']]")
-                                
-                if buttonlist[i].mode == 'decision': 
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].true_index)
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].false_index)
-                    f.write("']]")
-                        
-                if buttonlist[i].mode == 'loop':
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].cont_index)
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].break_index)
-                    f.write("'], ")
-                    f.write("0, ")
-                    f.write(str(buttonlist[i].loop_time))
-                    f.write("]")
-            else:    
-                if buttonlist[i].mode == 'process':
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].next_index)
-                    f.write("']],\n")
-                                
-                if buttonlist[i].mode == 'decision': 
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].true_index)
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].false_index)
-                    f.write("']],\n")
-                        
-                if buttonlist[i].mode == 'loop':
-                    f.write("['")
-                    f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].string)
-                    f.write("', [")
-                    if(len(buttonlist[i].inputline) != 0):
-                        for count in range(0, len(buttonlist[i].inputline)):
-                            if (count == len(buttonlist[i].inputline)-1):
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("'")
-                            else:
-                                f.write("'")
-                                f.write(buttonlist[i].inputline[count])
-                                f.write("', ")
-                    f.write("], ['")
-                    f.write(buttonlist[i].cont_index)
-                    f.write("', ")
-                    f.write("'")
-                    f.write(buttonlist[i].break_index)
-                    f.write("'], ")
-                    f.write("0, ")
-                    f.write(str(buttonlist[i].loop_time))
-                    f.write("],\n")
-            
-            
+# =============================================================================
+#         f = open('list_useinunitest.txt', 'w')
+#         for i in range(0, len(buttonlist)):
+#             if(i == len(buttonlist)-1):
+#                 if buttonlist[i].mode == 'process':
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].next_index)
+#                     f.write("']]")
+#                                 
+#                 if buttonlist[i].mode == 'decision': 
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].true_index)
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].false_index)
+#                     f.write("']]")
+#                         
+#                 if buttonlist[i].mode == 'loop':
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].cont_index)
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].break_index)
+#                     f.write("'], ")
+#                     f.write("0, ")
+#                     f.write(str(buttonlist[i].loop_time))
+#                     f.write("]")
+#             else:    
+#                 if buttonlist[i].mode == 'process':
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].next_index)
+#                     f.write("']],\n")
+#                                 
+#                 if buttonlist[i].mode == 'decision': 
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].true_index)
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].false_index)
+#                     f.write("']],\n")
+#                         
+#                 if buttonlist[i].mode == 'loop':
+#                     f.write("['")
+#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].string)
+#                     f.write("', [")
+#                     if(len(buttonlist[i].inputline) != 0):
+#                         for count in range(0, len(buttonlist[i].inputline)):
+#                             if (count == len(buttonlist[i].inputline)-1):
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("'")
+#                             else:
+#                                 f.write("'")
+#                                 f.write(buttonlist[i].inputline[count])
+#                                 f.write("', ")
+#                     f.write("], ['")
+#                     f.write(buttonlist[i].cont_index)
+#                     f.write("', ")
+#                     f.write("'")
+#                     f.write(buttonlist[i].break_index)
+#                     f.write("'], ")
+#                     f.write("0, ")
+#                     f.write(str(buttonlist[i].loop_time))
+#                     f.write("],\n")
+# =============================================================================
+                    
         OpenFile.ReadWindSpeepData()
         OpenFile.ReadData_ThreePhaseShortCircuit()
         OpenFile.ReadData_MaxPower()
         OpenFile.ReadData_MaxTorqueCurrent()
-
+            
         CompileBlock.execBlockChart(finallist)
 
         Parameter.RemoveDefaultValue()
         
         
-        isPaintWindSpeed = True
-        isPaintRPM       = False
-        isPaintPower     = False 
-        figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
-        print('print figure',figure)
+# =============================================================================
+#         isPaintWindSpeed = True
+#         isPaintRPM       = True
+#         isPaintPower     = True 
+# =============================================================================
+        #figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
+        #print('print figure',figure)
 
 
-
-#==============================================================================
+        HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+# =============================================================================
 #         str_ylabel_2 = "RPM"
 #         str_ylabel_3 = "Power   ( W )"
 #         y2X10  = [i*10 for i in Parameter.RPM]
-#     
+#      
 #         ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
 #         if isPaintRPM is True:
 #             ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
@@ -1090,8 +1144,8 @@ class HelloWindow(QMainWindow):
 #             str_ylabel_3 = str_ylabel_3 + "\n"
 #         else:
 #             str_ylabel_3 = ""
-#         
-#     
+#          
+#      
 #         ax1.set_title("Wind Turbine Control System")
 #         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
 #         ax1.set_xlabel("Time (s)")
@@ -1106,16 +1160,55 @@ class HelloWindow(QMainWindow):
 #             ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
 #             ax2.set_ylabel("WindSpeed (m/s)")
 #             ax2.legend(loc=1) # upper right
-#==============================================================================
+# =============================================================================
             
 #        plt.savefig("123")
         
        # ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
         
-        for i in finallist:
-            print(i)
-            
+# =============================================================================
+#         for i in finallist:
+#             print(i)
+# =============================================================================
+    def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
+        global figure
+        
+        figure.clf()
+        
+        str_ylabel_2 = "RPM"
+        str_ylabel_3 = "Power   ( W )"
+        y2X10  = [i*10 for i in Parameter.RPM]
+     
+        ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
+        if isPaintRPM is True:
+            ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
+            str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
+        else:
+            str_ylabel_2 = ""
+        
+        if isPaintPower is True:
+            ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
+            str_ylabel_3 = str_ylabel_3 + "\n"
+        else:
+            str_ylabel_3 = ""
+         
+     
+        ax1.set_title("Wind Turbine Control System")
+        ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
+        ax1.set_xlabel("Time (s)")
+        ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
+        ax1.legend(loc=2) # upper left
+        ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+    
+        if isPaintWindSpeed is True:  
+            ax2 = ax1.twinx()
+            ax2.plot(Parameter.TimeSeries, Parameter.WindSpeed, label = "WindSpeed (m/s)", color='g')
+            ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+            ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
+            ax2.set_ylabel("WindSpeed (m/s)")
+            ax2.legend(loc=1) # upper right        
+        plt.savefig("123")
  
 if __name__ == "__main__":
     def run_app():
