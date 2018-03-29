@@ -305,6 +305,9 @@ def Check_MaxWindSpeed_ThreePhaseShortCircuit():
 def Check_RPM_Increase():
     return Parameter.RPM[Parameter.CurrentTime] > Parameter.RPM[Parameter.CurrentTime-1]
 
+def Check_RPM_Increase2():
+    return Parameter.RPM[Parameter.CurrentTime] >= Parameter.RPM[Parameter.CurrentTime-1]
+
 def Check_MaxMagBrake():
     return Parameter.RPM[Parameter.CurrentTime] > Parameter.MaxMagBrake
 
