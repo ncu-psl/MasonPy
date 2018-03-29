@@ -5,7 +5,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import matplotlib
-matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
@@ -30,7 +29,7 @@ class AppForm(QMainWindow):
                         'Save file', '', 
                         file_choices)
         if path:
-            self.canvas.print_figure(path, dpi=self.dpi)
+            self.canvas.print_figure(path[0], dpi=self.dpi)
             self.statusBar().showMessage('Saved to %s' % path, 2000)
     
     def on_about(self):
@@ -198,7 +197,7 @@ def main():
     app = QApplication(sys.argv)
     form = AppForm()
     form.show()
-    app.exec_()
+    sys.exit(app.exec_())
     
 if __name__ == "__main__":
     main()
