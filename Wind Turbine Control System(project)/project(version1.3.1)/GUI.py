@@ -196,8 +196,6 @@ class Loop_Button(QPushButton):
       
             QPushButton.mousePressEvent(self, e)
         
-            #print(self.string)
-        
 # =============================================================================
 #     def mouseReleaseEvent(self, e):
 #         self.dragable = 0
@@ -1300,10 +1298,8 @@ class HelloWindow(QMainWindow):
         #ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
         
-# =============================================================================
-#         for i in finallist:
-#             print(i)
-# =============================================================================
+        for i in finallist:
+            print(i)
     def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
         global figure
         
