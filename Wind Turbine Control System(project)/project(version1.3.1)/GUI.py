@@ -72,7 +72,8 @@ class Process_Button(QPushButton):
         global paintarray
         
         if linemode == 1:
-            paintarray.append(self)
+            if e.buttons() == Qt.LeftButton:
+                paintarray.append(self)
             
             #print(self.position)
         else :
@@ -129,7 +130,8 @@ class Decision_Button(QPushButton):
         global paintarray
         
         if linemode == 1:
-            paintarray.append(self)
+            if e.buttons() == Qt.LeftButton:
+                paintarray.append(self)
         else :
             if e.buttons() == Qt.RightButton:
                 for button in buttonlist:
@@ -183,7 +185,8 @@ class Loop_Button(QPushButton):
         global paintarray
         
         if linemode == 1:
-            paintarray.append(self)
+            if e.buttons() == Qt.LeftButton:
+                paintarray.append(self)
         else :
             if e.buttons() == Qt.RightButton:
                 for button in buttonlist:
@@ -390,7 +393,6 @@ class Example(QWidget):
         for button in buttonlist:
             if button.dragable == 1:
                 button.move(position2)
-                button.resize(210,30)
                 button.position = position
         
         e.setDropAction(Qt.MoveAction)
@@ -954,10 +956,14 @@ class HelloWindow(QMainWindow):
         global linemode
         global paintarray
         global linetype
+        global buttonlist
         
         if linemode == 0:
             linemode = 1
             linetype = 'true'
+            for i in buttonlist:
+                if i.dragable == True:
+                    i.dragable = False
         else :
             if linetype == 'false':
                 linetype = 'true'
@@ -970,10 +976,14 @@ class HelloWindow(QMainWindow):
         global linemode
         global paintarray
         global linetype
+        global buttonlist
         
         if linemode == 0:
             linemode = 1
             linetype = 'false'
+            for i in buttonlist:
+                if i.dragable == True:
+                    i.dragable = False
         else :
             if linetype == 'true':
                 linetype = 'false'
@@ -1298,8 +1308,10 @@ class HelloWindow(QMainWindow):
         #ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
         
         
-        for i in finallist:
-            print(i)
+# =============================================================================
+#         for i in finallist:
+#             print(i)
+# =============================================================================
     def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
         global figure
         
