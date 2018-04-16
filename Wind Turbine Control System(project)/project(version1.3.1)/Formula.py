@@ -219,6 +219,8 @@ def Cp_MaxTorqueCurrent(Tsr):
 
 def eff_g_MaxTorqueCurrent():
     eff_g = getApproximation(Parameter.RPM[Parameter.CurrentTime-1], Parameter.RPM__MaxTorqueCurrent, Parameter.eff_g_MaxTorqueCurrent)
+    if eff_g > 0.9:
+        eff_g = 0.9
     return eff_g
 
 
