@@ -1355,7 +1355,7 @@ if __name__ == "__main__":
     def run_app():
         app = QApplication(sys.argv)
         mainWin = HelloWindow()
-        mainWin.setMinimumWidth(500)
+        mainWin.setMinimumWidth(1200)
         mainWin.setMinimumHeight(500)
         mainWin.show()
         sys.exit(app.exec_())
