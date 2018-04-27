@@ -8,8 +8,8 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
-from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
+from PyQt5.QtWidgets import QDateTimeEdit, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtCore import QDateTime, QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
@@ -105,6 +105,8 @@ class Decision_Button(QPushButton):
     nodenum = 0
     position = QPoint()
     mode = 'decision'
+    compare_num = 0
+    compare_stuff = " "
     
   
     def __init__(self, title, parent):
@@ -138,11 +140,25 @@ class Decision_Button(QPushButton):
                     if button.dragable == 1:
                         button.dragable = 0
                 self.dragable = 1
+                
+            else:
+                self.showdialog()
       
             QPushButton.mousePressEvent(self, e)
+    
+    def showdialog(self):
         
-            #print(self.string)
-        
+        dia = DecitionDialogDialog()
+        mod, compare, num, result = dia.getdata()
+        if result == 1:
+            self.compare_num = num
+            self.compare_stuff = mod
+            if compare == ">":
+                self.string = 'Comparisongreater'
+            else:
+                self.string = 'Comparisongreaterorequal'
+            self.setText(self.compare_stuff + compare + self.compare_num)
+                
 # =============================================================================
 #     def mouseReleaseEvent(self, e):
 #         self.dragable = 0
@@ -211,7 +227,50 @@ class Loop_Button(QPushButton):
         if result == True:
             self.loop_time = temp
         
+class DecitionDialogDialog(QDialog):
+    def __init__(self, parent = None):
+        super().__init__()
+
+        self.layout = QVBoxLayout(self)
+        self.layout2 = QHBoxLayout(self)
         
+        self.combo = QComboBox()
+        self.combo.addItem("Wind Speed")
+        self.combo.addItem("RPM")
+        self.combo.addItem("Power")
+        
+        self.combo2 = QComboBox()
+        self.combo2.addItem(">=")
+        self.combo2.addItem(">")
+        
+        self.inputnum = QLineEdit()
+        
+        self.layout2.addWidget(self.combo)
+        self.layout2.addWidget(self.combo2)
+        self.layout2.addWidget(self.inputnum)
+        
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
+            Qt.Horizontal, self)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        
+        self.layout.addLayout(self.layout2)
+        self.layout.addWidget(self.buttons)
+        self.setLayout(self.layout)
+
+    def dateTime(self):
+        return self.datetime.dateTime()
+
+    @staticmethod
+    def getdata(parent = None):
+        dialog = DecitionDialogDialog(parent)
+        result = dialog.exec_()
+        mode = dialog.combo.currentText()
+        compare = dialog.combo2.currentText()
+        num = dialog.inputnum.text()
+        return (mode, compare, num, result)
+
 class rightcanvas(QWidget):
     
     def __init__(self):
@@ -1094,7 +1153,7 @@ class HelloWindow(QMainWindow):
             if i.mode == 'process':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.next_index]]
             if i.mode == 'decision': 
-                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index]]
+                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index], i.compare_type, i.compare_num]
             if i.mode == 'loop':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], 0, i.loop_time]
             finallist.append(pac)
