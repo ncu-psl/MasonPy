@@ -8,8 +8,8 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem
-from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
+from PyQt5.QtWidgets import QDateTimeEdit, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtCore import QDateTime, QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
@@ -105,6 +105,8 @@ class Decision_Button(QPushButton):
     nodenum = 0
     position = QPoint()
     mode = 'decision'
+    compare_num = 0
+    compare_stuff = " "
     
   
     def __init__(self, title, parent):
@@ -138,11 +140,25 @@ class Decision_Button(QPushButton):
                     if button.dragable == 1:
                         button.dragable = 0
                 self.dragable = 1
+                
+            else:
+                self.showdialog()
       
             QPushButton.mousePressEvent(self, e)
+    
+    def showdialog(self):
         
-            #print(self.string)
-        
+        dia = DecitionDialogDialog()
+        mod, compare, num, result = dia.getdata()
+        if result == 1:
+            self.compare_num = num
+            self.compare_stuff = mod
+            if compare == ">":
+                self.string = 'Comparisongreater'
+            else:
+                self.string = 'Comparisongreaterorequal'
+            self.setText(self.compare_stuff + '  '+ compare + ' ' + self.compare_num)
+                
 # =============================================================================
 #     def mouseReleaseEvent(self, e):
 #         self.dragable = 0
@@ -210,8 +226,53 @@ class Loop_Button(QPushButton):
         temp, result = QInputDialog.getInt(self, 'Loop Time', 'Loop Time:')
         if result == True:
             self.loop_time = temp
+            self.setText('loop ' + str(self.loop_time) + ' times')
+            
         
+class DecitionDialogDialog(QDialog):
+    def __init__(self, parent = None):
+        super().__init__()
+
+        self.layout = QVBoxLayout(self)
+        self.layout2 = QHBoxLayout(self)
         
+        self.combo = QComboBox()
+        self.combo.addItem("Wind Speed")
+        self.combo.addItem("RPM")
+        self.combo.addItem("Power")
+        
+        self.combo2 = QComboBox()
+        self.combo2.addItem(">=")
+        self.combo2.addItem(">")
+        
+        self.inputnum = QLineEdit()
+        
+        self.layout2.addWidget(self.combo)
+        self.layout2.addWidget(self.combo2)
+        self.layout2.addWidget(self.inputnum)
+        
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
+            Qt.Horizontal, self)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        
+        self.layout.addLayout(self.layout2)
+        self.layout.addWidget(self.buttons)
+        self.setLayout(self.layout)
+
+    def dateTime(self):
+        return self.datetime.dateTime()
+
+    @staticmethod
+    def getdata(parent = None):
+        dialog = DecitionDialogDialog(parent)
+        result = dialog.exec_()
+        mode = dialog.combo.currentText()
+        compare = dialog.combo2.currentText()
+        num = dialog.inputnum.text()
+        return (mode, compare, num, result)
+
 class rightcanvas(QWidget):
     
     def __init__(self):
@@ -460,21 +521,26 @@ class HelloWindow(QMainWindow):
         
         add_ThreePhaseShortCircuit_MagBrake_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit_MagBrake')
         add_ThreePhaseShortCircuit_MagBrake_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBrake)
-        
-        add_CutOut_action = toolbarBox.addAction('check_CutOut')
-        add_CutOut_action.triggered.connect(self.add_CutOut)
-        
-        add_MaxMagBrake_action = toolbarBox.addAction('check_MaxMagBrake')
-        add_MaxMagBrake_action.triggered.connect(self.add_MaxMagBrake)
-        
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action = toolbarBox.addAction('check_MaxWindSpeed_ThreePhaseShortCircuit')
-        add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
-        
-        add_RPM_Increase_action = toolbarBox.addAction('check_RPM_Increase(>)')
-        add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase)
-        
-        add_RPM_Increase_action = toolbarBox.addAction('check_RPM_Increase(>=)')
-        add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase2)
+# =============================================================================
+#         
+#         add_CutOut_action = toolbarBox.addAction('check_CutOut')
+#         add_CutOut_action.triggered.connect(self.add_CutOut)
+#         
+#         add_MaxMagBrake_action = toolbarBox.addAction('check_MaxMagBrake')
+#         add_MaxMagBrake_action.triggered.connect(self.add_MaxMagBrake)
+#         
+#         add_MaxWindSpeed_ThreePhaseShortCircuit_action = toolbarBox.addAction('check_MaxWindSpeed_ThreePhaseShortCircuit')
+#         add_MaxWindSpeed_ThreePhaseShortCircuit_action.triggered.connect(self.add_MaxWindSpeed_ThreePhaseShortCircuit)
+#         
+#         add_RPM_Increase_action = toolbarBox.addAction('check_RPM_Increase(>)')
+#         add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase)
+#         
+#         add_RPM_Increase_action = toolbarBox.addAction('check_RPM_Increase(>=)')
+#         add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase2)
+#         
+# =============================================================================
+        add_decision_button = toolbarBox.addAction('Decision')
+        add_decision_button.triggered.connect(self.add_decision_button)
         
         add_Loop_action = toolbarBox.addAction('Loop')
         add_Loop_action.triggered.connect(self.add_Loop)
@@ -555,15 +621,19 @@ class HelloWindow(QMainWindow):
                 f.write('[')
                 for j in i.inputline:
                     f.write(j+',')
-                f.write(']')
+                f.write('] ')
+                f.write(i.compare_stuff + ' ')
+                f.write(i.compare_num)
             if i.mode == 'loop':
                 f.write(i.cont_index+' ')
                 f.write(i.break_index+' ')
                 f.write('[')
                 for j in i.inputline:
                     f.write(j+',')
-                f.write(']')
+                f.write('] ')
+                f.write(i.loop_time)
             f.write('\n')
+        f.close()
             
     def Read_File(self):
         global linearray
@@ -641,6 +711,8 @@ class HelloWindow(QMainWindow):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].true_index = temp[4]
                     buttonlist[count].false_index = temp[5]
+                    buttonlist[count].compare_stuff = temp[7]
+                    buttonlist[count].compare_num = temp[8]
                     
                     for i in linearray:
                         if temp[4] == i[3]:
@@ -677,6 +749,7 @@ class HelloWindow(QMainWindow):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].cont_index = temp[4]
                     buttonlist[count].break_index = temp[5]
+                    buttonlist[count].loop_time = temp[7]
                     
                     for i in linearray:
                         if temp[4] == i[3]:
@@ -708,6 +781,7 @@ class HelloWindow(QMainWindow):
                             true_line_added = 'false'
                         
                     count += 1
+        f.close()    
         #print(linearray)
         
     def add_button(self):
@@ -755,43 +829,45 @@ class HelloWindow(QMainWindow):
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
-    def add_MaxMagBrake(self):
-        global leftlayout
-        global leftwidget
-        global buttonlist
-        count = 0
-        
-        leftwidget.button = Decision_Button('MaxMagBrake', self)
-        leftwidget.button.string = 'Check_MaxMagBrake'
-        for i in buttonlist:
-            if i.string == 'Check_MaxMagBrake':
-                count = count + 1
-        leftwidget.button.nodenum = count
-        buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 30, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(30)
-        leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
-    
-    def add_MaxWindSpeed_ThreePhaseShortCircuit(self):
-        global leftlayout
-        global leftwidget
-        global buttonlist
-        count = 0
-        
-        leftwidget.button = Decision_Button('MaxWindSpeed_ThreePhaseShortCircuit', self)
-        leftwidget.button.string = 'Check_MaxWindSpeed_ThreePhaseShortCircuit'
-        for i in buttonlist:
-            if i.string == 'Check_MaxWindSpeed_ThreePhaseShortCircuit':
-                count = count + 1
-        leftwidget.button.nodenum = count
-        buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 30, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(30)
-        leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
+#     def add_MaxMagBrake(self):
+#         global leftlayout
+#         global leftwidget
+#         global buttonlist
+#         count = 0
+#         
+#         leftwidget.button = Decision_Button('MaxMagBrake', self)
+#         leftwidget.button.string = 'Check_MaxMagBrake'
+#         for i in buttonlist:
+#             if i.string == 'Check_MaxMagBrake':
+#                 count = count + 1
+#         leftwidget.button.nodenum = count
+#         buttonlist.append(leftwidget.button)
+#         leftwidget.button.setGeometry(240, 30, 210, 30)
+#         leftwidget.button.position.setX(240)
+#         leftwidget.button.position.setY(30)
+#         leftwidget.button.show()
+#         #leftlayout.addWidget(leftwidget.button)
+#     
+#     def add_MaxWindSpeed_ThreePhaseShortCircuit(self):
+#         global leftlayout
+#         global leftwidget
+#         global buttonlist
+#         count = 0
+#         
+#         leftwidget.button = Decision_Button('MaxWindSpeed_ThreePhaseShortCircuit', self)
+#         leftwidget.button.string = 'Check_MaxWindSpeed_ThreePhaseShortCircuit'
+#         for i in buttonlist:
+#             if i.string == 'Check_MaxWindSpeed_ThreePhaseShortCircuit':
+#                 count = count + 1
+#         leftwidget.button.nodenum = count
+#         buttonlist.append(leftwidget.button)
+#         leftwidget.button.setGeometry(240, 30, 210, 30)
+#         leftwidget.button.position.setX(240)
+#         leftwidget.button.position.setY(30)
+#         leftwidget.button.show()
+#         #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
         
     def add_MaxPower(self):
         global leftlayout
@@ -813,24 +889,26 @@ class HelloWindow(QMainWindow):
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
-    def add_CutOut(self):
-        global leftlayout
-        global leftwidget
-        global buttonlist
-        count = 0
-        
-        leftwidget.button = Decision_Button('CutOut', self)
-        leftwidget.button.string = 'Check_CutOut'
-        for i in buttonlist:
-            if i.string == 'Check_CutOut':
-                count = count + 1
-        leftwidget.button.nodenum = count
-        buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 30, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(30)
-        leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
+#     def add_CutOut(self):
+#         global leftlayout
+#         global leftwidget
+#         global buttonlist
+#         count = 0
+#         
+#         leftwidget.button = Decision_Button('CutOut', self)
+#         leftwidget.button.string = 'Check_CutOut'
+#         for i in buttonlist:
+#             if i.string == 'Check_CutOut':
+#                 count = count + 1
+#         leftwidget.button.nodenum = count
+#         buttonlist.append(leftwidget.button)
+#         leftwidget.button.setGeometry(240, 30, 210, 30)
+#         leftwidget.button.position.setX(240)
+#         leftwidget.button.position.setY(30)
+#         leftwidget.button.show()
+#         #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
     
     def add_MaxTorqueCurrent(self):
         global leftlayout
@@ -852,43 +930,45 @@ class HelloWindow(QMainWindow):
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
-    def add_RPM_Increase(self):
-        global leftlayout
-        global leftwidget
-        global buttonlist
-        count = 0
-        
-        leftwidget.button = Decision_Button('RPM_Increase(>)', self)
-        leftwidget.button.string = 'Check_RPM_Increase'
-        for i in buttonlist:
-            if i.string == 'Check_RPM_Increase':
-                count = count + 1
-        leftwidget.button.nodenum = count
-        buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 30, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(30)
-        leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
-        
-    def add_RPM_Increase2(self):
-        global leftlayout
-        global leftwidget
-        global buttonlist
-        count = 0
-        
-        leftwidget.button = Decision_Button('RPM_Increase(>=)', self)
-        leftwidget.button.string = 'Check_RPM_Increase2'
-        for i in buttonlist:
-            if i.string == 'Check_RPM_Increase2':
-                count = count + 1
-        leftwidget.button.nodenum = count
-        buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 30, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(30)
-        leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
+#     def add_RPM_Increase(self):
+#         global leftlayout
+#         global leftwidget
+#         global buttonlist
+#         count = 0
+#         
+#         leftwidget.button = Decision_Button('RPM_Increase(>)', self)
+#         leftwidget.button.string = 'Check_RPM_Increase'
+#         for i in buttonlist:
+#             if i.string == 'Check_RPM_Increase':
+#                 count = count + 1
+#         leftwidget.button.nodenum = count
+#         buttonlist.append(leftwidget.button)
+#         leftwidget.button.setGeometry(240, 30, 210, 30)
+#         leftwidget.button.position.setX(240)
+#         leftwidget.button.position.setY(30)
+#         leftwidget.button.show()
+#         #leftlayout.addWidget(leftwidget.button)
+#         
+#     def add_RPM_Increase2(self):
+#         global leftlayout
+#         global leftwidget
+#         global buttonlist
+#         count = 0
+#         
+#         leftwidget.button = Decision_Button('RPM_Increase(>=)', self)
+#         leftwidget.button.string = 'Check_RPM_Increase2'
+#         for i in buttonlist:
+#             if i.string == 'Check_RPM_Increase2':
+#                 count = count + 1
+#         leftwidget.button.nodenum = count
+#         buttonlist.append(leftwidget.button)
+#         leftwidget.button.setGeometry(240, 30, 210, 30)
+#         leftwidget.button.position.setX(240)
+#         leftwidget.button.position.setY(30)
+#         leftwidget.button.show()
+#         #leftlayout.addWidget(leftwidget.button)
+# =============================================================================
     
         
     def add_MaxTorqueCurrent_MagBrake(self):
@@ -930,6 +1010,24 @@ class HelloWindow(QMainWindow):
         leftwidget.button.position.setY(30)
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
+        
+    def add_decision_button(self):
+        global leftlayout
+        global leftwidget
+        global buttonlist
+        count = 0
+        
+        leftwidget.button = Decision_Button('decision', self)
+        leftwidget.button.string = 'decision'
+        for i in buttonlist:
+            if i.string == 'decision':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        buttonlist.append(leftwidget.button)
+        leftwidget.button.setGeometry(240, 30, 210, 30)
+        leftwidget.button.position.setX(240)
+        leftwidget.button.position.setY(30)
+        leftwidget.button.show()
     
     def add_Loop(self):
         global leftlayout
@@ -939,6 +1037,7 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
+        leftwidget.button.setText('loop ' + str(leftwidget.button.loop_time) + ' times')
         leftwidget.button.string = 'Loop'
         leftwidget.button.setStyleSheet("background-color: Orange")
         for i in buttonlist:
@@ -1094,7 +1193,7 @@ class HelloWindow(QMainWindow):
             if i.mode == 'process':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.next_index]]
             if i.mode == 'decision': 
-                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index]]
+                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index], i.compare_type, i.compare_num]
             if i.mode == 'loop':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], 0, i.loop_time]
             finallist.append(pac)
