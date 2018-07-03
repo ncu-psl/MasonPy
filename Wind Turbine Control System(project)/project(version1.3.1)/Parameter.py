@@ -117,7 +117,6 @@ RPM_ThreePhaseShortCircuit       = []
 Tg_ThreePhaseShortCircuit        = []
 
 
-
 Tsr_ThreePhaseShortCircuit       = []
 Cp_ThreePhaseShortCircuit        = []
 
@@ -137,12 +136,12 @@ Cp_MaxPower        = []
 
 
 # Mode_MaxTorqueCurrent
-Tsr_MaxTorqueCurrent = []
-Cp_MaxTorqueCurrent   = []
-
 RPM__MaxTorqueCurrent  = []
 eff_g_MaxTorqueCurrent = []
 eff_e_MaxTorqueCurrent = 0.9
+
+Tsr_MaxTorqueCurrent = []
+Cp_MaxTorqueCurrent   = []
 
 TorqueGenerator_MaxTorqueCurrent = 110
 

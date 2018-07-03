@@ -208,7 +208,7 @@ def eff_g_MaxPower():
     return eff_g
 
 def eff_e_MaxPower(): 
-    eff_e = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime], Parameter.WindSpeed_MaxPower, Parameter.eff_e_MaxPower)
+    eff_e = getApproximation(Parameter.WindSpeed[Parameter.CurrentTime-1], Parameter.WindSpeed_MaxPower, Parameter.eff_e_MaxPower)
     return eff_e
 
 
