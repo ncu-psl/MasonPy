@@ -104,8 +104,8 @@ class Decision_Button(QPushButton):
     false_index = 'null'
     nodenum = 0
     position = QPoint()
-    mode = 'decision'
-    compare_num = 0
+    mode = 'Decision'
+    compare_num = 0.0
     compare_stuff = " "
     
   
@@ -151,13 +151,13 @@ class Decision_Button(QPushButton):
         dia = DecitionDialogDialog()
         mod, compare, num, result = dia.getdata()
         if result == 1:
-            self.compare_num = num
+            self.compare_num = float(num)
             self.compare_stuff = mod
             if compare == ">":
                 self.string = 'Comparisongreater'
             else:
                 self.string = 'Comparisongreaterorequal'
-            self.setText(self.compare_stuff + '  '+ compare + ' ' + self.compare_num)
+            self.setText(self.compare_stuff + '  '+ compare + ' ' + str(self.compare_num))
                 
 # =============================================================================
 #     def mouseReleaseEvent(self, e):
@@ -177,7 +177,7 @@ class Loop_Button(QPushButton):
     nodenum = 0
     loop_time = 200
     position = QPoint()
-    mode = 'loop'
+    mode = 'Loop'
     
     def __init__(self, title, parent):
         super().__init__(title, parent)
@@ -226,7 +226,7 @@ class Loop_Button(QPushButton):
         temp, result = QInputDialog.getInt(self, 'Loop Time', 'Loop Time:')
         if result == True:
             self.loop_time = temp
-            self.setText('loop ' + str(self.loop_time) + ' times')
+            self.setText('Loop ' + str(self.loop_time) + ' times')
             
         
 class DecitionDialogDialog(QDialog):
@@ -237,7 +237,7 @@ class DecitionDialogDialog(QDialog):
         self.layout2 = QHBoxLayout(self)
         
         self.combo = QComboBox()
-        self.combo.addItem("Wind Speed")
+        self.combo.addItem("Wind_Speed")
         self.combo.addItem("RPM")
         self.combo.addItem("Power")
         
@@ -283,7 +283,7 @@ class rightcanvas(QWidget):
         button_widget = QWidget()
         layout2 = QtWidgets.QHBoxLayout()
         button_widget.setLayout(layout2)
-        wind_check = QCheckBox('Wind Speed', self)
+        wind_check = QCheckBox('Wind_Speed', self)
         wind_check.setCheckState(QtCore.Qt.Checked)
         wind_check.stateChanged.connect(self.wind_show)
         rpm_check = QCheckBox('RPM', self)
@@ -447,7 +447,7 @@ class Example(QWidget):
 
         global buttonlist
         position = e.pos()
-        x = position.x()+240
+        x = position.x()+225
         y = position.y()+30
         position2 = QPoint(x, y)
         
@@ -539,8 +539,8 @@ class HelloWindow(QMainWindow):
 #         add_RPM_Increase_action.triggered.connect(self.add_RPM_Increase2)
 #         
 # =============================================================================
-        add_decision_button = toolbarBox.addAction('Decision')
-        add_decision_button.triggered.connect(self.add_decision_button)
+        add_decision_action = toolbarBox.addAction('Decision')
+        add_decision_action.triggered.connect(self.add_Decision)
         
         add_Loop_action = toolbarBox.addAction('Loop')
         add_Loop_action.triggered.connect(self.add_Loop)
@@ -615,7 +615,7 @@ class HelloWindow(QMainWindow):
                 for j in i.inputline:
                     f.write(j+',')
                 f.write(']')
-            if i.mode == 'decision':
+            if i.mode == 'Decision':
                 f.write(i.true_index+' ')
                 f.write(i.false_index+' ')
                 f.write('[')
@@ -623,15 +623,15 @@ class HelloWindow(QMainWindow):
                     f.write(j+',')
                 f.write('] ')
                 f.write(i.compare_stuff + ' ')
-                f.write(i.compare_num)
-            if i.mode == 'loop':
+                f.write(str(i.compare_num))
+            if i.mode == 'Loop':
                 f.write(i.cont_index+' ')
                 f.write(i.break_index+' ')
                 f.write('[')
                 for j in i.inputline:
                     f.write(j+',')
                 f.write('] ')
-                f.write(i.loop_time)
+                f.write(str(i.loop_time))
             f.write('\n')
         f.close()
             
@@ -650,7 +650,6 @@ class HelloWindow(QMainWindow):
         f = open('windele.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
-            #print(temp)
             if(temp[0] == 'Start'):
                 #print(temp)
                 exec("self.add_"+temp[0]+"()")
@@ -673,13 +672,15 @@ class HelloWindow(QMainWindow):
             else:
                 name = temp[0].split('_')
                 exe_name = ''
-                for i in name:
-                    if(i!='Check'):
+                if temp[1] == 'process':
+                    for i in name:
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
+                else:
+                    exe_name = exe_name + '_' + temp[1]
+                
                 #print(exe_name)
                 exec("self.add"+exe_name+"()")
-                
                 if(temp[1] == 'process'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].next_index = temp[4]
@@ -707,13 +708,16 @@ class HelloWindow(QMainWindow):
                         
                     count += 1
                     
-                if(temp[1] == 'decision'):
+                if(temp[1] == 'Decision'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].true_index = temp[4]
                     buttonlist[count].false_index = temp[5]
                     buttonlist[count].compare_stuff = temp[7]
-                    buttonlist[count].compare_num = temp[8]
-                    
+                    buttonlist[count].compare_num = float(temp[8])
+                    if temp[0] == 'Comparisongreaterorequal':
+                        buttonlist[count].setText(temp[7] + '  >= ' + temp[8])
+                    else:
+                        buttonlist[count].setText(temp[7] + '  > ' + temp[8])
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
@@ -745,12 +749,12 @@ class HelloWindow(QMainWindow):
                         
                     count += 1
                     
-                if(temp[1] == 'loop'):
+                if(temp[1] == 'Loop'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].cont_index = temp[4]
                     buttonlist[count].break_index = temp[5]
-                    buttonlist[count].loop_time = temp[7]
-                    
+                    buttonlist[count].loop_time = int(temp[7])
+                    buttonlist[count].setText('Loop ' + temp[7] + ' times')
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
@@ -1011,16 +1015,16 @@ class HelloWindow(QMainWindow):
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
-    def add_decision_button(self):
+    def add_Decision(self):
         global leftlayout
         global leftwidget
         global buttonlist
         count = 0
         
-        leftwidget.button = Decision_Button('decision', self)
-        leftwidget.button.string = 'decision'
+        leftwidget.button = Decision_Button('Decision', self)
+        leftwidget.button.string = 'Decision'
         for i in buttonlist:
-            if i.string == 'decision':
+            if i.string == 'Decision':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -1037,7 +1041,7 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
-        leftwidget.button.setText('loop ' + str(leftwidget.button.loop_time) + ' times')
+        leftwidget.button.setText('Loop ' + str(leftwidget.button.loop_time) + ' times')
         leftwidget.button.string = 'Loop'
         leftwidget.button.setStyleSheet("background-color: Orange")
         for i in buttonlist:
@@ -1120,7 +1124,7 @@ class HelloWindow(QMainWindow):
                     if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
                         i.next_index = linearray[j][3]
     
-            if i.mode == 'decision': 
+            if i.mode == 'Decision': 
                 for j in range(len(linearray)):
                     if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
                         a.append(linearray[j][3])
@@ -1132,7 +1136,7 @@ class HelloWindow(QMainWindow):
                         else:
                             i.false_index = linearray[j][3]
                             
-            if i.mode == 'loop': 
+            if i.mode == 'Loop': 
                 for j in range(len(linearray)):
                     if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
                         a.append(linearray[j][3])
@@ -1192,9 +1196,9 @@ class HelloWindow(QMainWindow):
         for i in buttonlist:
             if i.mode == 'process':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.next_index]]
-            if i.mode == 'decision': 
+            if i.mode == 'Decision': 
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index], i.compare_type, i.compare_num]
-            if i.mode == 'loop':
+            if i.mode == 'Loop':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], 0, i.loop_time]
             finallist.append(pac)
         
