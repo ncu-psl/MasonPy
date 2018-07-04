@@ -1,5 +1,5 @@
 from numpy import*
-from dataformat import*
+from Databaseformat import*
 
 
 class originalMode(object):
@@ -15,9 +15,9 @@ class originalMode(object):
         self.A               = ((self.D)/2)**2 * pi
         self.TorqueMachine   = 175
         
-        self.CalculateValue(LastMode)
+        self.CalculateValue(LastMode, database, WindSpeed)
         
-    def CalculateValue(self, LastMode, database = referencedata(), WindSpeed=0):
+    def CalculateValue(self, LastMode, database, WindSpeed):
         self.CurrentTime  = LastMode.CurrentTime + 1
         self.WindSpeed    = WindSpeed[self.CurrentTime]
         self.mode         = self.namemode()
@@ -94,7 +94,7 @@ class originalMode(object):
         power = 2 * pi * RPM/60 * Torque * eff_g * eff_e
         if power < 0:
             power=0                              
-        return poewr
+        return power
     
     
     

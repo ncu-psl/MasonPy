@@ -115,11 +115,9 @@ if __name__=='__main__':
 #     print("TimeSeries")
 #     print(TimeSeries)
 #==============================================================================
-#==============================================================================
-#     print("WindSpeed")
-#     print(WindSpeed)
-# 
-#==============================================================================
+    print("WindSpeed")
+    print(WindSpeed)
+
 
 
     # ReadData_ThreePhaseShortCircuit    
@@ -170,20 +168,22 @@ if __name__=='__main__':
 #     print(Cp_MaxPower)
 #==============================================================================
     
-    #ReadData_MaxTorqueCurrent    
-    RPM__MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
-    print("RPM__MaxTorqueCurrent")
-    print(RPM__MaxTorqueCurrent)
-    print("eff_g_MaxTorqueCurrent")
-    print(eff_g_MaxTorqueCurrent)
-    print("eff_e_MaxTorqueCurrent")
-    print(eff_e_MaxTorqueCurrent)
-    
-    print("Tg_MaxTorqueCurrent")
-    print(Tg_MaxTorqueCurrent)
-    
-    print("Tsr__MaxTorqueCurrent")
-    print(Tsr__MaxTorqueCurrent)
-    print("Cp_MaxTorqueCurrent")
-    print(Cp_MaxTorqueCurrent)
+#==============================================================================
+#     #ReadData_MaxTorqueCurrent    
+#     RPM__MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
+#     print("RPM__MaxTorqueCurrent")
+#     print(RPM__MaxTorqueCurrent)
+#     print("eff_g_MaxTorqueCurrent")
+#     print(eff_g_MaxTorqueCurrent)
+#     print("eff_e_MaxTorqueCurrent")
+#     print(eff_e_MaxTorqueCurrent)
+#     
+#     print("Tg_MaxTorqueCurrent")
+#     print(Tg_MaxTorqueCurrent)
+#     
+#     print("Tsr__MaxTorqueCurrent")
+#     print(Tsr__MaxTorqueCurrent)
+#     print("Cp_MaxTorqueCurrent")
+#     print(Cp_MaxTorqueCurrent)
+#==============================================================================
 
