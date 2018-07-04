@@ -1,6 +1,6 @@
 from numpy import*
 from Mode import*
-from dataformat import*
+from Databaseformat import*
 
 
 class Mode_init(originalMode):

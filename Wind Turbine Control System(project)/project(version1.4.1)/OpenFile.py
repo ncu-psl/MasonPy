@@ -115,32 +115,32 @@ if __name__=='__main__':
 #     print("TimeSeries")
 #     print(TimeSeries)
 #==============================================================================
-#==============================================================================
-#     print("WindSpeed")
-#     print(WindSpeed)
-# 
-#==============================================================================
+    print("WindSpeed")
+    print(WindSpeed)
+
 
 
     # ReadData_ThreePhaseShortCircuit    
-    WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
-    
-    print("WindSpeed_ThreePhaseShortCircuit")
-    print(WindSpeed_ThreePhaseShortCircuit)
-    print("eff_g_ThreePhaseShortCircuit")
-    print(eff_g_ThreePhaseShortCircuit)
-    print("eff_e_ThreePhaseShortCircuit")
-    print(eff_e_ThreePhaseShortCircuit)
-    
-    print("RPM_ThreePhaseShortCircuit")
-    print(RPM_ThreePhaseShortCircuit)
-    print("Tg_ThreePhaseShortCircuit")
-    print(Tg_ThreePhaseShortCircuit)
-    
-    print("Tsr_ThreePhaseShortCircuit")
-    print(Tsr_ThreePhaseShortCircuit)
-    print("Cp_ThreePhaseShortCircuit")
-    print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
+#     WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
+#     
+#     print("WindSpeed_ThreePhaseShortCircuit")
+#     print(WindSpeed_ThreePhaseShortCircuit)
+#     print("eff_g_ThreePhaseShortCircuit")
+#     print(eff_g_ThreePhaseShortCircuit)
+#     print("eff_e_ThreePhaseShortCircuit")
+#     print(eff_e_ThreePhaseShortCircuit)
+#     
+#     print("RPM_ThreePhaseShortCircuit")
+#     print(RPM_ThreePhaseShortCircuit)
+#     print("Tg_ThreePhaseShortCircuit")
+#     print(Tg_ThreePhaseShortCircuit)
+#     
+#     print("Tsr_ThreePhaseShortCircuit")
+#     print(Tsr_ThreePhaseShortCircuit)
+#     print("Cp_ThreePhaseShortCircuit")
+#     print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
     
     
     
