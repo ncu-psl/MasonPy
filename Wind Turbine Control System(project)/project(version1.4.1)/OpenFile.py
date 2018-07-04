@@ -123,24 +123,26 @@ if __name__=='__main__':
 
 
     # ReadData_ThreePhaseShortCircuit    
-    WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
-    
-    print("WindSpeed_ThreePhaseShortCircuit")
-    print(WindSpeed_ThreePhaseShortCircuit)
-    print("eff_g_ThreePhaseShortCircuit")
-    print(eff_g_ThreePhaseShortCircuit)
-    print("eff_e_ThreePhaseShortCircuit")
-    print(eff_e_ThreePhaseShortCircuit)
-    
-    print("RPM_ThreePhaseShortCircuit")
-    print(RPM_ThreePhaseShortCircuit)
-    print("Tg_ThreePhaseShortCircuit")
-    print(Tg_ThreePhaseShortCircuit)
-    
-    print("Tsr_ThreePhaseShortCircuit")
-    print(Tsr_ThreePhaseShortCircuit)
-    print("Cp_ThreePhaseShortCircuit")
-    print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
+#     WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit, eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit , Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
+#     
+#     print("WindSpeed_ThreePhaseShortCircuit")
+#     print(WindSpeed_ThreePhaseShortCircuit)
+#     print("eff_g_ThreePhaseShortCircuit")
+#     print(eff_g_ThreePhaseShortCircuit)
+#     print("eff_e_ThreePhaseShortCircuit")
+#     print(eff_e_ThreePhaseShortCircuit)
+#     
+#     print("RPM_ThreePhaseShortCircuit")
+#     print(RPM_ThreePhaseShortCircuit)
+#     print("Tg_ThreePhaseShortCircuit")
+#     print(Tg_ThreePhaseShortCircuit)
+#     
+#     print("Tsr_ThreePhaseShortCircuit")
+#     print(Tsr_ThreePhaseShortCircuit)
+#     print("Cp_ThreePhaseShortCircuit")
+#     print(Cp_ThreePhaseShortCircuit)
+#==============================================================================
     
     
     
@@ -168,22 +170,20 @@ if __name__=='__main__':
 #     print(Cp_MaxPower)
 #==============================================================================
     
-#==============================================================================
-#     #ReadData_MaxTorqueCurrent    
-#     RPM__MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
-#     print("RPM__MaxTorqueCurrent")
-#     print(RPM__MaxTorqueCurrent)
-#     print("eff_g_MaxTorqueCurrent")
-#     print(eff_g_MaxTorqueCurrent)
-#     print("eff_e_MaxTorqueCurrent")
-#     print(eff_e_MaxTorqueCurrent)
-#     
-#     print("Tg_MaxTorqueCurrent")
-#     print(Tg_MaxTorqueCurrent)
-#     
-#     print("Tsr__MaxTorqueCurrent")
-#     print(Tsr__MaxTorqueCurrent)
-#     print("Cp_MaxTorqueCurrent")
-#     print(Cp_MaxTorqueCurrent)
-#==============================================================================
+    #ReadData_MaxTorqueCurrent    
+    RPM__MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, Tg_MaxTorqueCurrent, Tsr__MaxTorqueCurrent, Cp_MaxTorqueCurrent = ReadData_MaxTorqueCurrent()
+    print("RPM__MaxTorqueCurrent")
+    print(RPM__MaxTorqueCurrent)
+    print("eff_g_MaxTorqueCurrent")
+    print(eff_g_MaxTorqueCurrent)
+    print("eff_e_MaxTorqueCurrent")
+    print(eff_e_MaxTorqueCurrent)
+    
+    print("Tg_MaxTorqueCurrent")
+    print(Tg_MaxTorqueCurrent)
+    
+    print("Tsr__MaxTorqueCurrent")
+    print(Tsr__MaxTorqueCurrent)
+    print("Cp_MaxTorqueCurrent")
+    print(Cp_MaxTorqueCurrent)
 
