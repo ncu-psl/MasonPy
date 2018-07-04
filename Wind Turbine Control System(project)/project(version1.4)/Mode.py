@@ -1,10 +1,10 @@
 from numpy import*
-import dataformat
+from dataformat import*
 
-class Mode(object):
-    def __init__(self , LastMode, database = dataformat.referencedata(), WindSpeed):
+
+class originalMode(object):
+    def __init__(self , LastMode=None, database = referencedata(), WindSpeed=0):
         self.MaxWindSpeed_ThreePhaseShortCircuit = 8
-        self.CurrentTime     = 1
         self.TimeDelta       = 0.01
         self.MonmentIntertia = 0.7
         self.CutOutRPM       = 400
@@ -12,13 +12,14 @@ class Mode(object):
         self.MaxMagBrake     = 42
         self.Rho             = 1.293
         self.D               = 3.7
-        self.A               = self.D**2 * pi
+        self.A               = ((self.D)/2)**2 * pi
         self.TorqueMachine   = 175
         
         self.CalculateValue(LastMode)
         
-    def CalculateValue(self, LastMode, database = dataformat.referencedata(), WindSpeed):
-        self.WindSpeed    = WindSpeed
+    def CalculateValue(self, LastMode, database = referencedata(), WindSpeed=0):
+        self.CurrentTime  = LastMode.CurrentTime + 1
+        self.WindSpeed    = WindSpeed[self.CurrentTime]
         self.mode         = self.namemode()
         self.Tsr          = self.CalculateTSR(LastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, database.Tsr, database.Cp)
@@ -26,9 +27,8 @@ class Mode(object):
         self.Tg           = self.CalculateTg(LastMode.RPM, database.RPMtoTg, database.Tg)
         self.Tm           = self.setTm()
         self.Tt           = self.CalculateTotalTorque(self.Tb, self.Tg, self.Tm)  
-        self.eff_g        = self.CalculateEff_g(0, [0, 0], [0, 0]) 
-        self.eff_e        = self.CalculateEff_e()
-        self.CurrentTime  = LastMode.CurrentTime + 1
+        self.eff_g        = None # self.CalculateEff_g() 
+        self.eff_e        = None # self.CalculateEff_e()
         self.RPM          = self.CalculateRPM(LastMode.RPM, self.Tt, self.TimeDelta, self.MonmentIntertia)
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
         
@@ -144,3 +144,6 @@ class Mode(object):
         else:
             pointy = (pointx-startx)*(endy-starty)/(endx-startx)+starty
         return pointy
+    
+    
+   
