@@ -768,7 +768,7 @@ class HelloWindow(QMainWindow):
                         if(temp[4]!='null'):
                             linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        if(temp[4]!='null'):
+                        if(temp[5]!='null'):
                             linearray.append([buttonlist[count],null_button,'false',temp[4]])
                     true_line_added = 'false'
                     false_line_added = 'false'
