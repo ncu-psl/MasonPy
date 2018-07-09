@@ -4,7 +4,7 @@ from Databaseformat import*
 
 
 class Mode_init(originalMode):
-    def __init__(self, LastMode=None, database = referencedata(), WindSpeed=0):
+    def __init__(self, LastMode=None, database = None, WindSpeed=0):
         self.MaxWindSpeed_ThreePhaseShortCircuit = 8
         self.TimeDelta       = 0.01
         self.MonmentIntertia = 0.7

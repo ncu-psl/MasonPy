@@ -13,7 +13,7 @@ class Mode_ThreePhaseShortCircuit(originalMode):
         self.Tg           = self.CalculateTg(LastMode.RPM, database.RPMtoTg, database.Tg)
         self.Tm           = self.setTm()
         self.Tt           = self.CalculateTotalTorque(self.Tb, self.Tg, self.Tm)  
-        self.eff_g        = self.CalculateEff_g(self.WindSpeed, database.WindSpeed, database.eff_g) 
+        self.eff_g        = self.CalculateEff_g(self.WindSpeed, database.WindSpeed, database.eff_g)
         self.eff_e        = 0.9
         self.RPM          = 0
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
