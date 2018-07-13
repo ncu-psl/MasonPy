@@ -517,8 +517,8 @@ class HelloWindow(QMainWindow):
         f = open('functionname.txt', 'r')
         for line in f:
             add_function_action = toolbarBox.addAction(line.strip())
-            name = line.strip()
-            add_function_action.triggered.connect(self.add_Process(name))
+            self.fname = line.strip()
+            add_function_action.triggered.connect(lambda:self.add_Process(self.fname))
         
         add_Start_action = toolbarBox.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
