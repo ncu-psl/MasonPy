@@ -1197,7 +1197,7 @@ class HelloWindow(QMainWindow):
             if i.mode == 'process':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.next_index]]
             if i.mode == 'Decision': 
-                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index], i.compare_type, i.compare_num]
+                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.true_index, i.false_index], i.compare_stuff, i.compare_num]
             if i.mode == 'Loop':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], 0, i.loop_time]
             finallist.append(pac)
