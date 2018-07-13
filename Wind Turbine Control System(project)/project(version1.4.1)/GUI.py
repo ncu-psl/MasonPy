@@ -514,6 +514,12 @@ class HelloWindow(QMainWindow):
         toolbarBox = QtWidgets.QToolBar(self)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
         
+        f = open('functionname.txt', 'r')
+        for line in f:
+            add_function_action = toolbarBox.addAction(line.strip())
+            name = line.strip()
+            add_function_action.triggered.connect(self.add_Process(name))
+        
         add_Start_action = toolbarBox.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
         
@@ -532,8 +538,8 @@ class HelloWindow(QMainWindow):
         add_ThreePhaseShortCircuit_MagBrake_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit_MagBrake')
         add_ThreePhaseShortCircuit_MagBrake_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBrake)
         
-        add_decision_action = toolbarBox.addAction('Process')
-        add_decision_action.triggered.connect(self.add_Process)
+        add_process_action = toolbarBox.addAction('Process')
+        add_process_action.triggered.connect(self.add_Process)
         
         add_decision_action = toolbarBox.addAction('Decision')
         add_decision_action.triggered.connect(self.add_Decision)
@@ -909,14 +915,18 @@ class HelloWindow(QMainWindow):
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
     
-    def add_Process(self):
+    def add_Process(self, name):
         global leftlayout
         global leftwidget
         global buttonlist
         count = 0
         
-        leftwidget.button = Process_Button('Process', self)
-        leftwidget.button.string = 'Process'
+        if name == False:        
+            leftwidget.button = Process_Button('Process', self)
+            leftwidget.button.string = 'Process'
+        else:
+            leftwidget.button = Process_Button(name, self)
+            leftwidget.button.string = name
         leftwidget.button.setStyleSheet("background-color: DodgerBlue")
         for i in buttonlist:
             if i.string == 'Process':
@@ -927,7 +937,7 @@ class HelloWindow(QMainWindow):
         leftwidget.button.position.setX(240)
         leftwidget.button.position.setY(30)
         leftwidget.button.show()
-        
+    
     def add_Decision(self):
         global leftlayout
         global leftwidget
