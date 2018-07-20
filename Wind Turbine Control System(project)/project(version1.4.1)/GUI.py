@@ -672,17 +672,22 @@ class HelloWindow(QMainWindow):
                                     
                         
             else:
-                name = temp[0].split('_')
-                exe_name = ''
-                if temp[1] == 'process':
+                if(temp[0] == 'Comparisongreater'):
+                    exec("self.add_decision_button()")
+                    compare = '>'
+                    
+                elif(temp[0] == 'Comparisongreaterorequal'):
+                    exec("self.add_decision_button()")
+                    compare = '>='
+                else:
+                    name = temp[0].split('_')
+                    exe_name = ''
                     for i in name:
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
-                else:
-                    exe_name = exe_name + '_' + temp[1]
+                    #print(exe_name)
+                    exec("self.add"+exe_name+"()")
                 
-                #print(exe_name)
-                exec("self.add"+exe_name+"()")
                 if(temp[1] == 'process'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].next_index = temp[4]
@@ -690,7 +695,7 @@ class HelloWindow(QMainWindow):
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
-                            i[3] = 'true'
+                            i[2] = 'true'
                             true_line_added = 'true'
                     if(true_line_added == 'false'):
                         if(temp[4] != 'null'):
@@ -710,16 +715,19 @@ class HelloWindow(QMainWindow):
                         
                     count += 1
                     
-                if(temp[1] == 'Decision'):
+                if(temp[1] == 'decision'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].true_index = temp[4]
                     buttonlist[count].false_index = temp[5]
-                    buttonlist[count].compare_stuff = temp[7]
-                    buttonlist[count].compare_num = float(temp[8])
-                    if temp[0] == 'Comparisongreaterorequal':
-                        buttonlist[count].setText(temp[7] + '  >= ' + temp[8])
+                    if(temp[7] == 'Wind'):
+                        buttonlist[count].compare_stuff = 'Wind speed'
+                        buttonlist[count].compare_num = temp[9]
+                        buttonlist[count].setText(buttonlist[count].compare_stuff + '  '+ compare + ' ' + buttonlist[count].compare_num)
                     else:
-                        buttonlist[count].setText(temp[7] + '  > ' + temp[8])
+                        buttonlist[count].compare_stuff = temp[7]
+                        buttonlist[count].compare_num = temp[8]
+                        buttonlist[count].setText(buttonlist[count].compare_stuff + '  '+ compare + ' ' + buttonlist[count].compare_num)
+                    
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
@@ -751,12 +759,13 @@ class HelloWindow(QMainWindow):
                         
                     count += 1
                     
-                if(temp[1] == 'Loop'):
+                if(temp[1] == 'loop'):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].cont_index = temp[4]
                     buttonlist[count].break_index = temp[5]
                     buttonlist[count].loop_time = int(temp[7])
-                    buttonlist[count].setText('Loop ' + temp[7] + ' times')
+                    buttonlist[count].setText('loop ' + str(buttonlist[count].loop_time) + ' times')
+                    
                     for i in linearray:
                         if temp[4] == i[3]:
                             i[0] = buttonlist[count]
@@ -770,7 +779,7 @@ class HelloWindow(QMainWindow):
                         if(temp[4]!='null'):
                             linearray.append([buttonlist[count],null_button,'true',temp[4]])
                     if(false_line_added == 'false'):
-                        if(temp[5]!='null'):
+                        if(temp[4]!='null'):
                             linearray.append([buttonlist[count],null_button,'false',temp[4]])
                     true_line_added = 'false'
                     false_line_added = 'false'
@@ -785,7 +794,7 @@ class HelloWindow(QMainWindow):
                             if(true_line_added == 'false'):
                                 linearray.append([null_button,buttonlist[count],'null',j])
                             true_line_added = 'false'
-                        
+
                     count += 1
         f.close()    
         #print(linearray)
@@ -947,7 +956,7 @@ class HelloWindow(QMainWindow):
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
         for i in buttonlist:
-            if i.string == 'Decision':
+            if i.mode == 'Decision':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
