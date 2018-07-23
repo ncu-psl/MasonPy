@@ -319,7 +319,7 @@ def Check_CutOut():
 
 
 def Comparisongreaterorequal(variable, value):
-    if variable == 'WindSpeed':
+    if variable == 'Wind speed':
         Authenticity = Parameter.WindSpeed[Parameter.CurrentTime] >= value
     if variable == 'RPM':
         Authenticity = Parameter.RPM[-1] >= value
@@ -328,7 +328,7 @@ def Comparisongreaterorequal(variable, value):
     return Authenticity
 
 def Comparisongreater(variable, value):
-    if variable == 'WindSpeed':
+    if variable == 'Wind speed':
         Authenticity = Parameter.WindSpeed[Parameter.CurrentTime] > value
     if variable == 'RPM':
         Authenticity = Parameter.RPM[-1] > value

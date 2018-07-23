@@ -1362,9 +1362,9 @@ class HelloWindow(QMainWindow):
         OpenFile.ReadData_ThreePhaseShortCircuit()
         OpenFile.ReadData_MaxPower()
         OpenFile.ReadData_MaxTorqueCurrent()
-            
+        print(5)
         CompileBlock.execBlockChart(finallist)
-
+        print(5)
         Parameter.RemoveDefaultValue()
         
         
