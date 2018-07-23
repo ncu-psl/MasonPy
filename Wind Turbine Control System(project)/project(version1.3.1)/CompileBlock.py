@@ -10,8 +10,8 @@ def evalDecision(string):
     return eval("Formula."+string+"()")
 
 
-def evalComparison(string, parameter, value): 
-    return eval("Formula." + string + "(" +'\''+ parameter + '\'' + "," + str(value)  + ")")
+def evalComparison(string, variable, value): 
+    return eval("Formula." + string + "(" +'\''+ variable + '\'' + "," + str(value)  + ")")
 
 
 @jit

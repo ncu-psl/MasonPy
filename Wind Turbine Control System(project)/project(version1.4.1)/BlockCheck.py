@@ -1,6 +1,6 @@
 from Block import*
 class blockcheck(block):
-    def __init__(self, blockname, inputMode, inputlist, outlist, cycletime=0, variable, value, Operator):
+    def __init__(self, blockname, inputMode, inputlist, outlist, cycletime, variable, value, Operator):
         self.blockname = blockname
         self.inputMode = inputMode
         self.input     = inputlist

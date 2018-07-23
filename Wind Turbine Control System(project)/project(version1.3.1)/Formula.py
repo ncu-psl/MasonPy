@@ -318,22 +318,22 @@ def Check_CutOut():
     return (Parameter.RPM[Parameter.CurrentTime] > Parameter.CutOutRPM or Parameter.Power[Parameter.CurrentTime] > Parameter.CutOutPower)
 
 
-def Comparisongreaterorequal(parameter, value):
-    if parameter == 'WindSpeed':
+def Comparisongreaterorequal(variable, value):
+    if variable == 'WindSpeed':
         Authenticity = Parameter.WindSpeed[Parameter.CurrentTime] >= value
-    if parameter == 'RPM':
-        Authenticity = Parameter.RPM[Parameter.CurrentTime] >= value
-    if parameter == 'Power':
-        Authenticity = Parameter.Power[Parameter.CurrentTime] >= value
+    if variable == 'RPM':
+        Authenticity = Parameter.RPM[-1] >= value
+    if variable == 'Power':
+        Authenticity = Parameter.Power[-1] >= value
     return Authenticity
 
-def Comparisongreater(parameter, value):
-    if parameter == 'WindSpeed':
+def Comparisongreater(variable, value):
+    if variable == 'WindSpeed':
         Authenticity = Parameter.WindSpeed[Parameter.CurrentTime] > value
-    if parameter == 'RPM':
-        Authenticity = Parameter.RPM[Parameter.CurrentTime] > value
-    if parameter == 'Power':
-        Authenticity = Parameter.Power[Parameter.CurrentTime] > value
+    if variable == 'RPM':
+        Authenticity = Parameter.RPM[-1] > value
+    if variable == 'Power':
+        Authenticity = Parameter.Power[-1] > value
     return Authenticity
 
 

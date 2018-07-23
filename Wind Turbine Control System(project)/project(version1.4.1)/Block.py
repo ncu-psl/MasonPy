@@ -1,5 +1,5 @@
 class block(object):
-    def __init__(self, blockname, inputMode, inputlist, outlist, cycletime=0):
+    def __init__(self, blockname, inputMode, inputlist, outlist, cycletime):
         self.Mode      = blockname
         self.inputMode = inputMode
         self.input     = inputlist

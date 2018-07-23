@@ -18,6 +18,7 @@ class originalMode(object):
         self.CalculateValue(LastMode, database, WindSpeed)
         
     def CalculateValue(self, LastMode, database, WindSpeed):
+        self.lastmode     = LastMode
         self.CurrentTime  = LastMode.CurrentTime + 1
         self.WindSpeed    = WindSpeed[self.CurrentTime]
         self.mode         = self.namemode()
@@ -99,8 +100,25 @@ class originalMode(object):
     
     
     
+# 
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+# 內差近似    
     def getApproximation(self, index, domainlist, rangelist):
         indexleft, indexright = self.getMargin(index, domainlist)
         leftx    = domainlist[indexleft]

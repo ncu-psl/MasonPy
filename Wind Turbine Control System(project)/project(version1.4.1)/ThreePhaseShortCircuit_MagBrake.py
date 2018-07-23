@@ -1,7 +1,7 @@
-import Mode
-import dataformat
+from ThreePhaseShortCircuit import*
+from Databaseformat import*
 
-class Mode_ThreePhaseShortCircuit_MagBrake(Mode):
+class Mode_ThreePhaseShortCircuit_MagBrake(Mode_ThreePhaseShortCircuit):
     def CalculateValue(self, LastMode, database, WindSpeed):
         self.CurrentTime  = LastMode.CurrentTime + 1
         self.WindSpeed    = WindSpeed[self.CurrentTime]

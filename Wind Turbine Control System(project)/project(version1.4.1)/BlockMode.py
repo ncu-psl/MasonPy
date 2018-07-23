@@ -1,5 +1,5 @@
 from Block import*
-class blockMode(block):
+class blockmode(block):
     def __init__(self, Mode, inputlist, outlist, cycletime=0):
         self.Mode      = Mode
         self.input     = inputlist
