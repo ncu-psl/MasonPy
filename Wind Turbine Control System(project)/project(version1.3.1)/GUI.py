@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QDateTimeEdit, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtWidgets import QDateTimeEdit, QLineEdit, QComboBox, QDialogButtonBox, QMessageBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QDateTime, QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -552,10 +552,12 @@ class HelloWindow(QMainWindow):
         add_fline_action.triggered.connect(self.add_false_line)
         
         menu = self.menuBar().addMenu('File')
-        read_action = menu.addAction('Import')
+        read_action = menu.addAction('輸入流程')
         read_action.triggered.connect(self.Read_File)
-        write_action = menu.addAction('Export')
+        write_action = menu.addAction('輸出流程')
         write_action.triggered.connect(self.Write_File)
+        excel_action = menu.addAction('輸出Excel')
+        excel_action.triggered.connect(self.Write_excel)
         
         add_draw_action = self.menuBar().addAction('draw')
         add_draw_action.triggered.connect(self.start_draw)
@@ -796,6 +798,12 @@ class HelloWindow(QMainWindow):
                     count += 1
         f.close()
         #print(linearray)
+    
+    def Write_excel(self):
+        if(len(Parameter.RPM) > 2):
+            ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
+        else:
+            msg = QMessageBox.information(self, 'error', '要先draw')
         
     def add_button(self):
         global leftlayout
@@ -1362,9 +1370,9 @@ class HelloWindow(QMainWindow):
         OpenFile.ReadData_ThreePhaseShortCircuit()
         OpenFile.ReadData_MaxPower()
         OpenFile.ReadData_MaxTorqueCurrent()
-        print(5)
+        
         CompileBlock.execBlockChart(finallist)
-        print(5)
+        
         Parameter.RemoveDefaultValue()
         
         
