@@ -83,17 +83,7 @@ class Process_Button(QPushButton):
                         button.dragable = 0
                 self.dragable = 1
             
-            else:
-                self.showdialog()
-      
             QPushButton.mousePressEvent(self, e)
-        
-    def showdialog(self):
-        dia = ProcessDialog()
-        name, result = dia.getprocessname()
-        if result == 1:
-            self.string = name
-            self.setText(self.string)
         
 class Decision_Button(QPushButton):
     global buttonlist
@@ -213,34 +203,6 @@ class Loop_Button(QPushButton):
         if result == True:
             self.loop_time = temp
             self.setText('Loop ' + str(self.loop_time) + ' times')
-            
-class ProcessDialog(QDialog):
-    def __init__(self, parent = None):
-        super().__init__()
-        
-        self.layout = QVBoxLayout(self)
-        self.layout2 = QHBoxLayout(self)
-        
-        self.label = QLabel('Input process:')
-        self.process_name = QLineEdit()
-        
-        self.buttons = QDialogButtonBox(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
-            Qt.Horizontal, self)
-        self.buttons.accepted.connect(self.accept)
-        self.buttons.rejected.connect(self.reject)
-        
-        self.layout2.addWidget(self.label)
-        self.layout2.addWidget(self.process_name)
-        self.layout.addLayout(self.layout2)
-        self.layout.addWidget(self.buttons)
-        self.setLayout(self.layout)
-    
-    def getprocessname(parent = None):
-        dialog = ProcessDialog(parent)
-        result = dialog.exec_()
-        name = dialog.process_name.text()
-        return (name, result)
         
 class DecitionDialog(QDialog):
     def __init__(self, parent = None):
@@ -382,8 +344,6 @@ class Example(QWidget):
         #self.button.move(100, 65)
 
      #   buttonlist.append(self.button)
-    
-        self.setWindowTitle('Click or Move')
         self.setGeometry(300, 300, 280, 150)
         
     def paintEvent(self, e):
@@ -457,7 +417,7 @@ class Example(QWidget):
 
         global buttonlist
         position = e.pos()
-        x = position.x()+225
+        x = position.x()+200
         y = position.y()+30
         position2 = QPoint(x, y)
         
@@ -514,33 +474,35 @@ class HelloWindow(QMainWindow):
         toolbarBox = QtWidgets.QToolBar(self)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
         
-        f = open('functionname.txt', 'r')
-        for line in f:
-            add_function_action = toolbarBox.addAction(line.strip())
-            self.fname = line.strip()
-            add_function_action.triggered.connect(lambda:self.add_Process(self.fname))
-        
         add_Start_action = toolbarBox.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
         
-        add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
-        add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
-                
-        add_MaxPower_action = toolbarBox.addAction('mode_MaxPower')
-        add_MaxPower_action.triggered.connect(self.add_MaxPower)
-        
-        add_MaxTorqueCurrent_action = toolbarBox.addAction('mode_MaxTorqueCurrent')
-        add_MaxTorqueCurrent_action.triggered.connect(self.add_MaxTorqueCurrent)
-        
-        add_MaxTorqueCurrent_MagBrake_action = toolbarBox.addAction('mode_MaxTorqueCurrent_MagBrake')
-        add_MaxTorqueCurrent_MagBrake_action.triggered.connect(self.add_MaxTorqueCurrent_MagBrake)
-        
-        add_ThreePhaseShortCircuit_MagBrake_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit_MagBrake')
-        add_ThreePhaseShortCircuit_MagBrake_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBrake)
-        
-        add_process_action = toolbarBox.addAction('Process')
-        add_process_action.triggered.connect(self.add_Process)
-        
+        with open('Formula.py', encoding = 'utf8') as f:
+            for line in f:
+                cleanline = line.strip()
+                if cleanline.find("def ") != -1 and cleanline.find("Mode_") != -1 and cleanline[0] != '#':
+                    temp = cleanline.split()
+                    temp = temp[1].split('(')
+                    add_function_action = toolbarBox.addAction(temp[0].replace("Mode_", "", 1))
+                    add_function_action.triggered.connect(lambda checked, string = temp[0]:self.add_Process(string))
+# =============================================================================
+#         
+#         add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
+#         add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
+#                 
+#         add_MaxPower_action = toolbarBox.addAction('mode_MaxPower')
+#         add_MaxPower_action.triggered.connect(self.add_MaxPower)
+#         
+#         add_MaxTorqueCurrent_action = toolbarBox.addAction('mode_MaxTorqueCurrent')
+#         add_MaxTorqueCurrent_action.triggered.connect(self.add_MaxTorqueCurrent)
+#         
+#         add_MaxTorqueCurrent_MagBrake_action = toolbarBox.addAction('mode_MaxTorqueCurrent_MagBrake')
+#         add_MaxTorqueCurrent_MagBrake_action.triggered.connect(self.add_MaxTorqueCurrent_MagBrake)
+#         
+#         add_ThreePhaseShortCircuit_MagBrake_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit_MagBrake')
+#         add_ThreePhaseShortCircuit_MagBrake_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBrake)
+#         
+# =============================================================================
         add_decision_action = toolbarBox.addAction('Decision')
         add_decision_action.triggered.connect(self.add_Decision)
         
@@ -653,7 +615,6 @@ class HelloWindow(QMainWindow):
         for line in f:
             temp = line.strip().split(' ')
             if(temp[0] == 'Start'):
-                #print(temp)
                 exec("self.add_"+temp[0]+"()")
                 buttonlist[0].string = temp[0]
                 buttonlist[0].next_index = temp[4]
@@ -685,7 +646,6 @@ class HelloWindow(QMainWindow):
                     for i in name:
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
-                    #print(exe_name)
                     exec("self.add"+exe_name+"()")
                 
                 if(temp[1] == 'process'):
@@ -763,8 +723,7 @@ class HelloWindow(QMainWindow):
                     buttonlist[count].string = temp[0]
                     buttonlist[count].cont_index = temp[4]
                     buttonlist[count].break_index = temp[5]
-                    buttonlist[count].loop_time = int(temp[7])
-                    buttonlist[count].setText('loop ' + str(buttonlist[count].loop_time) + ' times')
+                    buttonlist[count].loop_time = temp[7]
                     
                     for i in linearray:
                         if temp[4] == i[3]:
@@ -797,7 +756,6 @@ class HelloWindow(QMainWindow):
 
                     count += 1
         f.close()    
-        #print(linearray)
         
     def add_button(self):
         global leftlayout
@@ -806,8 +764,6 @@ class HelloWindow(QMainWindow):
         
         leftwidget.button0 = Process_Button('123', self)
         buttonlist.append(leftwidget.button0)
-        
-        #leftlayout.addWidget(leftwidget.button0)
     
     def add_Start(self):
         global leftlayout
@@ -934,11 +890,11 @@ class HelloWindow(QMainWindow):
             leftwidget.button = Process_Button('Process', self)
             leftwidget.button.string = 'Process'
         else:
-            leftwidget.button = Process_Button(name, self)
+            leftwidget.button = Process_Button(name.replace("Mode_", "", 1), self)
             leftwidget.button.string = name
         leftwidget.button.setStyleSheet("background-color: DodgerBlue")
         for i in buttonlist:
-            if i.string == 'Process':
+            if i.mode == 'process':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -956,7 +912,7 @@ class HelloWindow(QMainWindow):
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
         for i in buttonlist:
-            if i.mode == 'Decision':
+            if i.mode == 'decision':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
