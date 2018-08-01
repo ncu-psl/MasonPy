@@ -631,7 +631,6 @@ class HelloWindow(QMainWindow):
                             linearray.append([null_button,buttonlist[0],'null',j])
                         true_line_added = 'false'
                                     
-                        
             else:
                 if(temp[0] == 'Comparisongreater'):
                     exec("self.add_decision_button()")
@@ -640,16 +639,17 @@ class HelloWindow(QMainWindow):
                 elif(temp[0] == 'Comparisongreaterorequal'):
                     exec("self.add_decision_button()")
                     compare = '>='
+                elif(temp[0] == 'Loop'):
+                    exec("self.add_Loop()")
                 else:
                     name = temp[0].split('_')
                     exe_name = ''
                     for i in name:
                         if(i!='Mode'):
                             exe_name = exe_name + '_' + i
-                    exec("self.add"+exe_name+"()")
+                    exec("self.add_Process(temp[0])")
                 
                 if(temp[1] == 'process'):
-                    buttonlist[count].string = temp[0]
                     buttonlist[count].next_index = temp[4]
                     
                     for i in linearray:
