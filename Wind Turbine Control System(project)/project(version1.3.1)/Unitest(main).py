@@ -82,7 +82,7 @@ list=[
 ['Mode_ThreePhaseShortCircuit0', 'Mode_ThreePhaseShortCircuit', ['line_0', 'line_16', 'line_17', 'line_19', 'line_24'], ['line_1']],
 ['Check_MaxMagBrake0', 'Check_MaxMagBrake', ['line_1'], ['line_2', 'line_15']],
 ['Check_MaxWindSpeed_ThreePhaseShortCircuit0', 'Check_MaxWindSpeed_ThreePhaseShortCircuit', ['line_15'], ['line_3', 'line_16']],
-['Loop0', 'Loop', ['line_3'], ['line_4', 'line_17'], 0, 200],
+['Loop0', 'Loop', ['line_3'], ['line_4', 'line_17'], 0, 2000],
 ['Mode_MaxPower0', 'Mode_MaxPower', ['line_4', 'line_18'], ['line_5']],
 ['Check_CutOut0', 'Check_CutOut', ['line_5'], ['line_6', 'line_18']],
 ['Mode_MaxTorqueCurrent0', 'Mode_MaxTorqueCurrent', ['line_6', 'line_20'], ['line_7']],

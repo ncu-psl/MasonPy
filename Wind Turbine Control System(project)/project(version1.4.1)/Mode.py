@@ -33,10 +33,9 @@ class originalMode(object):
         self.RPM          = self.CalculateRPM(LastMode.RPM, self.Tt, self.TimeDelta, self.MonmentIntertia)
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
         
-        
-        
+
     def namemode(self, mode=''):
-        mode = mode
+        self.mode = mode
         return mode
         
     def CalculateTSR(self, LastRPM, D, WindSpeed):
