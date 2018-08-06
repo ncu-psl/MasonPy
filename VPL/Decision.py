@@ -1,7 +1,7 @@
 from Mode import*
 
 class Decision(originalMode):
-    def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=[], ComparativeVariable = None,  comparisonValue = None, Operator = None):
+    def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=[], comparisonVariable = None,  comparisonValue = None, Operator = None):
         self.name = name
         self.lastMode = lastMode
         self.inputLines = inputLines
@@ -13,7 +13,7 @@ class Decision(originalMode):
             self.outputTrueLines = None
             self.outputFalseLines = None
 
-        self.ComparativeVariable = ComparativeVariable
+        self.comparisonVariable = comparisonVariable
         self.comparisonValue = comparisonValue
         self.Operator = Operator
     
@@ -21,20 +21,20 @@ class Decision(originalMode):
     
     def getResult(self):
         if isinstance(self.lastMode, originalMode):
-            if isinstance(self.ComparativeVariable, str) and isinstance(self.lastMode.getValue(self.comparisonValue), (int, float)):
+            if isinstance(self.comparisonVariable, str) and isinstance(self.lastMode.getValue(self.comparisonVariable), (int, float)):
                 
                 if isinstance(self.comparisonValue, (int, float)):
                     if self.Operator in ['>', '>=', '<', '<=', '=']:
                         if self.Operator == '>':
-                            TorF = self.lastMode.getValue(self.comparisonValue) > self.comparisonValue
+                            TorF = self.lastMode.getValue(self.comparisonVariable) > self.comparisonValue
                         elif self.Operator == '>=':
-                            TorF = self.lastMode.getValue(self.comparisonValue) >= self.comparisonValue 
+                            TorF = self.lastMode.getValue(self.comparisonVariable) >= self.comparisonValue 
                         elif self.Operator == '<':
-                            TorF = self.lastMode.getValue(self.comparisonValue) < self.comparisonValue
+                            TorF = self.lastMode.getValue(self.comparisonVariable) < self.comparisonValue
                         elif self.Operator == '<=':
-                            TorF = self.lastMode.getValue(self.comparisonValue) <= self.comparisonValue
+                            TorF = self.lastMode.getValue(self.comparisonVariable) <= self.comparisonValue
                         else: # self.Operator == '='
-                            TorF = self.lastMode.getValue(self.comparisonValue) == self.comparisonValue
+                            TorF = self.lastMode.getValue(self.comparisonVariable) == self.comparisonValue
                         
                         if TorF:
                             return self.outputTrueLines
@@ -42,12 +42,20 @@ class Decision(originalMode):
                             return self.outputFalseLines         
                     else:
                         print('operator error')
+                        msg = 'operator error'
+                        return msg
                 else:
                     print('comparison Value error!')
+                    msg = 'comparison Value error!'
+                    return msg
             else:
                 print('parameter error!')
+                msg = 'parameter error!'
+                return msg
         else:
             print('input mode error!')
+            msg = 'input mode error!'
+            return msg
 #            print('expected 2 arguments')
 
 if __name__ == '__main__':
