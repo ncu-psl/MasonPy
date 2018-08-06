@@ -5,6 +5,10 @@ class originalMode(object):
         self.inputLines = inputLines
         self.outputLines = outputLines
         self.calculate()
+        self.do()
+        
+    def do(self):
+        pass
         
     def calculate(self):
         if self.lastMode != None:
@@ -48,8 +52,7 @@ class originalMode(object):
             return False
    
     def getValue(self, string):
-        a=originalMode()
-        if hasattr(a, str(string)):
+        if hasattr(originalMode(), str(string)):
             value = eval('self.'+string)
             return value
         else:
