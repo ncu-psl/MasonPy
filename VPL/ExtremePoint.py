@@ -1,7 +1,7 @@
 from Mode import*
 
 class ExtremePointMode(object):
-    def __init__(self, STartorEnd, inputLines=[], outputLines=''):
+    def __init__(self, STartorEnd = None, inputLines=[], outputLines=''):
         if STartorEnd:
             self.Mode = 'START'
             self.currentTime = -1
