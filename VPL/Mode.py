@@ -38,11 +38,18 @@ class originalMode(object):
                 return True
             else:
                 print('Can not connect !')
-                msg = 'Can not connect !'
-                return  msg
+                return False
+#==============================================================================
+#                 msg = 'Can not connect !'
+#                 return  msg
+#==============================================================================
         else:
             print('type of input is error !')
-            return False
+            return False            
+#==============================================================================
+#             msg = 'type of input is error !'
+#             return msg
+#==============================================================================
         
     def isConnect(self):
         connectLine = self.lastMode.outputLines
@@ -50,8 +57,11 @@ class originalMode(object):
             return True
         else:
             print('Not connected !')
-            msg = 'Not connected !'
-            return  msg
+            return False
+#==============================================================================
+#             msg = 'Not connected !'
+#             return  msg
+#==============================================================================
    
     def getValue(self, string):
         if hasattr(originalMode(), str(string)):
@@ -59,8 +69,11 @@ class originalMode(object):
             return value
         else:
             print('Parameter error !')
-            msg = 'Parameter error !'
-            return msg
+            return False
+#==============================================================================
+#             msg = 'Parameter error !'
+#             return msg
+#==============================================================================
     
     
 if __name__ == '__main__':
