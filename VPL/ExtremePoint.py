@@ -34,10 +34,10 @@ if __name__ == '__main__':
             self.assertIs(StartPoint.outputLines, 'Line1')
             
         def test_object_End(self):
-            StartPoint = ExtremePointMode(False,  ['Line1', 'Line2', 'Line3'] , None)
-            self.assertIs(StartPoint.Mode, 'END')
-            self.assertEqual(StartPoint.currentTime, -2)
-            self.assertEqual(StartPoint.inputLines, ['Line1', 'Line2', 'Line3'])    
-            self.assertIs(StartPoint.outputLines, None)    
+            EndPoint = ExtremePointMode(False,  ['Line1', 'Line2', 'Line3'] , None)
+            self.assertIs(EndPoint.Mode, 'END')
+            self.assertEqual(EndPoint.currentTime, -2)
+            self.assertEqual(EndPoint.inputLines, ['Line1', 'Line2', 'Line3'])    
+            self.assertIs(EndPoint.outputLines, None)    
 
     unittest.main()   

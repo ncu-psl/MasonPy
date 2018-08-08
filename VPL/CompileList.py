@@ -62,58 +62,60 @@ def execBlockChart(list):
     print("Loop", number_Loop)
  
     
-    flag = -1
-    if list[0][1] == "Start":
-        Connectionline = list[0][3][0]
-        flag = FindNextBlock(list, Connectionline)
-        lastBlock = list[1][0]    
-        string = list[flag][1]
-    
-        
-    while 1:
-        
-         
-        string = list[flag][1]
-   
-        if string.find("Mode") != -1:
-            if lastBlock != "Loop":
-               resetLoopCounter(list)
-               
-            execProcess(string)
-            lastBlock = string
-            Connectionline = list[flag][3][0]
-            flag = FindNextBlock(list, Connectionline)
-
-
-            
-                
-        elif string.find("Check") != -1:
-            if evalDecision(string):
-                Connectionline = list[flag][3][0]
-                flag = FindNextBlock(list, Connectionline)
-            else:
-                Connectionline = list[flag][3][1]
-                flag = FindNextBlock(list, Connectionline)        
-            lastBlock = string    
- 
-                
-             
-                
-        elif string.find("Loop") != -1:
-            if list[flag][4] == list[flag][5]:
-                list[flag][4] = 0
-                Connectionline = list[flag][3][0]
-                flag = FindNextBlock(list, Connectionline)
-            else:  
- 
-                list[flag][4] += 1
-                Connectionline = list[flag][3][1]
-                flag = FindNextBlock(list, Connectionline)
-                lastBlock = string
-
-        else:
-            if flag == -1:   
-                break
+#==============================================================================
+#     flag = -1
+#     if list[0][1] == "Start":
+#         Connectionline = list[0][3][0]
+#         flag = FindNextBlock(list, Connectionline)
+#         lastBlock = list[1][0]    
+#         string = list[flag][1]
+#     
+#         
+#     while 1:
+#         
+#          
+#         string = list[flag][1]
+#    
+#         if string.find("Mode") != -1:
+#             if lastBlock != "Loop":
+#                resetLoopCounter(list)
+#                
+#             execProcess(string)
+#             lastBlock = string
+#             Connectionline = list[flag][3][0]
+#             flag = FindNextBlock(list, Connectionline)
+# 
+# 
+#             
+#                 
+#         elif string.find("Check") != -1:
+#             if evalDecision(string):
+#                 Connectionline = list[flag][3][0]
+#                 flag = FindNextBlock(list, Connectionline)
+#             else:
+#                 Connectionline = list[flag][3][1]
+#                 flag = FindNextBlock(list, Connectionline)        
+#             lastBlock = string    
+#  
+#                 
+#              
+#                 
+#         elif string.find("Loop") != -1:
+#             if list[flag][4] == list[flag][5]:
+#                 list[flag][4] = 0
+#                 Connectionline = list[flag][3][0]
+#                 flag = FindNextBlock(list, Connectionline)
+#             else:  
+#  
+#                 list[flag][4] += 1
+#                 Connectionline = list[flag][3][1]
+#                 flag = FindNextBlock(list, Connectionline)
+#                 lastBlock = string
+# 
+#         else:
+#             if flag == -1:   
+#                 break
+#==============================================================================
             
             
             
@@ -140,6 +142,11 @@ if __name__=='__main__':
 #     ]
 #==============================================================================
     
-    testList = [['Start', '']]            
-            
-            
+     list=[
+        ['Start0', 'Start', [], ['line_0']],
+['Mode_A', 'testMode', ['line_0', 'line_16',], ['line_1']],
+['Check_MaxMagBrake0', 'Check_MaxMagBrake', ['line_1'], ['line_A', 'line_B']],
+['End0', 'End', ['line_A', 'line_B'], []],  
+    ]
+     execBlockChart(list)
+     
