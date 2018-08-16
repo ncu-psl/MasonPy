@@ -212,9 +212,24 @@ class DecitionDialog(QDialog):
         self.layout2 = QHBoxLayout(self)
         
         self.combo = QComboBox()
-        self.combo.addItem("Wind_Speed")
-        self.combo.addItem("RPM")
-        self.combo.addItem("Power")
+        
+        with open('Formula.py', encoding = 'utf8') as f:
+            inrightsection = 0
+            for line in f:
+                cleanline = line.strip()
+                if inrightsection == 0:
+                    if cleanline.find("def Comparisongreaterorequal") != -1 and cleanline[0] != '#':
+                        inrightsection = 1
+                else:
+                    if cleanline.find("return") != -1:
+                        inrightsection = 0
+                    else:
+                        if cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find("'") != -1:
+                            temp = cleanline.split("'")
+                            self.combo.addItem(temp[1])
+                        elif cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find('"') != -1:
+                            temp = cleanline.split('"')
+                            self.combo.addItem(temp[1])
         
         self.combo2 = QComboBox()
         self.combo2.addItem(">=")
