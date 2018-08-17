@@ -1,4 +1,11 @@
-ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide']]  # [file.py, class]
+import string
+#==============================================================================
+# import random
+# def id_generator(size=6, chars=string.ascii_uppercase):
+#     return ''.join(random.choice(chars) for _ in range(size))
+#==============================================================================
+
+ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide'], ['PrintTest', 'testMode']]  # [file.py, class]
 
 
 for i in ModuleandClass:
@@ -7,16 +14,38 @@ for i in ModuleandClass:
 global AllModule
 AllModule = [ i[1] for i in ModuleandClass ]
 
-
-
-def buildObj(string):
+        
+def getNewstr(parList):
+    newstr =''
+    if range(len(parList)) == 0:
+        newstr ='()'
+    for i in range(len(parList)):
+        if i == 0:
+            newstr += '('
+        
+        newstr += 'par'+'[' + str(i) +']'+','
+                        
+        if i == len(parList)-1:
+            newstr += ')'
+    return newstr  
+        
+        
+        
+        
+   
+def buildObj(string, *parameter):
     global AllModule
+
+    par = []
     
-    if string in AllModule:
-        buildobject = eval(string+'()')
+    for i in range(len(parameter)):
+        par.append(parameter[i])
+
+    if string in AllModule:        
+        buildobject = eval(string + getNewstr(par))
 #        return  obj
     else:
-        print('Not found!')
+        print('Not found in the ModuleandClass!')
         buildobject = False   
 #==============================================================================
 #         msg = 'Not found!'
@@ -29,7 +58,7 @@ def buildObj(string):
 def resetLoopCounter(list):
      for i in range(len(list)):
          string = list[i][1]      #  outputlist
-         if string.find("Loop") != -1:
+         if string.find('Loop') != -1:
              list[i][4] = 0   #  current time counter
 
 
@@ -40,67 +69,86 @@ def FindNextBlock(list, Connectionline):
             index = i
             break;
     if index == -1:
-        print("Error: Some lines are missing!")    
+        print('Error: Some lines are missing!')    
     return index
 
 
 def execBlockChart(list):
-    number_Process  = 0
-    number_Decision = 0
-    number_Loop     = 0
+    number_ExtremePoint = 0
+    number_Process      = 0
+    number_Decision     = 0
+    number_Loop         = 0
     
     for i in range(len(list)):
-        string = list[i][1]
-        if string.find("Mode")!= -1:
+        string = list[i][0]
+        if string.find('Start')!= -1 or string.find('End')!= -1:
+            number_ExtremePoint += 1
+        if string.find('Mode')!= -1:
             number_Process += 1
-        if string.find("Check")!= -1:
+        if string.find('Check')!= -1:
             number_Decision += 1 
-        if string.find("Loop")!= -1:
+        if string.find('Loop')!= -1:
             number_Loop += 1
-    print("Process", number_Process)    
-    print("Decision", number_Decision)
-    print("Loop", number_Loop)
+    print('number_ExtremePoint', number_ExtremePoint)
+    print('Process', number_Process)    
+    print('Decision', number_Decision)
+    print('Loop', number_Loop)
+    print('\n\n\n')
  
     
+    flag = -1
+    if list[0][0] == 'Start':
+        nextline = list[0][3][0]
+        
+        newObj = buildObj(list[0][1], True, [], nextline)
+        lastBlock = list[1][0]
+        
+        flag = FindNextBlock(list, nextline)
+        nextBlock = list[flag][1]  
+        
+    
+        
+    while 1:
+        
+         
+        string = nextBlock
+   
+        if string.find('Mode') != -1:
+            if lastBlock != 'Loop':
+               resetLoopCounter(list)
+               
+            nextline = list[0][3][0]
+            newObj = buildObj(string, string, newObj, newObj.outputLines, nextline)
+            newObj.do()
+            
+            lastBlock = string
+            flag = FindNextBlock(list, nextline)
+            nextBlock = list[flag][1]
+            
+            
+
+            
+                
 #==============================================================================
-#     flag = -1
-#     if list[0][1] == "Start":
-#         Connectionline = list[0][3][0]
-#         flag = FindNextBlock(list, Connectionline)
-#         lastBlock = list[1][0]    
-#         string = list[flag][1]
-#     
-#         
-#     while 1:
-#         
-#          
-#         string = list[flag][1]
-#    
-#         if string.find("Mode") != -1:
-#             if lastBlock != "Loop":
-#                resetLoopCounter(list)
-#                
-#             execProcess(string)
-#             lastBlock = string
-#             Connectionline = list[flag][3][0]
-#             flag = FindNextBlock(list, Connectionline)
-# 
-# 
+#         elif string.find('Check') != -1:
+#             comparisonVariable,  comparisonValue, Operatorlist = [flag][3][0], list[flag][3][1], list[flag][3][2]
+#             nextline = list[0][3][0]
+#             newObj = buildObj(string, string, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operatorlist)
 #             
-#                 
-#         elif string.find("Check") != -1:
-#             if evalDecision(string):
-#                 Connectionline = list[flag][3][0]
+#             if newObjget.Result():
+#                 nextline = list[flag][3][0]
 #                 flag = FindNextBlock(list, Connectionline)
 #             else:
-#                 Connectionline = list[flag][3][1]
+#                 nextline = list[flag][3][1]
 #                 flag = FindNextBlock(list, Connectionline)        
 #             lastBlock = string    
-#  
-#                 
-#              
-#                 
-#         elif string.find("Loop") != -1:
+#             break
+#==============================================================================
+                
+             
+                
+#==============================================================================
+#         elif string.find('Loop') != -1:
 #             if list[flag][4] == list[flag][5]:
 #                 list[flag][4] = 0
 #                 Connectionline = list[flag][3][0]
@@ -143,10 +191,11 @@ if __name__=='__main__':
 #==============================================================================
     
      list=[
-        ['Start0', 'Start', [], ['line_0']],
+        ['Start', 'ExtremePointMode', [], ['line_0']],
 ['Mode_A', 'testMode', ['line_0', 'line_16',], ['line_1']],
-['Check_MaxMagBrake0', 'Check_MaxMagBrake', ['line_1'], ['line_A', 'line_B']],
-['End0', 'End', ['line_A', 'line_B'], []],  
+['Check_MaxMagBrake0', 'Decide', ['line_1'], ['line_A', 'line_B'], ['currentTime', '=', 1]],
+['End0', 'ExtremePointMode', ['line_A', 'line_B'], []]
     ]
      execBlockChart(list)
-     
+    
+    

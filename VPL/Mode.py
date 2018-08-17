@@ -5,7 +5,6 @@ class originalMode(object):
         self.inputLines = inputLines
         self.outputLines = outputLines
         self.calculate()
-        self.do()
         
     def do(self):
         pass
@@ -14,7 +13,7 @@ class originalMode(object):
         if self.lastMode != None:
             self.currentTime = self.lastMode.currentTime + 1
         else:
-            self.currentTime = 0       
+            self.currentTime = 0           
     
     def rename(self, name):
         self.name = name
