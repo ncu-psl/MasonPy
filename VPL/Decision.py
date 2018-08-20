@@ -31,10 +31,23 @@ class Decide(originalMode):
         self.comparisonVariable = comparisonVariable
         self.comparisonValue = comparisonValue
         self.Operator = Operator
+        
+        
+    def setLastMode(self, lastMode):
+        self.lastMode = lastMode
+        return self.lastMode  
+   
+    def setinputLines(self, inputLines):
+        self.inputLines = inputLines
+        return self.inputLines
+    
+    def setoutputLines(self, outputLines):
+        self.outputLines = outputLines
+        return self.outputLines
     
     
     
-    def getResult(self):
+    def getResultLine(self):
         if isinstance(self.lastMode, originalMode):
             if isinstance(self.comparisonVariable, str) and isinstance(self.lastMode.getValue(self.comparisonVariable), (int, float)):
                 

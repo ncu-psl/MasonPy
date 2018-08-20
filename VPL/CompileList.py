@@ -96,55 +96,76 @@ def execBlockChart(list):
     print('\n\n\n')
  
     
-    flag = -1
+    flag = 0
     if list[0][0] == 'Start':
         nextline = list[0][3][0]
         
         newObj = buildObj(list[0][1], True, [], nextline)
-        lastBlock = list[1][0]
         
+        lastBlock = list[flag][0]
         flag = FindNextBlock(list, nextline)
         nextBlock = list[flag][1]  
+        string = list[flag][0]
+
+        print('lastBlock',lastBlock)
+        print('flag',flag)
+        print('nextBlock',nextBlock)
+        print('string',string)
         
-    
+        print('\n\n\n\n')
         
     while 1:
-        
-         
-        string = nextBlock
    
         if string.find('Mode') != -1:
             if lastBlock != 'Loop':
                resetLoopCounter(list)
                
-            nextline = list[0][3][0]
-            newObj = buildObj(string, string, newObj, newObj.outputLines, nextline)
+            nextline = list[flag][3][0]
+            newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline)
             newObj.do()
             
-            lastBlock = string
+            lastBlock = list[flag][0]
             flag = FindNextBlock(list, nextline)
             nextBlock = list[flag][1]
+            string = list[flag][0]
             
+            print('lastBlock',lastBlock)
+            print('flag',flag)
+            print('nextBlock',nextBlock)
+            print('string',string)
+            print('\n\n\n\n\n')
+            
+
             
 
             
                 
-#==============================================================================
-#         elif string.find('Check') != -1:
-#             comparisonVariable,  comparisonValue, Operatorlist = [flag][3][0], list[flag][3][1], list[flag][3][2]
-#             nextline = list[0][3][0]
-#             newObj = buildObj(string, string, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operatorlist)
-#             
-#             if newObjget.Result():
-#                 nextline = list[flag][3][0]
-#                 flag = FindNextBlock(list, Connectionline)
-#             else:
-#                 nextline = list[flag][3][1]
-#                 flag = FindNextBlock(list, Connectionline)        
-#             lastBlock = string    
-#             break
-#==============================================================================
+        elif string.find('Check') != -1:
+            comparisonVariable,  comparisonValue, Operator = list[flag][4][0], list[flag][4][1], list[flag][4][2]
+            
+            print(comparisonVariable,  comparisonValue, Operator)
+            nextline = list[flag][3]
+            print(nextline)
+            newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operator)
+            
+            
+         
+            nextline = newObj.getResultLine()
+            newObj.setoutputLines(nextline)
+               
+            print('getvalue', newObj.getResultLine())
                 
+                
+            lastBlock = list[flag][0]
+            flag = FindNextBlock(list, nextline)
+            nextBlock = list[flag][1]
+            string = list[flag][0]    
+            
+            
+            print('lastBlock',lastBlock)
+            print('flag',flag)
+            print('nextBlock',nextBlock)
+            print('string',string)
              
                 
 #==============================================================================
@@ -159,13 +180,15 @@ def execBlockChart(list):
 #                 Connectionline = list[flag][3][1]
 #                 flag = FindNextBlock(list, Connectionline)
 #                 lastBlock = string
-# 
-#         else:
-#             if flag == -1:   
-#                 break
 #==============================================================================
-            
-            
+        
+        elif string.find('End') != -1:        
+            break
+        else:
+            if flag == -1:   
+                break
+
+
             
 if __name__=='__main__':
     
@@ -192,9 +215,14 @@ if __name__=='__main__':
     
      list=[
         ['Start', 'ExtremePointMode', [], ['line_0']],
-['Mode_A', 'testMode', ['line_0', 'line_16',], ['line_1']],
-['Check_MaxMagBrake0', 'Decide', ['line_1'], ['line_A', 'line_B'], ['currentTime', '=', 1]],
-['End0', 'ExtremePointMode', ['line_A', 'line_B'], []]
+['Mode_A', 'testMode', ['line_0'], ['line_1']],
+['Mode_A', 'testMode', ['line_1'], ['line_2']],
+['Mode_A', 'testMode', ['line_2'], ['line_3']],
+['Mode_A', 'testMode', ['line_3'], ['line_4']],
+['Mode_A', 'testMode', ['line_4'], ['line_5']],
+['Check_MaxMagBrake0', 'Decide', ['line_5'], ['line_A', 'line_B'], ['currentTime', 4, '>']],
+['End0', 'ExtremePointMode', ['line_A'], []],
+['End1', 'ExtremePointMode', ['line_B'], []]
     ]
      execBlockChart(list)
     
