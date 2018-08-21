@@ -1,1 +1,0 @@
-[['Start0', 'ExtremePointMode', [], ['line_0']], ['End1', 'ExtremePointMode', ['line_2'], ['null']], ['Mode_testMode2', 'testMode', ['line_0', 'line_3'], ['line_1']], ['Loop0', 'Loop', ['line_1'], ['line_2', 'line_3'], [0, 5]]]

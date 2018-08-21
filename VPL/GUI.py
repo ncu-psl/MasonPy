@@ -1019,7 +1019,10 @@ class HelloWindow(QMainWindow):
                 if i.ExtremePoint == 0:
                     pac = ["Mode_" + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
                 else:
-                    pac = [i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, [i.next_index]]
+                    if i.string == 'End':
+                        pac = [i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, []]
+                    else:
+                        pac = [i.string, 'ExtremePointMode', i.inputline, [i.next_index]]
             if i.mode == 'Decision': 
                 pac = [i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]]
             if i.mode == 'Loop':
