@@ -584,34 +584,57 @@ class HelloWindow(QMainWindow):
         global buttonlist
         
         self.full_buttonlist()
+
         f = open('windele.txt', 'w')
         for i in buttonlist:
-            f.write(i.string+' ')
-            f.write(i.mode+' ')
-            f.write(str(i.position)+' ')
             if i.mode == 'process':
-                f.write(i.next_index+' ')
-                f.write('[')
-                for j in i.inputline:
-                    f.write(j+',')
-                f.write(']')
-            if i.mode == 'Decision':
-                f.write(i.true_index+' ')
-                f.write(i.false_index+' ')
+                if i.ExtremePoint == 0:                                         #write 'Mode_' + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]
+                    f.write('Mode_' + i.string + str(i.nodenum) + ' ')
+                    f.write(i.string+' ')
+                    f.write('[')
+                    for j in i.inputline:
+                        f.write(j+',')
+                    f.write('] ')
+                    f.write('[' + i.next_index + ']')
+                else:
+                    if i.string == 'End':                                       #write i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, []
+                        f.write(i.string + str(i.nodenum) + ' ')
+                        f.write('ExtremePointMode ')
+                        f.write('[')
+                        for j in i.inputline:
+                           f.write(j+',')
+                        f.write('] ')
+                        f.write('[]')
+                    else:                                                       #write i.string, 'ExtremePointMode', i.inputline, [i.next_index]
+                        f.write(i.string + ' ')
+                        f.write('ExtremePointMode ')
+                        f.write('[')
+                        for j in i.inputline:
+                           f.write(j+',')
+                        f.write('] ')
+                        f.write('[')
+                        f.write(i.next_index)
+                        f.write(']')
+
+            elif i.mode == 'Decision':                                            #write i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]
+                f.write(i.string + str(i.nodenum) + ' ')
+                f.write('Decide ')
                 f.write('[')
                 for j in i.inputline:
                     f.write(j+',')
                 f.write('] ')
-                f.write(i.compare_stuff + ' ')
-                f.write(str(i.compare_num))
-            if i.mode == 'Loop':
-                f.write(i.cont_index+' ')
-                f.write(i.break_index+' ')
+                f.write('[' + i.true_index + ',' + i.false_index + '] ')
+                f.write('[' + i.compare_stuff + ',' + str(i.compare_num) + ',' + i.compare_symbol + ']')
+                
+            elif i.mode == 'Loop':                                                #write i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [0, i.loop_time]
+                f.write(i.string + str(i.nodenum) + ' ')
+                f.write(i.string + ' ')
                 f.write('[')
                 for j in i.inputline:
                     f.write(j+',')
                 f.write('] ')
-                f.write(str(i.loop_time))
+                f.write('[' + i.cont_index + ',' + i.break_index + '] ')
+                f.write('[0,' + str(i.loop_time) + ']')
             f.write('\n')
         f.close()
             
