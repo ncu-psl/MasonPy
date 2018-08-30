@@ -1,7 +1,7 @@
 def getModuleandClass():
     
     # [file.py, class]
-    ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide'], ['PrintTest', 'testMode']]  
+    ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide'], ['Loops', 'Loop'], ['PrintTest', 'testMode']]  
     
     return ModuleandClass
 
