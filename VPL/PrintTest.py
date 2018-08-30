@@ -1,5 +1,7 @@
 from Mode import*
 
+
+
 class testMode(originalMode):
 
     
@@ -9,6 +11,7 @@ class testMode(originalMode):
         self.C=3
     
     def do(self):
+        print(self.currentTime)
         print('test')
         
         
