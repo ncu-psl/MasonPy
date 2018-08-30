@@ -1,12 +1,12 @@
-ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide'], ['PrintTest', 'testMode']]  # [file.py, class]
+import SetModule
 
+ModuleandClass = SetModule.getModuleandClass()
 
 for i in ModuleandClass:
     exec('from '+ i[0] + ' import*')
 
 global AllModule
 AllModule = [ i[1] for i in ModuleandClass ]
-
         
 def getNewstr(parList):
     newstr =''
@@ -21,10 +21,6 @@ def getNewstr(parList):
         if i == len(parList)-1:
             newstr += ')'
     return newstr  
-        
-        
-        
-        
    
 def buildObj(string, *parameter):
     global AllModule
@@ -101,7 +97,7 @@ def execBlockChart(list):
         string = list[flag][0]
 
 
-       
+    Loopdict = {}   
     while 1:
    
         if string.find('Mode') != -1:
@@ -118,11 +114,6 @@ def execBlockChart(list):
             flag = FindNextBlock(list, nextline)
             nextBlock = list[flag][1]
             string = list[flag][0]
-
-            
-
-            
-
             
                 
         elif string.find('Check') != -1:
@@ -131,8 +122,6 @@ def execBlockChart(list):
             nextline = list[flag][3]
 
             newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operator)
-            
-            
          
             nextline = newObj.getResultLine()
             newObj.setoutputLines(nextline)
@@ -148,7 +137,13 @@ def execBlockChart(list):
                 
         elif string.find('Loop') != -1:
 
-            
+            if string in Loopdict:
+                Loopdict[string].decreaseCounter()
+                
+            else:
+                exec(string + '=' + 'Loop'+ '(' + 'list[flag][4][1]' + ',' +  None +')')
+                exec('Loopdict'+'[' + '\"' + string + '\"' + ']' + '=' + string)
+                
             if list[flag][4][0] == list[flag][4][1]-1:
                 list[flag][4][0] = 0
                 
