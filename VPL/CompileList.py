@@ -1,10 +1,3 @@
-import string
-#==============================================================================
-# import random
-# def id_generator(size=6, chars=string.ascii_uppercase):
-#     return ''.join(random.choice(chars) for _ in range(size))
-#==============================================================================
-
 ModuleandClass = [['ExtremePoint', 'ExtremePointMode'], ['Mode', 'originalMode'], ['Decision', 'Decide'], ['PrintTest', 'testMode']]  # [file.py, class]
 
 

@@ -5,7 +5,12 @@ class originalMode(object):
         self.inputLines = inputLines
         self.outputLines = outputLines
         self.calculate()
+        self.setInit()
         
+    
+    def setInit(self):
+        pass
+    
     def do(self):
         pass
         
@@ -62,8 +67,8 @@ class originalMode(object):
 #             return  msg
 #==============================================================================
    
-    def getValue(self, string):
-        if hasattr(originalMode(), str(string)):
+    def getValue(self, obj,string):
+        if  str(string) in dir(obj):
             value = eval('self.'+string)
             return value
         else:
@@ -137,15 +142,15 @@ if __name__ == '__main__':
         def test_method_9_getValue(self):
             lastMode = originalMode('last', None, ['LineX', 'LineY'], 'LineA')
             nextMode = originalMode('next', lastMode, ['LineA', 'LineB'], 'LineF') 
-            self.assertIs(nextMode.getValue('name'), 'next')    
-            self.assertIs(type(nextMode.getValue('lastMode')), type(lastMode))
-            self.assertEqual(nextMode.getValue('inputLines'), ['LineA', 'LineB'])
-            self.assertIs(nextMode.getValue('outputLines'), 'LineF')
+            self.assertIs(nextMode.getValue(nextMode, 'name'), 'next')    
+            self.assertIs(type(nextMode.getValue(nextMode, 'lastMode')), type(lastMode))
+            self.assertEqual(nextMode.getValue(nextMode, 'inputLines'), ['LineA', 'LineB'])
+            self.assertIs(nextMode.getValue(nextMode, 'outputLines'), 'LineF')
             
         def test_method_10_getValue(self):
             lastMode = originalMode('last', None, ['LineX', 'LineY'], 'LineA')
             nextMode = originalMode('next', lastMode, ['LineA', 'LineB'], 'LineF') 
-            self.assertIs(nextMode.getValue('data'), False) 
+            self.assertIs(nextMode.getValue(nextMode, 'data'), False) 
         
         def test_method_11_checkConnect(self):
             A_Mode = originalMode('A', None, ['LineX', 'LineY'], 'LineA')
@@ -168,7 +173,7 @@ if __name__ == '__main__':
                 Modeobject = originalMode('Mode', Modeobject, ['Line'+ str(1 + i)], 'Line' + str(2 + i))
                 Modelist.append(Modeobject)
             
-            self.assertEqual(Modelist[4].currentTime, Modelist[4].getValue('currentTime'))
+            self.assertEqual(Modelist[4].currentTime, Modelist[4].getValue(Modelist[4], 'currentTime'))
 
 
     unittest.main()   

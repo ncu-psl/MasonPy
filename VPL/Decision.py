@@ -49,20 +49,19 @@ class Decide(originalMode):
     
     def getResultLine(self):
         if isinstance(self.lastMode, originalMode):
-            if isinstance(self.comparisonVariable, str) and isinstance(self.lastMode.getValue(self.comparisonVariable), (int, float)):
-                
+            if isinstance(self.comparisonVariable, str) and isinstance(self.lastMode.getValue(self.lastMode, self.comparisonVariable), (int, float)):
                 if isinstance(self.comparisonValue, (int, float)):
                     if self.Operator in ['>', '>=', '<', '<=', '=']:
                         if self.Operator == '>':
-                            TorF = self.lastMode.getValue(self.comparisonVariable) > self.comparisonValue
+                            TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) > self.comparisonValue
                         elif self.Operator == '>=':
-                            TorF = self.lastMode.getValue(self.comparisonVariable) >= self.comparisonValue 
+                            TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) >= self.comparisonValue 
                         elif self.Operator == '<':
-                            TorF = self.lastMode.getValue(self.comparisonVariable) < self.comparisonValue
+                            TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) < self.comparisonValue
                         elif self.Operator == '<=':
-                            TorF = self.lastMode.getValue(self.comparisonVariable) <= self.comparisonValue
+                            TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) <= self.comparisonValue
                         else: # self.Operator == '='
-                            TorF = self.lastMode.getValue(self.comparisonVariable) == self.comparisonValue
+                            TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) == self.comparisonValue
                         
                         if TorF:
                             return self.outputTrueLines
@@ -116,7 +115,7 @@ if __name__ == '__main__':
             Modeobject = originalMode('Mode', StartPoint, ['LineX', 'LineY'], 'LineC')
             self.assertEqual(Modeobject.currentTime, 0)    
             comparison = Decide('Decide', Modeobject, ['LineA', 'LineB', 'LineC'], ['Line1', 'Line2'], 'currentTime', 0 , '=')
-            self.assertIs(comparison.getResult(), 'Line1')
+            self.assertIs(comparison.getResultLine(), 'Line1')
             
         def test_3_getResult(self):
             StartPoint = ExtremePointMode(True, None, 'LineX')
@@ -124,7 +123,7 @@ if __name__ == '__main__':
             Modeobject = originalMode('Mode', StartPoint, ['LineX', 'LineY'], 'LineC')
             self.assertEqual(Modeobject.currentTime, 0)    
             comparison = Decide('Decide', Modeobject, ['LineA', 'LineB', 'LineC'], ['Line1', 'Line2'], 'currentTime', 100 , '>')
-            self.assertIs(comparison.getResult(), 'Line2')
+            self.assertIs(comparison.getResultLine(), 'Line2')
             
         def test_4_getResult(self):
             StartPoint = ExtremePointMode(True, None, 'LineX')
@@ -132,9 +131,9 @@ if __name__ == '__main__':
             Modeobject = originalMode('Mode', StartPoint, ['LineX', 'LineY'], 'LineZ')
             self.assertEqual(Modeobject.currentTime, 0)
             comparison_1 = Decide('Decide', Modeobject, ['LineZ'], ['Line1', 'Line2'], 'currentTime', 0 , '=')
-            self.assertIs(comparison_1.getResult(), 'Line1')
+            self.assertIs(comparison_1.getResultLine(), 'Line1')
             comparison_2 = Decide('Decide', Modeobject, ['Line1'], ['LineA', 'LineB'], 'currentTime', 100 , '>')
-            self.assertIs(comparison_2.getResult(), 'LineB')    
+            self.assertIs(comparison_2.getResultLine(), 'LineB')    
             
        
 
