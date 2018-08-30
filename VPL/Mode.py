@@ -7,7 +7,6 @@ class originalMode(object):
         self.calculate()
         self.setInit()
         
-    
     def setInit(self):
         pass
     
@@ -67,7 +66,7 @@ class originalMode(object):
 #             return  msg
 #==============================================================================
    
-    def getValue(self, obj,string):
+    def getValue(self, obj, string):
         if  str(string) in dir(obj):
             value = eval('self.'+string)
             return value
@@ -162,7 +161,7 @@ if __name__ == '__main__':
             B_Mode = originalMode('B', A_Mode, ['LineA', 'LineB'], 'LineF') 
             self.assertEqual(B_Mode.checkConnect(A_Mode), True)
         
-        def test_13_getResult(self):
+        def test_13_getResultLine(self):
             
             StartPoint = ExtremePointMode(True, None, 'LineX')
             self.assertEqual(StartPoint.currentTime, -1)

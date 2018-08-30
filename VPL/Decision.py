@@ -3,8 +3,6 @@ from Mode import*
 class Decide(originalMode):
     def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=[], comparisonVariable = None,  comparisonValue = None, Operator = None):
         self.name = name
-        
-        
         while True:
             if hasattr(lastMode, 'lastMode'):
                 if isinstance(lastMode, Decide):
@@ -117,7 +115,7 @@ if __name__ == '__main__':
             comparison = Decide('Decide', Modeobject, ['LineA', 'LineB', 'LineC'], ['Line1', 'Line2'], 'currentTime', 0 , '=')
             self.assertIs(comparison.getResultLine(), 'Line1')
             
-        def test_3_getResult(self):
+        def test_3_getResultLine(self):
             StartPoint = ExtremePointMode(True, None, 'LineX')
             self.assertEqual(StartPoint.currentTime, -1)
             Modeobject = originalMode('Mode', StartPoint, ['LineX', 'LineY'], 'LineC')
@@ -125,7 +123,7 @@ if __name__ == '__main__':
             comparison = Decide('Decide', Modeobject, ['LineA', 'LineB', 'LineC'], ['Line1', 'Line2'], 'currentTime', 100 , '>')
             self.assertIs(comparison.getResultLine(), 'Line2')
             
-        def test_4_getResult(self):
+        def test_4_getResultLine(self):
             StartPoint = ExtremePointMode(True, None, 'LineX')
             self.assertEqual(StartPoint.currentTime, -1)
             Modeobject = originalMode('Mode', StartPoint, ['LineX', 'LineY'], 'LineZ')
