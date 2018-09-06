@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtWidgets import QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -156,7 +156,6 @@ class Loop_Button(QPushButton):
     
     def __init__(self, title, parent):
         super().__init__(title, parent)
-        
 
     def mouseMoveEvent(self, e):
 
@@ -185,8 +184,10 @@ class Loop_Button(QPushButton):
                         button.dragable = 0
                 self.dragable = 1
                 
-            else:
-                self.showdialog()
+# =============================================================================
+#             else:
+#                 self.showdialog()
+# =============================================================================
       
             QPushButton.mousePressEvent(self, e)
             
@@ -195,6 +196,52 @@ class Loop_Button(QPushButton):
         if result == True:
             self.loop_time = temp
             self.setText('Loop ' + str(self.loop_time) + ' times')
+
+class Loop_end(QPushButton):
+    global buttonlist
+    
+    inputline = []
+    dragable = 0
+    string = 'a'
+    next_index = 'null'
+    nodenum = 0
+    position = QPoint()
+    mode = 'Loop_end'
+    ExtremePoint = 0
+    
+    def __init__(self, title, parent):
+        super().__init__(title, parent)
+        
+    def mouseMoveEvent(self, e):
+
+        if e.buttons() != Qt.RightButton:
+            return
+
+        mimeData = QMimeData()
+
+        drag = QDrag(self)
+        drag.setMimeData(mimeData)
+        drag.setHotSpot(e.pos() + self.rect().topLeft())
+        
+        dropAction = drag.exec_(Qt.MoveAction)
+
+    def mousePressEvent(self, e):
+        global linemode
+        global paintarray
+        
+        if linemode == 1:
+            if e.buttons() == Qt.LeftButton:
+                paintarray.append(self)
+            
+            #print(self.position)
+        else :
+            if e.buttons() == Qt.RightButton:
+                for button in buttonlist:
+                    if button.dragable == 1:
+                        button.dragable = 0
+                self.dragable = 1
+            
+            QPushButton.mousePressEvent(self, e)
         
 class DecitionDialog(QDialog):
     def __init__(self, parent = None):
@@ -616,7 +663,7 @@ class HelloWindow(QMainWindow):
                         f.write(i.next_index)
                         f.write(']')
 
-            elif i.mode == 'Decision':                                            #write i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]
+            elif i.mode == 'Decision':                                          #write i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]
                 f.write(i.string + str(i.nodenum) + ' ')
                 f.write('Decide ')
                 f.write('[')
@@ -626,7 +673,7 @@ class HelloWindow(QMainWindow):
                 f.write('[' + i.true_index + ',' + i.false_index + '] ')
                 f.write('[' + i.compare_stuff + ',' + str(i.compare_num) + ',' + i.compare_symbol + ']')
                 
-            elif i.mode == 'Loop':                                                #write i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [0, i.loop_time]
+            elif i.mode == 'Loop':                                              #write i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [0, i.loop_time]
                 f.write(i.string + str(i.nodenum) + ' ')
                 f.write(i.string + ' ')
                 f.write('[')
@@ -644,7 +691,7 @@ class HelloWindow(QMainWindow):
         
         linearray = []
         buttonlist = []
-        count = 1                                   #number of line
+        count = 1                                   #number of string line being imported in file
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
@@ -887,9 +934,36 @@ class HelloWindow(QMainWindow):
         leftwidget.button = Loop_Button('Loop', self)
         leftwidget.button.setText('Loop ' + str(leftwidget.button.loop_time) + ' times')
         leftwidget.button.string = 'Loop'
-        leftwidget.button.setStyleSheet("background-color: Orange")
         for i in buttonlist:
             if i.string == 'Loop':
+                count = count + 1
+        leftwidget.button.nodenum = count
+        menu = QMenu(self)
+        end_action = QAction(menu)
+        end_action.setText("add end point")
+        menu.addAction(end_action)
+        end_action.triggered.connect(lambda checked, string = leftwidget.button.string + str(leftwidget.button.nodenum):self.add_Loop_end(string))
+        leftwidget.button.setMenu(menu)
+        leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
+        leftwidget.button.setStyleSheet("background-color: Orange")
+        buttonlist.append(leftwidget.button)
+        leftwidget.button.setGeometry(240, 30, 210, 30)
+        leftwidget.button.position.setX(240)
+        leftwidget.button.position.setY(30)
+        leftwidget.button.show()
+        #leftlayout.addWidget(leftwidget.button)
+        
+    def add_Loop_end(self, Loop_name):                                                      #insert name of loop will be ended
+        global leftlayout
+        global leftwidget
+        global buttonlist
+        global figure
+        count = 0
+        
+        leftwidget.button = Loop_end('Loop End', self)
+        leftwidget.button.string = Loop_name + 'end'
+        for i in buttonlist:
+            if i.mode == 'Loop_end':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -897,7 +971,6 @@ class HelloWindow(QMainWindow):
         leftwidget.button.position.setX(240)
         leftwidget.button.position.setY(30)
         leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
         
     def add_line(self):
         global linemode
