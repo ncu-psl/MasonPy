@@ -184,13 +184,26 @@ class Loop_Button(QPushButton):
                         button.dragable = 0
                 self.dragable = 1
                 
-# =============================================================================
-#             else:
-#                 self.showdialog()
-# =============================================================================
-      
-            QPushButton.mousePressEvent(self, e)
-            
+            else:
+                pos = e.pos()
+ 
+                topRight = self.rect().topRight()
+                bottomRight = self.rect().bottomRight()
+     
+                hotspotTopLeft = QtCore.QPoint(topRight.x()-25, topRight.y())
+     
+                hotspotRect = QtCore.QRect(hotspotTopLeft, bottomRight)
+                
+                if hotspotRect.contains(pos):
+                    print('clicked inside hotspot')
+                    QtWidgets.QPushButton.mousePressEvent(self, e)
+                else:
+                    print('clicked outside hotspot')
+                    self.blockSignals(True)
+                    self.showdialog()
+                    QtWidgets.QPushButton.mousePressEvent(self, e)
+                    self.blockSignals(False)
+    
     def showdialog(self):
         temp, result = QInputDialog.getInt(self, 'Loop Time', 'Loop Time:')
         if result == True:
