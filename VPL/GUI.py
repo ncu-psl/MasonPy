@@ -8,7 +8,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -115,6 +115,7 @@ class Decision_Button(QPushButton):
     def mousePressEvent(self, e):
         global linemode
         global paintarray
+        global linearray
         
         if linemode == 1:
             if e.buttons() == Qt.LeftButton:
@@ -127,7 +128,14 @@ class Decision_Button(QPushButton):
                 self.dragable = 1
                 
             else:
-                self.showdialog()
+                lineconnected = 0
+                for i in linearray:
+                    if i[1].string == self.string and i[1].nodenum == self.nodenum:
+                        self.showdialog()
+                        lineconnected = 1
+                        break
+                if lineconnected == 0:
+                    self.errordialog()
       
             QPushButton.mousePressEvent(self, e)
     
@@ -140,6 +148,9 @@ class Decision_Button(QPushButton):
             self.compare_symbol = compare
             self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num))
             self.string = "Check_" + self.compare_stuff
+    
+    def errordialog(self):
+        dia = QMessageBox.warning(self, "error", "Require a fuction connected ahead.", QMessageBox.Close) 
         
 class Loop_Button(QPushButton):
     global buttonlist
@@ -475,7 +486,7 @@ class Example(QWidget):
         if linemode == 1:
             if len(paintarray) == 2:
                 linename = 'line_' + str(linenum)
-                linearray.append([paintarray[0], paintarray[1], linetype,linename])
+                linearray.append([paintarray[0], paintarray[1], linetype, linename])
                 linenum = linenum + 1
                 x = painter.drawLine(paintarray[0].position, paintarray[1].position)
                 paintarray = []
@@ -553,7 +564,7 @@ class HelloWindow(QMainWindow):
         add_End_action = toolbarBox.addAction('End')
         add_End_action.triggered.connect(self.add_End)
         
-        with open('PrintTest.py', encoding = 'utf8') as f:
+        with open('PrintTest.py', encoding = 'utf8') as f:                      #import function.py
             for line in f:
                 cleanline = line.strip()
                 if cleanline.find("class ") != -1:
