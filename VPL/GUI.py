@@ -75,6 +75,8 @@ class Process_Button(QPushButton):
                     if button.dragable == 1:
                         button.dragable = 0
                 self.dragable = 1
+            else:
+                text = QInputDialog.
             
             QPushButton.mousePressEvent(self, e)
         
@@ -266,6 +268,11 @@ class Loop_end(QPushButton):
                 self.dragable = 1
             
             QPushButton.mousePressEvent(self, e)
+
+class ProcessDialog(QDialog):
+    def __init__(self, parent = None):
+        super().__init__()
+        
         
 class DecitionDialog(QDialog):
     def __init__(self, parent = None):
