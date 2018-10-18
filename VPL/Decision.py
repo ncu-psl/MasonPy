@@ -8,7 +8,6 @@ class Decide(originalMode):
                 if isinstance(lastMode, Decide):
                         lastMode = eval('lastMode'+'.lastMode')
                 else:
-                    lastMode = lastMode
                     break
             else:
                 print('Nothing to compare !')
@@ -44,8 +43,22 @@ class Decide(originalMode):
         return self.outputLines
     
     
-    
     def getResultLine(self):
+        TorF = self.getResultValue()
+        if type(TorF) is bool:
+            if TorF:
+                return self.outputTrueLines
+            else:
+                return self.outputFalseLines
+        else:
+#==============================================================================
+#             msg = TorF
+#             return msg
+#==============================================================================
+            return False
+        
+    
+    def getResultValue(self):
         if isinstance(self.lastMode, originalMode):
             if isinstance(self.comparisonVariable, str) and isinstance(self.lastMode.getValue(self.lastMode, self.comparisonVariable), (int, float)):
                 if isinstance(self.comparisonValue, (int, float)):
@@ -60,39 +73,36 @@ class Decide(originalMode):
                             TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) <= self.comparisonValue
                         else: # self.Operator == '='
                             TorF = self.lastMode.getValue(self.lastMode, self.comparisonVariable) == self.comparisonValue
-                        
-                        if TorF:
-                            return self.outputTrueLines
-                        else:
-                            return self.outputFalseLines         
+                        return TorF
+
                     else:
-                        print('operator error')
-                        return False
 #==============================================================================
-#                         msg = 'operator error'
-#                         return msg
+#                         print('operator error')
+#                         return False
 #==============================================================================
+                        msg = 'operator error'
+                        return msg
                 else:
-                    print('comparison Value error!')
-                    return False
 #==============================================================================
-#                     msg = 'comparison Value error!'
-#                     return msg
+#                     print('comparison Value error!')
+#                     return False
 #==============================================================================
+                    msg = 'comparison Value error!'
+                    return msg
             else:
-                print('parameter error!')
-                return False
 #==============================================================================
-#                 msg = 'parameter error!'
-#                 return msg
+#                 print('parameter error!')
+#                 return False
 #==============================================================================
+                msg = 'parameter error!'
+                return msg
         else:
-            print('input mode error!')
-            return False
 #==============================================================================
-#             msg = 'input mode error!'
-#             return msg
+#             print('input mode error!')
+#             return False
 #==============================================================================
+            msg = 'input mode error!'
+            return msg
 #            print('expected 2 arguments')
 
 if __name__ == '__main__':
