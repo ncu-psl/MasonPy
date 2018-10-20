@@ -19,8 +19,7 @@ class originalMode(object):
         for i in range(len(parameters)):
             self.AllValue.append(str(parameters[i][0]))
             exec( 'self.' + str(parameters[i][0]) +'='+ str(parameters[i][1]))
-            
-        
+              
     def calculate(self):
         if self.lastMode != None:
             self.currentTime = self.lastMode.currentTime + 1
