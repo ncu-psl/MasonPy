@@ -15,14 +15,21 @@ def getNewstr(parList):
     for i in range(len(parList)):
         if i == 0:
             newstr += '('
-        
+      
         newstr += 'par'+'[' + str(i) +']'+','
                         
         if i == len(parList)-1:
             newstr += ')'
     return newstr  
+
+def text_cleanup(text, removestr):
+         new =""
+         for i in text:
+             if i not in removestr:
+                 new += i
+         return new
    
-def buildObj(string, *parameter):
+def buildObj(name, *parameter):
     global AllModule
 
     par = []
@@ -30,8 +37,8 @@ def buildObj(string, *parameter):
     for i in range(len(parameter)):
         par.append(parameter[i])
 
-    if string in AllModule:        
-        buildobject = eval(string + getNewstr(par))
+    if name in AllModule:        
+        buildobject = eval(name + getNewstr(par))
 #        return  obj
     else:
         print('Not found in the ModuleandClass!')
@@ -46,8 +53,8 @@ def buildObj(string, *parameter):
 
 def resetLoopCounter(list):
      for i in range(len(list)):
-         string = list[i][1]      #  outputlist
-         if string.find('Loop') != -1:
+         name = list[i][1]      #  outputlist
+         if name.find('Loop') != -1:
              list[i][4] = 0   #  current time counter
 
 
@@ -69,14 +76,14 @@ def execBlockChart(list):
     number_Loop         = 0
     
     for i in range(len(list)):
-        string = list[i][0]
-        if string.find('Start')!= -1 or string.find('End')!= -1:
+        name = list[i][0]
+        if name.find('Start')!= -1 or name.find('End')!= -1:
             number_ExtremePoint += 1
-        if string.find('Mode')!= -1:
+        if name.find('Mode')!= -1:
             number_Process += 1
-        if string.find('Check')!= -1:
+        if name.find('Check')!= -1:
             number_Decision += 1 
-        if string.find('Loop')!= -1:
+        if name.find('Loop')!= -1:
             number_Loop += 1
     print('number_ExtremePoint', number_ExtremePoint)
     print('Process', number_Process)    
@@ -91,32 +98,37 @@ def execBlockChart(list):
         
         newObj = buildObj(list[0][1], True, [], nextline)
         
+        # append List
+        
         lastBlock = list[flag][0]
+        
         flag = FindNextBlock(list, nextline)
-        nextBlock = list[flag][1]  
-        string = list[flag][0]
+        
+        nextBlock, name = list[flag][1], list[flag][0]
+ 
 
 
     Loopdict = {}   
     while 1:
    
-        if string.find('Mode') != -1:
-#==============================================================================
-#             if lastBlock != 'Loop':
-#                resetLoopCounter(list)
-#==============================================================================
+        if name.find('Mode') != -1:
                
             nextline = list[flag][3][0]
+            
             newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline)
+            
             newObj.do()
             
+            # append List
+            
             lastBlock = list[flag][0]
+     
             flag = FindNextBlock(list, nextline)
-            nextBlock = list[flag][1]
-            string = list[flag][0]
+            
+            nextBlock, name = list[flag][1], list[flag][0]
             
                 
-        elif string.find('Check') != -1:
+        elif name.find('Check') != -1:
             comparisonVariable,  comparisonValue, Operator = list[flag][4][0], list[flag][4][1], list[flag][4][2]
 
             nextline = list[flag][3]
@@ -125,24 +137,39 @@ def execBlockChart(list):
          
             nextline = newObj.getResultLine()
             newObj.setoutputLines(nextline)
+            
+            # append List
+            
+            newObj= newObj.lastMode
                
-          
-                
             lastBlock = list[flag][0]
+            
             flag = FindNextBlock(list, nextline)
-            nextBlock = list[flag][1]
-            string = list[flag][0]    
+            
+            nextBlock, name = list[flag][1], list[flag][0]
 
              
                 
-        elif string.find('Loop') != -1:
+        elif name.find('Loop') != -1:
 
-            if string in Loopdict:
-                Loopdict[string].decreaseCounter()
+            
+#==============================================================================
+#             if name.find('braek') != -1:
+#                 name = text_cleanup(name, 'break')
+#                 Loopdict[name].resetCounter()
+#                 
+#             elif name in Loopdict:   
+#                 Loopdict[name].decrementCounter()
+#                 
+#             else:
+#                 exec(name + '=' + 'Loop'+ '(' + 'list[flag][4][1]' + ',' +  None +')')
+#                 exec('Loopdict'+'[' + '\"' + name + '\"' + ']' + '=' + name)
+#==============================================================================
                 
-            else:
-                exec(string + '=' + 'Loop'+ '(' + 'list[flag][4][1]' + ',' +  None +')')
-                exec('Loopdict'+'[' + '\"' + string + '\"' + ']' + '=' + string)
+                
+                
+                
+                
                 
             if list[flag][4][0] == list[flag][4][1]-1:
                 list[flag][4][0] = 0
@@ -151,8 +178,8 @@ def execBlockChart(list):
                 
                 lastBlock = list[flag][0]
                 flag = FindNextBlock(list, nextline)
-                nextBlock = list[flag][1]
-                string = list[flag][0]
+                
+                nextBlock, name = list[flag][1], list[flag][0]
                 
             else:  
 
@@ -165,14 +192,13 @@ def execBlockChart(list):
                 
                 lastBlock = list[flag][0]
                 flag = FindNextBlock(list, nextline)
-                nextBlock = list[flag][1]
-                string = list[flag][0]
                 
+                nextBlock, name = list[flag][1], list[flag][0]
                 
-                
-                
+
         
-        elif string.find('End') != -1:        
+        
+        elif name.find('End') != -1:        
             break
         else:
             if flag == -1:   
