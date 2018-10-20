@@ -5,13 +5,21 @@ class originalMode(object):
         self.inputLines = inputLines
         self.outputLines = outputLines
         self.calculate()
+        self.AllValue = []
         self.setInit()
         
     def setInit(self):
+        self.setInitValue()
         pass
     
     def do(self):
         pass
+    
+    def setInitValue(self, *parameters):  # parameter = [variable, value]  self.variable=value
+        for i in range(len(parameters)):
+            self.AllValue.append(str(parameters[i][0]))
+            exec( 'self.' + str(parameters[i][0]) +'='+ str(parameters[i][1]))
+            
         
     def calculate(self):
         if self.lastMode != None:
@@ -77,6 +85,7 @@ class originalMode(object):
 #             msg = 'Parameter error !'
 #             return msg
 #==============================================================================
+
     
     
 if __name__ == '__main__':
