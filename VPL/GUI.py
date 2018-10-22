@@ -7,6 +7,7 @@ Created on Mon Nov 13 14:01:40 2017
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+import importlib.util
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
@@ -42,10 +43,16 @@ class Process_Button(QPushButton):
     position = QPoint()
     mode = 'process'
     ExtremePoint = 0
+    parameter_name = []
+    parameter_value = []
     
     def __init__(self, title, parent):
         super().__init__(title, parent)
         
+        spec = importlib.util.spec_from_file_location('a', 'PrintTest.py')
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.parameter_name = eval("mod."+title+"().AllValue")
 
     def mouseMoveEvent(self, e):
 
@@ -76,9 +83,14 @@ class Process_Button(QPushButton):
                         button.dragable = 0
                 self.dragable = 1
             else:
-                text = QInputDialog.
+                self.showdialog()
             
             QPushButton.mousePressEvent(self, e)
+    
+    def showdialog(self):
+        inputlist, result = ProcessDialog(self.parameter_name).getdata(self.parameter_name)
+        if result == 1:
+            self.parameter_value = inputlist
         
 class Decision_Button(QPushButton):
     global buttonlist
@@ -94,7 +106,7 @@ class Decision_Button(QPushButton):
     compare_num = 0.0
     compare_stuff = " "
     compare_symbol = " "
-    
+    parameter = []
   
     def __init__(self, title, parent):
         super().__init__(title, parent)
@@ -130,20 +142,23 @@ class Decision_Button(QPushButton):
                 self.dragable = 1
                 
             else:
-                lineconnected = 0
                 for i in linearray:
                     if i[1].string == self.string and i[1].nodenum == self.nodenum:
-                        self.showdialog()
-                        lineconnected = 1
-                        break
-                if lineconnected == 0:
+                        if not self.parameter:
+                            self.parameter = i[0].parameter_name
+                        else:
+                            self.parameter = list(set(self.parameter) & set(i[0].parameter_name))
+                
+                if not self.parameter:
                     self.errordialog()
+                else:
+                    self.showdialog()
       
             QPushButton.mousePressEvent(self, e)
     
     def showdialog(self):
-        dia = DecitionDialog()
-        mod, compare, num, result = dia.getdata()
+        dia = DecisionDialog(self.parameter)
+        mod, compare, num, result = dia.getdata(self.parameter)
         if result == 1:
             self.compare_num = float(num)
             self.compare_stuff = mod
@@ -208,10 +223,8 @@ class Loop_Button(QPushButton):
                 hotspotRect = QtCore.QRect(hotspotTopLeft, bottomRight)
                 
                 if hotspotRect.contains(pos):
-                    print('clicked inside hotspot')
                     QtWidgets.QPushButton.mousePressEvent(self, e)
                 else:
-                    print('clicked outside hotspot')
                     self.blockSignals(True)
                     self.showdialog()
                     QtWidgets.QPushButton.mousePressEvent(self, e)
@@ -270,36 +283,72 @@ class Loop_end(QPushButton):
             QPushButton.mousePressEvent(self, e)
 
 class ProcessDialog(QDialog):
-    def __init__(self, parent = None):
+    def __init__(self, paremeter_name, parent = None):
         super().__init__()
         
+        self.layout = QVBoxLayout(self)
+        self.label_layout = QVBoxLayout(self)
+        self.edit_layout = QVBoxLayout(self)
+        self.upside_layout = QHBoxLayout(self)
+        self.input_edit_list = []
         
-class DecitionDialog(QDialog):
-    def __init__(self, parent = None):
+        for i in range(len(paremeter_name)):
+            self.label = QLabel(paremeter_name[i], self)
+            self.label_layout.addWidget(self.label)
+            self.input = QLineEdit(self)
+            self.input_edit_list.append(self.input)
+            self.edit_layout.addWidget(self.input)
+        self.upside_layout.addLayout(self.label_layout)
+        self.upside_layout.addLayout(self.edit_layout)
+        
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
+            Qt.Horizontal, self)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        
+        self.layout.addLayout(self.upside_layout)
+        self.layout.addWidget(self.buttons)
+        self.setLayout(self.label_layout)
+       
+    def getdata(parent = None, paremeter_name = []):
+        dialog = ProcessDialog(paremeter_name, parent)
+        inputlist = []
+        result = dialog.exec_()
+        for i in range(len(paremeter_name)):
+            inputlist.append(dialog.input_edit_list[i].text())
+        return (inputlist, result)
+        
+class DecisionDialog(QDialog):
+    def __init__(self, parameter, parent = None):
         super().__init__()
 
         self.layout = QVBoxLayout(self)
         self.layout2 = QHBoxLayout(self)
         
         self.combo = QComboBox()
-        
-        with open('Formula.py', encoding = 'utf8') as f:
-            inrightsection = 0
-            for line in f:
-                cleanline = line.strip()
-                if inrightsection == 0:
-                    if cleanline.find("def Comparisongreaterorequal") != -1 and cleanline[0] != '#':
-                        inrightsection = 1
-                else:
-                    if cleanline.find("return") != -1:
-                        inrightsection = 0
-                    else:
-                        if cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find("'") != -1:
-                            temp = cleanline.split("'")
-                            self.combo.addItem(temp[1])
-                        elif cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find('"') != -1:
-                            temp = cleanline.split('"')
-                            self.combo.addItem(temp[1])
+# =============================================================================
+#         
+#         with open('Formula.py', encoding = 'utf8') as f:
+#             inrightsection = 0
+#             for line in f:
+#                 cleanline = line.strip()
+#                 if inrightsection == 0:
+#                     if cleanline.find("def Comparisongreaterorequal") != -1 and cleanline[0] != '#':
+#                         inrightsection = 1
+#                 else:
+#                     if cleanline.find("return") != -1:
+#                         inrightsection = 0
+#                     else:
+#                         if cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find("'") != -1:
+#                             temp = cleanline.split("'")
+#                             self.combo.addItem(temp[1])
+#                         elif cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find('"') != -1:
+#                             temp = cleanline.split('"')
+#                             self.combo.addItem(temp[1])
+# =============================================================================
+        for i in range(len(parameter)):
+            self.combo.addItem(parameter[i])
         
         self.combo2 = QComboBox()
         self.combo2.addItem(">")
@@ -324,9 +373,8 @@ class DecitionDialog(QDialog):
         self.layout.addWidget(self.buttons)
         self.setLayout(self.layout)
 
-    @staticmethod
-    def getdata(parent = None):
-        dialog = DecitionDialog(parent)
+    def getdata(parent = None, parameter = []):
+        dialog = DecisionDialog(parameter, parent)
         result = dialog.exec_()
         mode = dialog.combo.currentText()
         compare = dialog.combo2.currentText()
@@ -752,7 +800,6 @@ class HelloWindow(QMainWindow):
                 if(temp[0] == 'Comparisongreater'):
                     exec("self.add_Decision()")
                     compare = '>'
-                    print(5)
                     
                 elif(temp[0] == 'Comparisongreaterorequal'):
                     exec("self.add_Decision()")
@@ -924,7 +971,7 @@ class HelloWindow(QMainWindow):
             leftwidget.button = Process_Button('Process', self)
             leftwidget.button.string = 'Process'
         else:
-            leftwidget.button = Process_Button(name.replace("Mode_", "", 1), self)
+            leftwidget.button = Process_Button(name, self)
             leftwidget.button.string = name
         leftwidget.button.setStyleSheet("background-color: DodgerBlue")
         for i in buttonlist:
