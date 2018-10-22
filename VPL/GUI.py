@@ -327,26 +327,7 @@ class DecisionDialog(QDialog):
         self.layout2 = QHBoxLayout(self)
         
         self.combo = QComboBox()
-# =============================================================================
-#         
-#         with open('Formula.py', encoding = 'utf8') as f:
-#             inrightsection = 0
-#             for line in f:
-#                 cleanline = line.strip()
-#                 if inrightsection == 0:
-#                     if cleanline.find("def Comparisongreaterorequal") != -1 and cleanline[0] != '#':
-#                         inrightsection = 1
-#                 else:
-#                     if cleanline.find("return") != -1:
-#                         inrightsection = 0
-#                     else:
-#                         if cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find("'") != -1:
-#                             temp = cleanline.split("'")
-#                             self.combo.addItem(temp[1])
-#                         elif cleanline.find("if") != -1 and cleanline.find("==") != -1 and cleanline.find('"') != -1:
-#                             temp = cleanline.split('"')
-#                             self.combo.addItem(temp[1])
-# =============================================================================
+        
         for i in range(len(parameter)):
             self.combo.addItem(parameter[i])
         
