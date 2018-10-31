@@ -1,12 +1,14 @@
 import SetModule
 
-ModuleandClass = SetModule.getModuleandClass()
+AllFile = SetModule.getFile()   
 
-for i in ModuleandClass:
-    exec('from '+ i[0] + ' import*')
+ModuleandClass = SetModule.getClass()
+
+for i in AllFile:
+    exec('from '+ i + ' import*')
 
 global AllModule
-AllModule = [ i[1] for i in ModuleandClass ]
+AllModule = [ i for i in ModuleandClass ]
         
 def getNewstr(parList):
     newstr =''
@@ -112,17 +114,20 @@ def execBlockChart(list):
     while 1:
    
         if name.find('Mode') != -1:
-               
             nextline = list[flag][3][0]
+            
+#            print('lastMode', type(newObj))
             
             newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline)
             
             newObj.do()
             
+#            print('newMode', type(newObj))
             # append List
             
             lastBlock = list[flag][0]
      
+            
             flag = FindNextBlock(list, nextline)
             
             nextBlock, name = list[flag][1], list[flag][0]
@@ -136,7 +141,7 @@ def execBlockChart(list):
             newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operator)
          
             nextline = newObj.getResultLine()
-            newObj.setoutputLines(nextline)
+            # newObj.setoutputLines(nextline)
             
             # append List
             
@@ -151,52 +156,46 @@ def execBlockChart(list):
              
                 
         elif name.find('Loop') != -1:
-
+            comparisonVariable,  comparisonValue, Operator = list[flag][4][0], list[flag][4][1], list[flag][4][2]
+            Times = list[flag][5]
+            nextline = list[flag][3]
             
+            if name.find('braek') != -1:
+                name = text_cleanup(name, 'break')
+                Loopdict[name].resetCounter()
+                
+            else:
+                if name in Loopdict:
+                
+                    Loopdict[name].setlastMode(newObj)
+                    nextline = Loopdict[name].getResultLine()
+                    
+                else:
+                    newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline, comparisonVariable,  comparisonValue, Operator, Times)
+                    exec(name + '=' + 'newObj')
+                    exec('Loopdict'+'[' + '\"' + name + '\"' + ']' + '=' + name)
+                    nextline = Loopdict[name].getResultLine()
+                    newObj= newObj.lastMode
+                    
+                    
+                    
+
+                      
+                    
+                
 #==============================================================================
-#             if name.find('braek') != -1:
-#                 name = text_cleanup(name, 'break')
-#                 Loopdict[name].resetCounter()
-#                 
-#             elif name in Loopdict:   
-#                 Loopdict[name].decrementCounter()
-#                 
-#             else:
-#                 exec(name + '=' + 'Loop'+ '(' + 'list[flag][4][1]' + ',' +  None +')')
-#                 exec('Loopdict'+'[' + '\"' + name + '\"' + ']' + '=' + name)
+#                 if not isinstance(newObj.lastMode, Mode):
+#                     print('Error')
+#                     break
 #==============================================================================
-                
-                
-                
-                
-                
-                
-            if list[flag][4][0] == list[flag][4][1]-1:
-                list[flag][4][0] = 0
-                
-                nextline = list[flag][3][0]
-                
+
+               
                 lastBlock = list[flag][0]
+
                 flag = FindNextBlock(list, nextline)
-                
+            
                 nextBlock, name = list[flag][1], list[flag][0]
                 
-            else:  
-
-                
-                list[flag][4][0] += 1
-                    
-              
-                    
-                nextline = list[flag][3][1]
-                
-                lastBlock = list[flag][0]
-                flag = FindNextBlock(list, nextline)
-                
-                nextBlock, name = list[flag][1], list[flag][0]
-                
-
-        
         
         elif name.find('End') != -1:        
             break
@@ -232,10 +231,8 @@ if __name__=='__main__':
      list=[
         ['Start', 'ExtremePointMode', [], ['line_0']],
 ['Mode_A', 'testMode', ['line_0'], ['line_1']],
-['Loop1', 'Loop', ['line_1'], ['line_5', 'line_0'], [0, 5]],
-['Check_MaxMagBrake0', 'Decide', ['line_5'], ['line_A', 'line_B'], ['currentTime', 4, '=']],
+['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['currentTime', 5, '>='], 10],
 ['End0', 'ExtremePointMode', ['line_A'], []],
-['End1', 'ExtremePointMode', ['line_B'], []]
     ]
      execBlockChart(list)
     
