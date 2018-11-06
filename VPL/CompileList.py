@@ -1,15 +1,15 @@
 import SetModule
 
 AllFile = SetModule.getFile()   
-
-ModuleandClass = SetModule.getClass()
+AllDefinedClass = SetModule.getClass()
 
 for i in AllFile:
     exec('from '+ i + ' import*')
 
 global AllModule
-AllModule = [ i for i in ModuleandClass ]
-        
+AllModule = [ i for i in AllDefinedClass ]
+       
+# 修正字串 
 def getNewstr(parList):
     newstr =''
     if range(len(parList)) == 0:
@@ -24,12 +24,15 @@ def getNewstr(parList):
             newstr += ')'
     return newstr  
 
+
+# 移除字串編號
 def text_cleanup(text, removestr):
          new =""
          for i in text:
              if i not in removestr:
                  new += i
          return new
+
    
 def buildObj(name, *parameter):
     global AllModule
@@ -43,7 +46,7 @@ def buildObj(name, *parameter):
         buildobject = eval(name + getNewstr(par))
 #        return  obj
     else:
-        print('Not found in the ModuleandClass!')
+        print('Not found in the AllDefinedClass!')
         buildobject = False   
 #==============================================================================
 #         msg = 'Not found!'
