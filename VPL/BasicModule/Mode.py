@@ -1,3 +1,5 @@
+from numpy import*
+
 class originalMode(object):
     def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=''):
         self.name = name
@@ -17,9 +19,10 @@ class originalMode(object):
         pass
     
     def setInitValue(self, *parameters):  # parameter = [variable, value]  self.variable=value
-        for i in range(len(parameters)):
-            self.AllVariables.append(str(parameters[i][0]))
-            exec( 'self.' + str(parameters[i][0]) +'='+ str(parameters[i][1]))
+        for i in range(len(parameters[0])):
+            self.AllVariables.append(str(parameters[0][i][0]))
+            exec( 'self.' + str(parameters[0][i][0]) +'='+ str(parameters[0][i][1]))
+            # type == str
               
     def calculate(self):
         if self.lastMode != None:
