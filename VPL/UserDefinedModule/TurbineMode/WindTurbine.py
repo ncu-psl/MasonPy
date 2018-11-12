@@ -6,6 +6,7 @@ from numpy import*
 class turbineMode(originalMode):
     def setInit(self):
         parameters = []
+#        parameters.append(['WindSpeedList', WindSpeed])
         parameters.append(['MaxWindSpeed_ThreePhaseShortCircuit', 8])
         parameters.append(['TimeDelta', 0.01])
         parameters.append(['MonmentIntertia', 0.7])
@@ -17,15 +18,24 @@ class turbineMode(originalMode):
         parameters.append(['A', '((self.D)/2)**2 * pi'])
         parameters.append(['TorqueMachine', 175])
         
-#==============================================================================
-#         parameters.append(['lastMode', ?])
-#         parameters.append(['WindSpeed', ?])
-#==============================================================================
+        # parameters.append(['lastMode', ?])
+        parameters.append(['WindSpeed', 0])
+        parameters.append(['mode', None])
+        parameters.append(['Tsr', 0])
+        parameters.append(['Cp', None])
+        parameters.append(['Tb', None])
+        parameters.append(['Tg', None])
+        parameters.append(['Tt', None])
+        parameters.append(['RPM', None])
+        parameters.append(['power', None])
+        
+        
+#        print(parameters)
         
         self.setInitValue(parameters)
         
     def do(self):
-        self.CalculateValue(self.lastMode, self.database, self.lastMode.WindSpeed)
+        self.CalculateValue()
         
 #==============================================================================
 #     def __init__(self , LastMode=None, database = referencedata(), WindSpeed=0):
@@ -43,20 +53,20 @@ class turbineMode(originalMode):
 #         self.CalculateValue(LastMode, database, WindSpeed)
 #==============================================================================
         
-    def CalculateValue(self, LastMode, database, WindSpeed):
-        self.lastmode     = LastMode
-        self.CurrentTime  = LastMode.CurrentTime + 1
-        self.WindSpeed    = WindSpeed[self.CurrentTime]
+    def CalculateValue(self):
+        # self.lastmode     = LastMode
+        self.currentTime  = self.lastMode.currentTime + 1
+        self.WindSpeed    = self.WindSpeedList[self.currentTime]
         self.mode         = self.namemode()
-        self.Tsr          = self.CalculateTSR(LastMode.RPM, self.D, self.WindSpeed)
+        self.Tsr          = self.CalculateTSR(self.lastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, database.Tsr, database.Cp)
-        self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, LastMode.RPM)
-        self.Tg           = self.CalculateTg(LastMode.RPM, database.RPMtoTg, database.Tg)
+        self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, self.lastMode.RPM)
+        self.Tg           = self.CalculateTg(self.lastMode.RPM, database.RPMtoTg, database.Tg)
         self.Tm           = self.setTm()
         self.Tt           = self.CalculateTotalTorque(self.Tb, self.Tg, self.Tm)  
         self.eff_g        = None # self.CalculateEff_g() 
         self.eff_e        = None # self.CalculateEff_e()
-        self.RPM          = self.CalculateRPM(LastMode.RPM, self.Tt, self.TimeDelta, self.MonmentIntertia)
+        self.RPM          = self.CalculateRPM(self.lastMode.RPM, self.Tt, self.TimeDelta, self.MonmentIntertia)
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
         
 
@@ -65,6 +75,8 @@ class turbineMode(originalMode):
         return mode
         
     def CalculateTSR(self, LastRPM, D, WindSpeed):
+        if WindSpeed == 0:
+            WindSpeed = 0.0001
         Tsr = 2 * pi * (LastRPM / 60) * (D / 2) / WindSpeed
         return Tsr 
 
@@ -75,6 +87,8 @@ class turbineMode(originalMode):
         return Cp
     
     def CalculateTorqueBlade(self, Cp, Rho, A, WindSpeed, LastRPM):
+        if LastRPM == 0:
+            LastRPM = 0.001
         TorqueBlade = Cp * 0.5 * Rho * A * (WindSpeed**3) / (2 * pi * (LastRPM/60))
         return TorqueBlade
     
