@@ -47,13 +47,14 @@ def getClass():
     # ClassList =  [ClassName]
     BasicClass = ['ExtremePointMode', 'originalMode', 'Decide', 'Loop', 'testMode'] 
     
-    UserdefinedClass = ['testMode']  
+    TEST = ['testMode']
+    UserdefinedClass = ['Mode_ThreePhaseShortCircuit', 'Mode_Init']  
     
-    ModuleandClass = []
-    ModuleandClass.extend(BasicClass)
-    ModuleandClass.extend(UserdefinedClass)
-    
-    return ModuleandClass
+    AllClass = []
+    AllClass.extend(BasicClass)
+    AllClass.extend(TEST)
+    AllClass.extend(UserdefinedClass)
+    return AllClass
 
 
 if __name__=='__main__':
