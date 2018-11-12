@@ -1,7 +1,8 @@
-from Mode import*
-from Databaseformat import*
+from UserDefinedModule.Databaseformat import*
+from UserDefinedModule.OpenFile import*
+from UserDefinedModule.TurbineMode.WindTurbine import*
 
-class Mode_MaxPower(originalMode):
+class Mode_MaxPower(turbineMode):
     def CalculateValue(self, LastMode, database, WindSpeed):
         self.CurrentTime  = LastMode.CurrentTime + 1
         self.WindSpeed    = WindSpeed[self.CurrentTime]
@@ -18,36 +19,38 @@ class Mode_MaxPower(originalMode):
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
         
         
-if __name__ == '__main__':
-    import unittest
-    import OpenFile
-    from initMode import*
-    
-    class test(unittest.TestCase):
-        
-        def test_newobject(self):
-            RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = OpenFile.ReadData_MaxPower()
-            database_MaxPower = referencedata(None, RPMtoEffg_MaxPower, eff_g_MaxPower, None, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower)
-            Number, TimeSeries, WindSpeed = OpenFile.ReadWindSpeepData()
-            
-            init = Mode_init()
-            MaxPower = Mode_MaxPower(init, database_MaxPower, WindSpeed)
-            self.assertIsNotNone(MaxPower)
-        
-        def test_Property(self):
-            RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = OpenFile.ReadData_MaxPower()
-            database_MaxPower = referencedata(None, RPMtoEffg_MaxPower, eff_g_MaxPower, None, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower)
-            Number, TimeSeries, WindSpeed = OpenFile.ReadWindSpeepData()
-            init = Mode_init()
-            MaxPower = Mode_MaxPower(init, database_MaxPower, WindSpeed)
-            
-        
-            self.assertEquals(MaxPower.CurrentTime, 1)
-            self.assertEquals(MaxPower.WindSpeed, 7.3)
-            self.assertIs(MaxPower.mode, 'Mode_MaxPower')
-            self.assertEquals(MaxPower.eff_e, 0.9)
-      
-
-        
-
-    unittest.main()        
+#==============================================================================
+# if __name__ == '__main__':
+#     import unittest
+#     import OpenFile
+#     from initMode import*
+#     
+#     class test(unittest.TestCase):
+#         
+#         def test_newobject(self):
+#             RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = OpenFile.ReadData_MaxPower()
+#             database_MaxPower = referencedata(None, RPMtoEffg_MaxPower, eff_g_MaxPower, None, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower)
+#             Number, TimeSeries, WindSpeed = OpenFile.ReadWindSpeepData()
+#             
+#             init = Mode_init()
+#             MaxPower = Mode_MaxPower(init, database_MaxPower, WindSpeed)
+#             self.assertIsNotNone(MaxPower)
+#         
+#         def test_Property(self):
+#             RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower = OpenFile.ReadData_MaxPower()
+#             database_MaxPower = referencedata(None, RPMtoEffg_MaxPower, eff_g_MaxPower, None, RPMtoTG_MaxPower, Tg_MaxPower, Tsr_MaxPower, Cp_MaxPower)
+#             Number, TimeSeries, WindSpeed = OpenFile.ReadWindSpeepData()
+#             init = Mode_init()
+#             MaxPower = Mode_MaxPower(init, database_MaxPower, WindSpeed)
+#             
+#         
+#             self.assertEquals(MaxPower.CurrentTime, 1)
+#             self.assertEquals(MaxPower.WindSpeed, 7.3)
+#             self.assertIs(MaxPower.mode, 'Mode_MaxPower')
+#             self.assertEquals(MaxPower.eff_e, 0.9)
+#       
+# 
+#         
+# 
+#     unittest.main()        
+#==============================================================================

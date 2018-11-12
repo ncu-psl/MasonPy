@@ -1,5 +1,6 @@
-from Mode import*
-from Databaseformat import*
+from UserDefinedModule.Databaseformat import*
+from UserDefinedModule.OpenFile import*
+from UserDefinedModule.TurbineMode.WindTurbine import*
 
 class Mode_MaxTorqueCurrent(originalMode):
     def CalculateValue(self, LastMode, database, WindSpeed):

@@ -1,5 +1,6 @@
-from ThreePhaseShortCircuit import*
-from Databaseformat import*
+from UserDefinedModule.TurbineMode.ThreePhaseShortCircuit import*
+from UserDefinedModule.Databaseformat import*
+from UserDefinedModule.OpenFile import*
 
 class Mode_ThreePhaseShortCircuit_MagBrake(Mode_ThreePhaseShortCircuit):
     def CalculateValue(self, LastMode, database, WindSpeed):

@@ -1,5 +1,7 @@
-from MaxTorqueCurrent import*
-from Databaseformat import*
+from UserDefinedModule.TurbineMode.MaxTorqueCurrent import*
+from UserDefinedModule.Databaseformat import*
+from UserDefinedModule.OpenFile import*
+
 
 class Mode_MaxTorqueCurrent_MagBrake(Mode_MaxTorqueCurrent):
     def CalculateValue(self, LastMode, database, WindSpeed):
