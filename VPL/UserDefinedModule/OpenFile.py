@@ -11,7 +11,8 @@
 from numpy import*
 
 def ReadWindSpeepData():        
-    file=open("./TurbineData/1speed.txt")
+    file=open("./UserDefinedModule/TurbineData/1speed.txt")
+#    file=open("../TurbineData/1speed.txt")
     #file=open("testWindSpeed.txt")
     
     OriginalTimeSeries = []
@@ -82,30 +83,30 @@ def ReadData_ThreePhaseShortCircuit():
     # eff_g_ThreePhaseShortCircuit and eff_e_ThreePhaseShortCircuit setting in py
     eff_g_ThreePhaseShortCircuit  = 0
     eff_e_ThreePhaseShortCircuit = 0.9
-    WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit =  readData("./TurbineData/data_WindspeedToEff_g.txt")
-    RPM_ThreePhaseShortCircuit, Tg_ThreePhaseShortCircuit          =  readData("./TurbineData/dataThreePhaseShortCircuit_RPMToTg.txt")
-    Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit          =  readData("./TurbineData/data_TsrToCp.txt") 
+    WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit =  readData("./UserDefinedModule/TurbineData/data_WindspeedToEff_g.txt")
+    RPM_ThreePhaseShortCircuit, Tg_ThreePhaseShortCircuit          =  readData("./UserDefinedModule/TurbineData/dataThreePhaseShortCircuit_RPMToTg.txt")
+    Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit          =  readData("./UserDefinedModule/TurbineData/data_TsrToCp.txt") 
     return WindSpeed_ThreePhaseShortCircuit, eff_g_ThreePhaseShortCircuit,  eff_e_ThreePhaseShortCircuit, RPM_ThreePhaseShortCircuit, Tg_ThreePhaseShortCircuit, Tsr_ThreePhaseShortCircuit, Cp_ThreePhaseShortCircuit
 
 
 
 def ReadData_MaxPower():        
-    RPMtoEffg_MaxPower, eff_g_MaxPower   =  readData("./TurbineData/dataMaxPower_RPMToEff_g.txt")
+    RPMtoEffg_MaxPower, eff_g_MaxPower   =  readData("./UserDefinedModule/TurbineData/dataMaxPower_RPMToEff_g.txt")
     # eff_e_MaxPower setting in py
     eff_e_MaxPower = 0.9
-    RPMtoTG_MaxPower, Tg_MaxPower            =  readData("./TurbineData/dataMaxPower_RPMToTg.txt")
-    Tsr_MaxPower, Cp_MaxPower                      =  readData("./TurbineData/data_TsrToCp.txt") 
+    RPMtoTG_MaxPower, Tg_MaxPower            =  readData("./UserDefinedModule/TurbineData/dataMaxPower_RPMToTg.txt")
+    Tsr_MaxPower, Cp_MaxPower                      =  readData("./UserDefinedModule/TurbineData/data_TsrToCp.txt") 
     return RPMtoEffg_MaxPower, eff_g_MaxPower, eff_e_MaxPower, RPMtoTG_MaxPower, Tg_MaxPower,Tsr_MaxPower, Cp_MaxPower
 
 
 
 def ReadData_MaxTorqueCurrent():        
-    RPM_MaxTorqueCurrent, eff_g_MaxTorqueCurrent =  readData("./TurbineData/dataMaxTorqueCurrent_RPMToEff_g.txt")
+    RPM_MaxTorqueCurrent, eff_g_MaxTorqueCurrent =  readData("./UserDefinedModule/TurbineData/dataMaxTorqueCurrent_RPMToEff_g.txt")
     #  setting in py
     # eff_e_MaxTorqueCurrent setting in py
     eff_e_MaxTorqueCurrent = 0.9
     TorqueGenerator_MaxTorqueCurrent = 110
-    Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent = readData("./TurbineData/data_TsrToCp.txt")
+    Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent = readData("./UserDefinedModule/TurbineData/data_TsrToCp.txt")
     return RPM_MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, TorqueGenerator_MaxTorqueCurrent, Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent
 
 
