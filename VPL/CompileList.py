@@ -108,32 +108,39 @@ def execBlockChart(list):
         lastBlock = list[flag][0]
         
         flag = FindNextBlock(list, nextline)
-        
         nextBlock, name = list[flag][1], list[flag][0]
  
-
+    
+    finalData = []
 
     Loopdict = {}   
+    
     while 1:
    
         if name.find('Mode') != -1:
             nextline = list[flag][3][0]
-            
-#            print('lastMode', type(newObj))
+          
+
             
             newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline)
             
+            finalData.append(newObj)
             newObj.do()
             
-#            print('newMode', type(newObj))
-            # append List
+            
+            
+
             
             lastBlock = list[flag][0]
      
             
             flag = FindNextBlock(list, nextline)
             
+          
+            
             nextBlock, name = list[flag][1], list[flag][0]
+            
+           
             
                 
         elif name.find('Check') != -1:
@@ -205,6 +212,8 @@ def execBlockChart(list):
         else:
             if flag == -1:   
                 break
+            
+    return finalData     
 
 
             
@@ -232,11 +241,19 @@ if __name__=='__main__':
 #==============================================================================
     
      list=[
-        ['Start', 'ExtremePointMode', [], ['line_0']],
-['Mode_A', 'testMode', ['line_0'], ['line_1']],
-['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['currentTime', 5, '>='], 10],
+['Start', 'ExtremePointMode', [], ['line_0']],
+['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+['Mode_B', 'Mode_ThreePhaseShortCircuit', ['line_1'], ['line_2']],
+['Loop1', 'Loop', ['line_2'], ['line_A', 'line_1'],['currentTime', 5, '>='], 10],
 ['End0', 'ExtremePointMode', ['line_A'], []],
     ]
-     execBlockChart(list)
-    
+     print(execBlockChart(list))
+#==============================================================================
+#     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
+#     print(type(newObj1))
+#     newObj2 = buildObj('Mode_Init', 'Mode_Init', newObj1, 'line_0', 'line_1')
+#     print(type(newObj2))
+#     newObj3 = buildObj('Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit', newObj2, 'line_1', 'line_2')
+#     print(type(newObj3))
+#==============================================================================
     
