@@ -48,7 +48,7 @@ def getClass():
     BasicClass = ['ExtremePointMode', 'originalMode', 'Decide', 'Loop', 'testMode'] 
     
     TEST = ['testMode']
-    UserdefinedClass = ['Mode_ThreePhaseShortCircuit', 'Mode_Init']  
+    UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 'Mode_MaxTorqueCurrent', 'Mode_ThreePhaseShortCircuit_MagBrake']  
     
     AllClass = []
     AllClass.extend(BasicClass)

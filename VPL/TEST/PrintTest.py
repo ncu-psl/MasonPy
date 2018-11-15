@@ -4,7 +4,7 @@ class testMode(originalMode):
 
     
     def setInit(self):
-        self.setInitValue(['A', 0], ['B', 1], ['C',2])
+        self.setInitValue([['A', 0], ['B', 1], ['C',2]])
     
     def do(self):
         print(self.currentTime)

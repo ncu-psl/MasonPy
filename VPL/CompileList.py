@@ -244,10 +244,10 @@ if __name__=='__main__':
 ['Start', 'ExtremePointMode', [], ['line_0']],
 ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
 ['Mode_B', 'Mode_ThreePhaseShortCircuit', ['line_1'], ['line_2']],
-['Loop1', 'Loop', ['line_2'], ['line_A', 'line_1'],['currentTime', 5, '>='], 10],
+['Loop1', 'Loop', ['line_2'], ['line_A', 'line_1'],['WindSpeed', 8, '>='], 200],
 ['End0', 'ExtremePointMode', ['line_A'], []],
     ]
-     print(execBlockChart(list))
+     print(len(execBlockChart(list)))
 #==============================================================================
 #     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
 #     print(type(newObj1))
