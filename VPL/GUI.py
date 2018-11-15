@@ -16,8 +16,10 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import random
 
-import CompileList
-
+import CompileList, SetModule
+AllFile = SetModule.getFile()
+for i in AllFile:
+    exec('from '+ i + ' import*')
 
 leftwidget = QWidget()
 leftlayout = QVBoxLayout()
@@ -49,11 +51,10 @@ class Process_Button(QPushButton):
     def __init__(self, title, parent):
         super().__init__(title, parent)
         
-        spec = importlib.util.spec_from_file_location('a', 'PrintTest.py')
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        self.parameter_name = eval("mod."+title+"().AllValue")
-
+        if title != 'Start' and title != 'End':
+            t = eval(title + '()')
+            self.parameter_name = t.AllVariables
+            
     def mouseMoveEvent(self, e):
 
         if e.buttons() != Qt.RightButton:
@@ -600,14 +601,25 @@ class HelloWindow(QMainWindow):
         add_End_action = toolbarBox.addAction('End')
         add_End_action.triggered.connect(self.add_End)
         
-        with open('PrintTest.py', encoding = 'utf8') as f:                      #import function.py
-            for line in f:
-                cleanline = line.strip()
-                if cleanline.find("class ") != -1:
-                    temp = cleanline.split()
-                    temp = temp[1].split('(')
-                    add_function_action = toolbarBox.addAction(temp[0])
-                    add_function_action.triggered.connect(lambda checked, string = temp[0]:self.add_Process(string))
+# =============================================================================
+#         with open('PrintTest.py', encoding = 'utf8') as f:                      #import function.py
+#             for line in f:
+#                 cleanline = line.strip()
+#                 if cleanline.find("class ") != -1:
+#                     temp = cleanline.split()
+#                     temp = temp[1].split('(')
+#                     add_function_action = toolbarBox.addAction(temp[0])
+#                     add_function_action.triggered.connect(lambda checked, string = temp[0]:self.add_Process(string))
+#                     
+# =============================================================================
+        moduleclass = SetModule.getClass()
+        moduleclass.remove('ExtremePointMode')
+        moduleclass.remove('originalMode')
+        moduleclass.remove('Decide')
+        moduleclass.remove('Loop')
+        for i in range(len(moduleclass)):
+            add_function_action = toolbarBox.addAction(moduleclass[i])
+            add_function_action.triggered.connect(lambda checked, string = moduleclass[i]:self.add_Process(string))
 # =============================================================================
 #         
 #         add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
