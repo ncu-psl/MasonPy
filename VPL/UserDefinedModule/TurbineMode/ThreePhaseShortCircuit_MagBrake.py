@@ -1,5 +1,5 @@
 from UserDefinedModule.TurbineMode.ThreePhaseShortCircuit import*
-from UserDefinedModule.self.database_ThreePhaseShortCircuitformat import*
+from UserDefinedModule.TurbineMode.ThreePhaseShortCircuit import*
 from UserDefinedModule.OpenFile import*
 
 class Mode_ThreePhaseShortCircuit_MagBrake(Mode_ThreePhaseShortCircuit):
