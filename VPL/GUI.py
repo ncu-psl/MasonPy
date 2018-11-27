@@ -51,9 +51,14 @@ class Process_Button(QPushButton):
     def __init__(self, title, parent):
         super().__init__(title, parent)
         
+        self.parameter_name = []
+        self.parameter_value = []
+        
         if title != 'Start' and title != 'End':
             t = eval(title + '()')
             self.parameter_name = t.AllVariables
+            for i in range(len(self.parameter_name)):
+                self.parameter_value.append(eval('t.' + self.parameter_name[i]))
             
     def mouseMoveEvent(self, e):
 
@@ -89,7 +94,7 @@ class Process_Button(QPushButton):
             QPushButton.mousePressEvent(self, e)
     
     def showdialog(self):
-        inputlist, result = ProcessDialog(self.parameter_name).getdata(self.parameter_name)
+        inputlist, result = ProcessDialog(self.parameter_name, self.parameter_value).getdata(self.parameter_name, self.parameter_value)
         if result == 1:
             self.parameter_value = inputlist
         
@@ -284,7 +289,7 @@ class Loop_end(QPushButton):
             QPushButton.mousePressEvent(self, e)
 
 class ProcessDialog(QDialog):
-    def __init__(self, paremeter_name, parent = None):
+    def __init__(self, paremeter_name, parameter_value, parent = None):
         super().__init__()
         
         self.layout = QVBoxLayout(self)
@@ -296,7 +301,7 @@ class ProcessDialog(QDialog):
         for i in range(len(paremeter_name)):
             self.label = QLabel(paremeter_name[i], self)
             self.label_layout.addWidget(self.label)
-            self.input = QLineEdit(self)
+            self.input = QLineEdit(str(parameter_value[i]), self)
             self.input_edit_list.append(self.input)
             self.edit_layout.addWidget(self.input)
         self.upside_layout.addLayout(self.label_layout)
@@ -312,8 +317,8 @@ class ProcessDialog(QDialog):
         self.layout.addWidget(self.buttons)
         self.setLayout(self.label_layout)
        
-    def getdata(parent = None, paremeter_name = []):
-        dialog = ProcessDialog(paremeter_name, parent)
+    def getdata(parent = None, paremeter_name = [], parameter_value = []):
+        dialog = ProcessDialog(paremeter_name, parameter_value, parent)
         inputlist = []
         result = dialog.exec_()
         for i in range(len(paremeter_name)):
