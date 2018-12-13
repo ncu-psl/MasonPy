@@ -45,10 +45,12 @@ def findFile(folder = None):
 
 def getClass():
     # ClassList =  [ClassName]
-    BasicClass = ['ExtremePointMode', 'originalMode', 'Decide', 'Loop', 'testMode'] 
+    BasicClass = ['ExtremePointMode', 'originalMode', 'Decide', 'Loop'] 
     
     TEST = ['testMode']
-    UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 'Mode_MaxTorqueCurrent', 'Mode_ThreePhaseShortCircuit_MagBrake']  
+    
+    UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 
+    'Mode_MaxTorqueCurrent', 'Mode_ThreePhaseShortCircuit_MagBrake']  
     
     AllClass = []
     AllClass.extend(BasicClass)
@@ -72,3 +74,6 @@ if __name__=='__main__':
                 self.assertIs(type(i), str)        
                 
     unittest.main()
+
+
+
