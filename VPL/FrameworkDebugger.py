@@ -1,5 +1,13 @@
 import sys
 
+#==============================================================================
+# Missing Lines Exception
+# Start (輸入線,輸出線) = (0, 1)
+# End (輸入線,輸出線) = (n>0, 0)
+# Process (輸入線,輸出線)=(n>0, n>0)
+# Decision (輸入線,輸出線)=(n>0, 2)
+# Loop (輸入線,輸出線)=(n>0, 2)
+#==============================================================================
 class MissingLineException(Exception):
     def __init__(self, InputNum = 0, OutputNum = 0, err='Error: \"連接線錯誤\"\n'):
         InputErrMsg = self.getErrMsg(self.checkErrFlag(InputNum), self.setInputErrMsg())
@@ -35,7 +43,6 @@ class MissingLineException(Exception):
             err =  err +'\n'
         return err
 
-
 #==============================================================================
 # Start Lines
 #==============================================================================
@@ -48,7 +55,6 @@ class StartMissingLineException(MissingLineException):
         ErrMsg = {'0': 'Start 缺少輸出線', '1': '', '2': 'Start 僅能一條輸出線'}
         return ErrMsg
     
-
 #==============================================================================
 # End Lines
 #==============================================================================
@@ -61,7 +67,6 @@ class EndMissingLineException(MissingLineException):
         ErrMsg = {'0': '', '1': 'End 不得有輸出線', '2': 'End 不得有輸出線'}
         return ErrMsg
 
-
 #==============================================================================
 # Process Lines
 #==============================================================================
@@ -73,7 +78,6 @@ class ProcessMissingLineException(MissingLineException):
     def setOutputErrMsg(self):
         ErrMsg = {'0': 'Process 缺少輸出線', '1': '', '2': ''}
         return ErrMsg
-
 
 #==============================================================================
 # Decision Lines
@@ -98,7 +102,6 @@ class DecisionMissingLineException(MissingLineException):
         ErrMsg = {'0': 'Decision 輸出線必須為兩條,目前不足2條', '1': 'Decision 輸出線必須為兩條,目前不足1條', '2': '', '3': 'Decision 輸出線僅能兩條,目前過多'}
         return ErrMsg
 
-
 #==============================================================================
 # Loop Lines
 #==============================================================================
@@ -110,7 +113,6 @@ class LoopMissingLineException(DecisionMissingLineException):
     def setOutputErrMsg(self):
         ErrMsg = {'0': 'Loop 輸出線必須為兩條,目前不足2條', '1': 'Loop 輸出線必須為兩條,目前不足1條', '2': '', '3': 'Loop 輸出線僅能兩條,目前過多'}
         return ErrMsg  
-   
     
 #==============================================================================
 # raise MissingLineException
@@ -122,8 +124,15 @@ def MissingLineRaise(BlockName, InputNum, OutputNum):
            exec('raise '+ BlockDict[BlockName] + '('+str(InputNum) +','+ str(OutputNum) +')')
 
    
-    
-    
+
+#==============================================================================
+# Missing Blocks Exception
+# Start (數量) = (1)
+# End (數量) = (n>0)
+# Process (數量) = (n>=0)
+# Decision (數量) = (n>=0)
+# Loop (n>=0)
+#==============================================================================    
 class MissingBlockException(Exception):
     def __init__(self, InputList = [], err='Error: \"錯誤端點\"\n'):
         AllBlock = self.getAllBlock(InputList)
