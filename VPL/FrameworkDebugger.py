@@ -1,15 +1,5 @@
 import sys
 
-#==============================================================================
-# class HasErrorException(Exception):
-#     def __init__(self, ErrorMsg = [0], err=''):
-#         self.err = err
-#         Exception.__init__(self, self.err)
-#         
-# def MissingLineRaise():
-#     raise HasErrorException()   
-#==============================================================================
-
 class MissingLineException(Exception):
     def __init__(self, InputNum = 0, OutputNum = 0, err='Error: \"連接線錯誤\"\n'):
         InputErrMsg = self.getErrMsg(self.checkErrFlag(InputNum), self.setInputErrMsg())
@@ -127,13 +117,62 @@ class LoopMissingLineException(DecisionMissingLineException):
 #==============================================================================
 def MissingLineRaise(BlockName, InputNum, OutputNum):
     BlockDict = {'Start':'StartMissingLineException', 'End':'EndMissingLineException', 
-    'Process':'ProcessMissingLineException', 'Decision':'DecisionMissingLineException', 'Loop':'LoopMissingLineException'}    
-    print('raise '+ BlockDict[BlockName] + '('+str(InputNum) +','+ str(OutputNum) +')')
+    'Process':'ProcessMissingLineException', 'Decision':'DecisionMissingLineException', 'Loop':'LoopMissingLineException'}
     if eval(BlockDict[BlockName] + '('+str(InputNum) +','+ str(OutputNum) +')'+'.getFinalErrMsg()') != '':
            exec('raise '+ BlockDict[BlockName] + '('+str(InputNum) +','+ str(OutputNum) +')')
 
    
     
+    
+class MissingBlockException(Exception):
+    def __init__(self, InputList = [], err='Error: \"錯誤端點\"\n'):
+        AllBlock = self.getAllBlock(InputList)
+        StartErrMsg = self.getErrMsg(self.checkErrFlag(AllBlock, 'Start'), self.setStartErrMsg())
+        EndErrMsg = self.getErrMsg(self.checkErrFlag(AllBlock, 'End'), self.setEndErrMsg())
+        self.err = err + StartErrMsg + EndErrMsg
+        if (StartErrMsg + EndErrMsg) =='':
+            self.err = ''
+        Exception.__init__(self, self.err)
+    
+    def getAllBlock(self, InputList):
+        tempList = [InputList[i][0] for i in range(len(InputList))]
+        AllBlock = []
+        for i in range(len(tempList)):
+            if tempList[i].find('Start') != -1:
+                AllBlock.append('Start')
+            if tempList[i].find('End') != -1:
+                AllBlock.append('End')
+        return AllBlock     
+    
+    def getFinalErrMsg(self):
+        return self.err
+    
+    def checkErrFlag(self, InputList, BolckName):
+        if InputList.count(BolckName) == 0:
+            ErrFlag = 0
+        if InputList.count(BolckName) == 1:
+            ErrFlag = 1
+        if InputList.count(BolckName) > 1:
+            ErrFlag = 2     
+        return ErrFlag
+    
+    def setStartErrMsg(self):
+        ErrMsg = {'0': '缺少 Start', '1': '', '2': 'Start 僅能有一個'}
+        return ErrMsg
+
+    def setEndErrMsg(self):
+        ErrMsg = {'0': '缺少 End', '1': '', '2': ''}
+        return ErrMsg
+    
+    def getErrMsg(self, ErrFlag, ErrMsgDict):
+        err =  ErrMsgDict[str(ErrFlag)]
+        if err != '':
+            err =  err +'\n'
+        return err
+  
+def MissingBlockRaise(BlockName, InputList):
+    if eval('MissingBlockException' + '(InputNum)'+'.getFinalErrMsg()') != '':
+           exec('raise '+ 'MissingBlockException' + '(InputNum)')    
     
     
     
@@ -154,13 +193,15 @@ def TestMissingLineRaise(BlockName, x, y):
         MissingLineRaise(BlockName, x, y)
     except MissingLineException as e:
         MissingLinemsg = str(sys.exc_info()[1])
-
-    print('###################')    
-    print(MissingLinemsg)
+#==============================================================================
+#     print('###################')    
+#     print(MissingLinemsg)
+#==============================================================================
     return MissingLinemsg 
 
 
 if __name__ =='__main__':
+
     import unittest    
     class test(unittest.TestCase): 
         # Start (輸入線,輸出線)=(0, 1)
@@ -273,4 +314,53 @@ if __name__ =='__main__':
             self.assertEqual(TestMissingLineRaise('Loop', 0, 1), 'Error: "連接線錯誤"\nLoop 缺少輸入線\nLoop 輸出線必須為兩條,目前不足1條\n')
         def test_Loop_10_MissingLineRaise(self):
             self.assertEqual(TestMissingLineRaise('Loop', 0, 10), 'Error: "連接線錯誤"\nLoop 缺少輸入線\nLoop 輸出線僅能兩條,目前過多\n')
-    unittest.main()             
+        
+        # ExtremePoint
+        def test_ExtremePoint_1_MissingBlockRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ['End0', 'ExtremePointMode', ['line_A'], []],
+                    ]
+            ExtremePointList = MissingBlockException(list_1)
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), '')
+        # 缺少 Start
+        def test_ExtremePoint_2_MissingBlockRaise(self):
+            list_1=[
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ['End0', 'ExtremePointMode', ['line_A'], []],
+                    ]
+            ExtremePointList = MissingBlockException(list_1)
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 Start\n')
+        # 缺少 End    
+        def test_ExtremePoint_3_MissingBlockRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ]
+            ExtremePointList = MissingBlockException(list_1)
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 End\n')
+        # 缺少 Start 缺少 End    
+        def test_ExtremePoint_4_MissingBlockRaise(self):
+            list_1=[
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ]
+            ExtremePointList = MissingBlockException(list_1)
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 Start\n缺少 End\n')
+        # 過多 Start 缺少 End
+        def test_ExtremePoint_5_MissingBlockRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_2']],
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1', 'line_2'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ]
+            ExtremePointList = MissingBlockException(list_1)
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\nStart 僅能有一個\n缺少 End\n')    
+            
+    unittest.main()
