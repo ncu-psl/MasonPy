@@ -112,9 +112,8 @@ def execBlockChart(list):
  
     
     finalData = []
-
     Loopdict = {}   
-    
+
     while 1:
    
         if name.find('Mode') != -1:
@@ -143,7 +142,7 @@ def execBlockChart(list):
            
             
                 
-        elif name.find('Check') != -1:
+        elif name.find('Decision') != -1:
             comparisonVariable,  comparisonValue, Operator = list[flag][4][0], list[flag][4][1], list[flag][4][2]
 
             nextline = list[flag][3]
@@ -240,20 +239,23 @@ if __name__=='__main__':
 #     ]
 #==============================================================================
     
-     list=[
-['Start', 'ExtremePointMode', [], ['line_0']],
-['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-['Mode_B', 'Mode_ThreePhaseShortCircuit', ['line_1'], ['line_2']],
-['Loop1', 'Loop', ['line_2'], ['line_A', 'line_1'],['WindSpeed', 8, '>='], 200],
-['End0', 'ExtremePointMode', ['line_A'], []],
-    ]
+#==============================================================================
+#      list=[
+# ['Start', 'ExtremePointMode', [], ['line_0']],
+# ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+# ['Mode_B', 'Mode_ThreePhaseShortCircuit', ['line_1'], ['line_2']],
+# ['Loop1', 'Loop', ['line_2'], ['line_A', 'line_1'],['WindSpeed', 8, '>='], 200],
+# ['End0', 'ExtremePointMode', ['line_A'], []],
+#     ]
+#==============================================================================
 
      list=[
 ['Start', 'ExtremePointMode', [], ['line_0']],
-['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
+['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
 ['End0', 'ExtremePointMode', ['line_A'], []],
-    ]     
+    ]
+
      
      print(len(execBlockChart(list)))
 #==============================================================================
