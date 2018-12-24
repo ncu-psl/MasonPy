@@ -53,7 +53,6 @@ class Process_Button(QPushButton):
         
         self.parameter_name = []
         self.parameter_value = []
-        
         if title != 'Start' and title != 'End':
             t = eval(title + '()')
             self.parameter_name = t.AllVariables
@@ -151,9 +150,15 @@ class Decision_Button(QPushButton):
                 for i in linearray:
                     if i[1].string == self.string and i[1].nodenum == self.nodenum:
                         if not self.parameter:
-                            self.parameter = i[0].parameter_name
+                            if hasattr(i[0], 'parameter_name'):
+                                self.parameter = i[0].parameter_name
+                            else:
+                                self.parameter = i[0].parameter
                         else:
-                            self.parameter = list(set(self.parameter) & set(i[0].parameter_name))
+                            if hasattr(i[0], 'parameter_name'):
+                                self.parameter = list(set(self.parameter) & set(i[0].parameter_name))
+                            else:
+                                self.parameter = list(set(self.parameter) & set(i[0].parameter))
                 
                 if not self.parameter:
                     self.errordialog()
@@ -187,6 +192,10 @@ class Loop_Button(QPushButton):
     loop_time = 200
     position = QPoint()
     mode = 'Loop'
+    compare_num = 0.0
+    compare_stuff = " "
+    compare_symbol = " "
+    parameter = []
     
     def __init__(self, title, parent):
         super().__init__(title, parent)
@@ -232,7 +241,24 @@ class Loop_Button(QPushButton):
                     QtWidgets.QPushButton.mousePressEvent(self, e)
                 else:
                     self.blockSignals(True)
-                    self.showdialog()
+                    
+                    for i in linearray:
+                        if i[1].string == self.string and i[1].nodenum == self.nodenum:
+                            if not self.parameter:
+                                if hasattr(i[0], 'parameter_name'):
+                                    self.parameter = i[0].parameter_name
+                                else:
+                                    self.parameter = i[0].parameter
+                            else:
+                                if hasattr(i[0], 'parameter_name'):
+                                    self.parameter = list(set(self.parameter) & set(i[0].parameter_name))
+                                else:
+                                    self.parameter = list(set(self.parameter) & set(i[0].parameter))
+                
+                    if not self.parameter:
+                        self.showdialog()
+                    else:
+                        self.showdecisiondialog()
                     QtWidgets.QPushButton.mousePressEvent(self, e)
                     self.blockSignals(False)
     
@@ -241,6 +267,37 @@ class Loop_Button(QPushButton):
         if result == True:
             self.loop_time = temp
             self.setText('Loop ' + str(self.loop_time) + ' times')
+    def showdecisiondialog(self):
+        dia = loopdialog(self.parameter)
+        mod, compare, num, times, result = dia.getdata(self.parameter)
+        print(mod, compare, num, times, result)
+        if result == 1:
+            if (mod != 'Parameter..' and compare != 'Symbal..' and num != '') or times != '':
+                if num == '':
+                    self.compare_num = None
+                    self.compare_stuff = None
+                    self.compare_symbol = None
+                else:
+                    self.compare_num = float(num)
+                    self.compare_stuff = mod
+                    self.compare_symbol = compare
+                if times == '':
+                    self.loop_time = 0
+                else:
+                    self.loop_time = int(times)
+                if self.compare_num == None:
+                    print(5)
+                    self.setText('Loop' + str(self.loop_time) + 'times.')
+                elif self.loop_time == 0:
+                    print(6)
+                    self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num))
+                else:
+                    self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num) + ' or ' + 'Loop ' + str(self.loop_time) + ' times.')
+            else:
+                self.errordialog()
+    def errordialog(self):
+        dia = QMessageBox.warning(self, "error", "At least complete one statement.", QMessageBox.Close) 
+                
 
 class Loop_end(QPushButton):
     global buttonlist
@@ -368,6 +425,61 @@ class DecisionDialog(QDialog):
         num = dialog.inputnum.text()
         return (mode, compare, num, result)
 
+class loopdialog(QDialog):
+    def __init__(self, parameter, parent = None):
+        super().__init__()
+        self.layout = QVBoxLayout(self)
+        self.decision_layout = QHBoxLayout(self)
+        self.times_layout = QHBoxLayout(self)
+        
+        self.label = QLabel('At least choose one statement:', self)
+        self.label2 = QLabel('and/or', self)
+        self.combo = QComboBox()
+        
+        self.combo.addItem("Parameter..")
+        for i in range(len(parameter)):
+            self.combo.addItem(parameter[i])
+        
+        self.combo2 = QComboBox()
+        self.combo2.addItem("Symbal..")
+        self.combo2.addItem(">")
+        self.combo2.addItem(">=")
+        self.combo2.addItem("=")
+        self.combo2.addItem("<=")
+        self.combo2.addItem("<")
+        
+        self.inputnum = QLineEdit()
+        self.decision_layout.addWidget(self.combo)
+        self.decision_layout.addWidget(self.combo2)
+        self.decision_layout.addWidget(self.inputnum)
+        
+        self.time_label = QLabel('Loop Time:', self)
+        self.timeinput = QLineEdit()
+        self.times_layout.addWidget(self.time_label)
+        self.times_layout.addWidget(self.timeinput)
+        
+        self.buttons = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel,
+            Qt.Horizontal, self)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        
+        self.layout.addWidget(self.label)
+        self.layout.addLayout(self.decision_layout)
+        self.layout.addWidget(self.label2)
+        self.layout.addLayout(self.times_layout)
+        self.layout.addWidget(self.buttons)
+        self.setLayout(self.layout)
+    
+    def getdata(parent = None, parameter = []):
+        dialog = loopdialog(parameter, parent)
+        result = dialog.exec_()
+        mode = dialog.combo.currentText()
+        compare = dialog.combo2.currentText()
+        num = dialog.inputnum.text()
+        times = dialog.timeinput.text()
+        return (mode, compare, num, times, result)    
+    
 class rightcanvas(QWidget):
     
     def __init__(self):
@@ -964,7 +1076,6 @@ class HelloWindow(QMainWindow):
         global leftwidget
         global buttonlist
         count = 0
-        
         if name == False:        
             leftwidget.button = Process_Button('Process', self)
             leftwidget.button.string = 'Process'
@@ -991,7 +1102,7 @@ class HelloWindow(QMainWindow):
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
         for i in buttonlist:
-            if i.mode == 'decision':
+            if i.mode == 'Decision':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
@@ -1198,7 +1309,7 @@ class HelloWindow(QMainWindow):
             if i.mode == 'Decision': 
                 pac = [i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]]
             if i.mode == 'Loop':
-                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [0, i.loop_time]]
+                pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
         print(finallist)
 # =============================================================================
@@ -1352,7 +1463,6 @@ class HelloWindow(QMainWindow):
                     
         CompileList.execBlockChart(finallist)
         
-        
 # =============================================================================
 #         isPaintWindSpeed = True
 #         isPaintRPM       = True
@@ -1362,7 +1472,7 @@ class HelloWindow(QMainWindow):
         #print('print figure',figure)
 
 
-        #HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+        HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
 # =============================================================================
 #         str_ylabel_2 = "RPM"
 #         str_ylabel_3 = "Power   ( W )"
@@ -1407,23 +1517,23 @@ class HelloWindow(QMainWindow):
 #         for i in finallist:
 #             print(i)
 # =============================================================================
+    def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
+        global figure
+        
+        figure.clf()
+        
+        str_ylabel_2 = "RPM"
+        #str_ylabel_3 = "Power   ( W )"
+        #y2X10  = [i*10 for i in Parameter.RPM]
+     
+        ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
+        if isPaintRPM is True:
+            ax1.plot([0,1],[0,2])
+            str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
+        else:
+            str_ylabel_2 = ""
+        
 # =============================================================================
-#     def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
-#         global figure
-#         
-#         figure.clf()
-#         
-#         str_ylabel_2 = "RPM"
-#         str_ylabel_3 = "Power   ( W )"
-#         y2X10  = [i*10 for i in Parameter.RPM]
-#      
-#         ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
-#         if isPaintRPM is True:
-#             ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
-#             str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
-#         else:
-#             str_ylabel_2 = ""
-#         
 #         if isPaintPower is True:
 #             ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
 #             str_ylabel_3 = str_ylabel_3 + "\n"
