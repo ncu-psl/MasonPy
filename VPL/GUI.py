@@ -192,9 +192,9 @@ class Loop_Button(QPushButton):
     loop_time = 200
     position = QPoint()
     mode = 'Loop'
-    compare_num = 0.0
-    compare_stuff = " "
-    compare_symbol = " "
+    compare_num = None
+    compare_stuff = None
+    compare_symbol = None
     parameter = []
     
     def __init__(self, title, parent):
@@ -270,9 +270,10 @@ class Loop_Button(QPushButton):
     def showdecisiondialog(self):
         dia = loopdialog(self.parameter)
         mod, compare, num, times, result = dia.getdata(self.parameter)
-        print(mod, compare, num, times, result)
         if result == 1:
-            if (mod != 'Parameter..' and compare != 'Symbal..' and num != '') or times != '':
+            if int(times) == '' or int(times) <0:
+                self.errordialog2()
+            elif (mod != 'Parameter..' and compare != 'Symbal..' and num != '') or times != '':
                 if num == '':
                     self.compare_num = None
                     self.compare_stuff = None
@@ -286,18 +287,17 @@ class Loop_Button(QPushButton):
                 else:
                     self.loop_time = int(times)
                 if self.compare_num == None:
-                    print(5)
                     self.setText('Loop' + str(self.loop_time) + 'times.')
                 elif self.loop_time == 0:
-                    print(6)
-                    self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num))
+                    self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num))
                 else:
-                    self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num) + ' or ' + 'Loop ' + str(self.loop_time) + ' times.')
+                    self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num) + ' or ' + 'Loop ' + str(self.loop_time) + ' times.')
             else:
                 self.errordialog()
     def errordialog(self):
         dia = QMessageBox.warning(self, "error", "At least complete one statement.", QMessageBox.Close) 
-                
+    def errordialog2(self):
+        dia = QMessageBox.warning(self, "error", "Loop times can't less then 0.", QMessageBox.Close)             
 
 class Loop_end(QPushButton):
     global buttonlist
