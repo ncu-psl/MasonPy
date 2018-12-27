@@ -271,33 +271,47 @@ class Loop_Button(QPushButton):
         dia = loopdialog(self.parameter)
         mod, compare, num, times, result = dia.getdata(self.parameter)
         if result == 1:
-            if int(times) == '' or int(times) <0:
-                self.errordialog2()
-            elif (mod != 'Parameter..' and compare != 'Symbal..' and num != '') or times != '':
-                if num == '':
-                    self.compare_num = None
-                    self.compare_stuff = None
-                    self.compare_symbol = None
+            if times.strip() == '':
+                if mod != 'Parameter..' and compare != 'Symbal..' and num.strip() != '':
+                    try:
+                        self.compare_num = float(num.strip())
+                        self.compare_stuff = mod
+                        self.compare_symbol = compare
+                        self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num))
+                    except ValueError:
+                        self.errordialog4()
                 else:
-                    self.compare_num = float(num)
-                    self.compare_stuff = mod
-                    self.compare_symbol = compare
-                if times == '':
-                    self.loop_time = 0
-                else:
-                    self.loop_time = int(times)
-                if self.compare_num == None:
-                    self.setText('Loop' + str(self.loop_time) + 'times.')
-                elif self.loop_time == 0:
-                    self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num))
-                else:
-                    self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num) + ' or ' + 'Loop ' + str(self.loop_time) + ' times.')
+                    self.errordialog()
             else:
-                self.errordialog()
+                if mod != 'Parameter..' and compare != 'Symbal..' and num.strip() != '':
+                    try:
+                        self.compare_num = float(num.strip())
+                        self.compare_stuff = mod
+                        self.compare_symbol = compare
+                    except ValueError:
+                        self.errordialog4()
+                        return
+                    try:
+                        self.loop_time = int(times.strip())
+                    except ValueError:
+                        self.errordialog3()
+                        return
+                    self.setText(self.compare_stuff + ' '+ self.compare_symbol + ' ' + str(self.compare_num) + ' or ' + 'Loop ' + str(self.loop_time) + ' times.')
+                else:
+                    try:
+                        self.loop_time = int(times.strip())
+                    except ValueError:
+                        self.errordialog3()
+                        return
+                    self.setText('Loop ' + str(self.loop_time) + ' times.')
     def errordialog(self):
         dia = QMessageBox.warning(self, "error", "At least complete one statement.", QMessageBox.Close) 
     def errordialog2(self):
-        dia = QMessageBox.warning(self, "error", "Loop times can't less then 0.", QMessageBox.Close)             
+        dia = QMessageBox.warning(self, "error", "Loop times can't less then 0.", QMessageBox.Close)
+    def errordialog3(self):
+        dia = QMessageBox.warning(self, "error", "Please input int for loop times.", QMessageBox.Close)  
+    def errordialog4(self):
+        dia = QMessageBox.warning(self, "error", "Please input float for compare value.", QMessageBox.Close)           
 
 class Loop_end(QPushButton):
     global buttonlist
