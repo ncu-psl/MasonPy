@@ -29,12 +29,13 @@ class MissingLineException(Exception):
             ErrFlag = 2     
         return ErrFlag
     
+    
     def setInputErrMsg(self):
-        ErrMsg = {'0': 'IMsg0', '1': 'IMsg1', '2': 'IMsg2'}
+        ErrMsg = {'0': 'IMsg0', '1': 'IMsg1', '2': 'IMsg2'} # {key, value} = {Numbers of lines, Error Msg}
         return ErrMsg
     
     def setOutputErrMsg(self):
-        ErrMsg = {'0': 'OMsg0', '1': 'OMsg1', '2': 'OMsg2'}
+        ErrMsg = {'0': 'OMsg0', '1': 'OMsg1', '2': 'OMsg2'} # {key, value} = {Numbers of lines, Error Msg}
         return ErrMsg   
     
     def getErrMsg(self, ErrFlag, ErrMsgDict):
@@ -135,26 +136,26 @@ def MissingLineRaise(BlockName, InputNum, OutputNum):
 #==============================================================================    
 class MissingBlockException(Exception):
     def __init__(self, InputList = [], err='Error: \"錯誤端點\"\n'):
-        AllBlock = self.getAllBlock(InputList)
-        StartErrMsg = self.getErrMsg(self.checkErrFlag(AllBlock, 'Start'), self.setStartErrMsg())
-        EndErrMsg = self.getErrMsg(self.checkErrFlag(AllBlock, 'End'), self.setEndErrMsg())
+        ExtremePointList = self.getExtremePointBlock(InputList)
+        StartErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'Start'), self.setStartErrMsg())
+        EndErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'End'), self.setEndErrMsg())
         self.err = err + StartErrMsg + EndErrMsg
         if (StartErrMsg + EndErrMsg) =='':
             self.err = ''
         Exception.__init__(self, self.err)
-    
-    def getAllBlock(self, InputList):
-        tempList = [InputList[i][0] for i in range(len(InputList))]
-        AllBlock = []
-        for i in range(len(tempList)):
-            if tempList[i].find('Start') != -1:
-                AllBlock.append('Start')
-            if tempList[i].find('End') != -1:
-                AllBlock.append('End')
-        return AllBlock     
-    
+        
     def getFinalErrMsg(self):
         return self.err
+    
+    def getExtremePointBlock(self, InputList):
+        tempList = [InputList[i][0] for i in range(len(InputList))]
+        ExtremePointList = []
+        for i in range(len(tempList)):
+            if tempList[i].find('Start') != -1:
+                ExtremePointList.append('Start')
+            if tempList[i].find('End') != -1:
+                ExtremePointList.append('End')
+        return ExtremePointList     
     
     def checkErrFlag(self, InputList, BolckName):
         if InputList.count(BolckName) == 0:
@@ -180,11 +181,74 @@ class MissingBlockException(Exception):
         return err
   
 def MissingBlockRaise(BlockName, InputList):
-    if eval('MissingBlockException' + '(InputNum)'+'.getFinalErrMsg()') != '':
-           exec('raise '+ 'MissingBlockException' + '(InputNum)')    
+    if eval('MissingBlockException' + '(InputList)'+'.getFinalErrMsg()') != '':
+           exec('raise '+ 'MissingBlockException' + '(InputList)')    
     
+
+
+class DecisionErrorException(Exception):
+    def __init__(self, InputList, err='Error: \"Decision參數設定錯誤\"\n'):
+        DecisionList = self.getDecisionBlock(InputList)
+        ConditionalErrMsg = self.getErrMsg(DecisionList, self.setValueErrMsg())
+        self.err = err + ConditionalErrMsg
+        if ConditionalErrMsg =='':
+            self.err = ''
+        Exception.__init__(self, self.err)
     
+    def getFinalErrMsg(self):
+        return self.err
     
+    def getErrMsg(self, DecisionList, ErrMsgDict):
+        ErrFlag = 0
+        for i in range(len(DecisionList)):
+            if type(DecisionList[i][4][1]) != int:
+                ErrFlag = -1
+        err =  ErrMsgDict[str(ErrFlag)]
+        if err != '':
+            err =  err +'\n'
+        return err    
+            
+    def getDecisionBlock(self, InputList):
+        DecisionList = []
+        for i in range(len(InputList)):
+            if InputList[i][1].find('Decide') != -1:
+                DecisionList.append(InputList[i])
+        return DecisionList 
+
+    def setValueErrMsg(self):
+        ErrMsg = {'-1':'條件式 比較值錯誤', '0':''}
+        return ErrMsg
+
+def DecisionErrorRaise(InputList):
+    if eval('DecisionErrorException' + '(InputList)'+'.getFinalErrMsg()') != '':
+           exec('raise '+ 'DecisionErrorException' + '(InputList)')
+           
+#==============================================================================
+# class LoopErrorException(DecisionErrorException):
+#     def __init__(self, InputList, err='Error: \"Decision參數設定錯誤\"\n'):
+#         DecisionList = self.getDecisionBlock(InputList)
+#         CiunterErrMsg = 
+#         ConditionalErrMsg = 
+#         self.err = err + ParameterErrMsg + ValueErrMsg
+#         if (InputErrMsg + OutputErrMsg) =='':
+#             self.err = ''
+#         Exception.__init__(self, self.err)
+#     
+#     def getDecisionBlock(self, InputList):
+#         DecisionList = []
+#         for i in range(len(InputList)):
+#             if InputList[i][1].find('Loops') != -1:
+#                 DecisionList.append(InputList[i])
+#         return DecisionList 
+#     
+#      def getParameterErrMsg(self, DecisionList):
+#         ErrMsg = {'Counter 錯誤'}
+#         return ErrMsg
+# 
+#     def setValueErrMsg(self):
+#         ErrMsg = {'條件式 比較值錯誤'}
+#         return ErrMsg
+#==============================================================================
 
 #==============================================================================
 # ErrorMsg = [HasStart_ErrMsg, HasEnd_ErrMsg, StartMissingLine_ErrMsg,
@@ -192,9 +256,6 @@ def MissingBlockRaise(BlockName, InputList):
 #             LoopMissingLine_ErrMsg, DecisionInput_ErrMsg, LoopInput_ErrMsg,]
 #==============================================================================
 
-  
-
-errmsg = ''
 
 def TestMissingLineRaise(BlockName, x, y):
     MissingLinemsg = None
@@ -324,6 +385,7 @@ if __name__ =='__main__':
         def test_Loop_10_MissingLineRaise(self):
             self.assertEqual(TestMissingLineRaise('Loop', 0, 10), 'Error: "連接線錯誤"\nLoop 缺少輸入線\nLoop 輸出線僅能兩條,目前過多\n')
         
+        # Missing Blocks
         # ExtremePoint
         def test_ExtremePoint_1_MissingBlockRaise(self):
             list_1=[
@@ -370,6 +432,28 @@ if __name__ =='__main__':
                     ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
                     ]
             ExtremePointList = MissingBlockException(list_1)
-            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\nStart 僅能有一個\n缺少 End\n')    
+            self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\nStart 僅能有一個\n缺少 End\n')
+            
+        # Decision Error
+        # 輸入參數正確
+        def test_ExtremePoint_1_DecisionErrorRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Decision', 'Decide', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>=']],
+                    ['End0', 'ExtremePointMode', ['line_A', 'line_0'], []],
+                    ]
+            DecisionList = DecisionErrorException(list_1)
+            self.assertEqual(DecisionList.getFinalErrMsg(), '')
+        # 輸入參數錯誤
+        def test_ExtremePoint_2_DecisionErrorRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Decision', 'Decide', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 'ABC', '>=']],
+                    ['End0', 'ExtremePointMode', ['line_A'], []],
+                    ]
+            DecisionList = DecisionErrorException(list_1)
+            self.assertEqual(DecisionList.getFinalErrMsg(), 'Error: \"Decision參數設定錯誤\"\n條件式 比較值錯誤\n')     
             
     unittest.main()
