@@ -223,32 +223,48 @@ def DecisionErrorRaise(InputList):
     if eval('DecisionErrorException' + '(InputList)'+'.getFinalErrMsg()') != '':
            exec('raise '+ 'DecisionErrorException' + '(InputList)')
            
-#==============================================================================
-# class LoopErrorException(DecisionErrorException):
-#     def __init__(self, InputList, err='Error: \"Decision參數設定錯誤\"\n'):
-#         DecisionList = self.getDecisionBlock(InputList)
-#         CiunterErrMsg = 
-#         ConditionalErrMsg = 
-#         self.err = err + ParameterErrMsg + ValueErrMsg
-#         if (InputErrMsg + OutputErrMsg) =='':
-#             self.err = ''
-#         Exception.__init__(self, self.err)
-#     
-#     def getDecisionBlock(self, InputList):
-#         DecisionList = []
-#         for i in range(len(InputList)):
-#             if InputList[i][1].find('Loops') != -1:
-#                 DecisionList.append(InputList[i])
-#         return DecisionList 
-#     
-#      def getParameterErrMsg(self, DecisionList):
-#         ErrMsg = {'Counter 錯誤'}
-#         return ErrMsg
-# 
-#     def setValueErrMsg(self):
-#         ErrMsg = {'條件式 比較值錯誤'}
-#         return ErrMsg
-#==============================================================================
+           
+class LoopErrorException(DecisionErrorException):
+    def __init__(self, InputList, err='Error: \"Loop參數設定錯誤\"\n'):
+        LoopList = self.getLoopBlock(InputList)
+        ErrMsg = self.getErrMsg(LoopList)
+        self.err = err + ErrMsg
+        if (err + ErrMsg) =='':
+            self.err = ''
+        Exception.__init__(self, self.err)
+    
+    def getLoopBlock(self, InputList):
+        DecisionList = []
+        for i in range(len(InputList)):
+            if InputList[i][1].find('Loops') != -1:
+                DecisionList.append(InputList[i])
+        return DecisionList 
+    
+    def getErrMsg(self, LoopList):
+        HasConditional = False 
+        HasCounter = False
+        
+        ErrFlag = 0
+        for i in range(len(LoopList)):
+            if type(LoopList[i][4][1]) != int:
+                ErrFlag = -1
+        err =  ErrMsgDict[str(ErrFlag)]
+        if err != '':
+            err =  err +'\n'
+        return err
+        
+    
+    def getParameterErrMsg(self, DecisionList):
+        ErrMsg = {'Counter 錯誤'}
+        return ErrMsg
+
+    def setValueErrMsg(self):
+        ErrMsg = {'條件式 比較值錯誤'}
+        return ErrMsg
+
+def LoopErrorRaise(InputList):
+    if eval('LoopErrorException' + '(InputList)'+'.getFinalErrMsg()') != '':
+           exec('raise '+ 'LoopErrorException' + '(InputList)')    
 
 #==============================================================================
 # ErrorMsg = [HasStart_ErrMsg, HasEnd_ErrMsg, StartMissingLine_ErrMsg,
@@ -435,7 +451,7 @@ if __name__ =='__main__':
             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\nStart 僅能有一個\n缺少 End\n')
             
         # Decision Error
-        # 輸入參數正確
+        # Decision輸入參數正確
         def test_ExtremePoint_1_DecisionErrorRaise(self):
             list_1=[
                     ['Start', 'ExtremePointMode', [], ['line_0']],
@@ -445,8 +461,19 @@ if __name__ =='__main__':
                     ]
             DecisionList = DecisionErrorException(list_1)
             self.assertEqual(DecisionList.getFinalErrMsg(), '')
-        # 輸入參數錯誤
+        # Decision Error
+        # 無 Decision 但輸入參數正確
         def test_ExtremePoint_2_DecisionErrorRaise(self):
+            list_1=[
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Loop1', 'Loop', ['line_1', 'line_2'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
+                    ['End0', 'ExtremePointMode', ['line_A', 'line_0'], []],
+                    ]
+            DecisionList = DecisionErrorException(list_1)
+            self.assertEqual(DecisionList.getFinalErrMsg(), '')    
+        # 輸入參數錯誤
+        def test_ExtremePoint_3_DecisionErrorRaise(self):
             list_1=[
                     ['Start', 'ExtremePointMode', [], ['line_0']],
                     ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
