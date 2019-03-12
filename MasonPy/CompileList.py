@@ -251,8 +251,9 @@ if __name__=='__main__':
 
      list=[
 ['Start', 'ExtremePointMode', [], ['line_0']],
-['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
+
 ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
+['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
 ['End0', 'ExtremePointMode', ['line_A'], []],
     ]
 
