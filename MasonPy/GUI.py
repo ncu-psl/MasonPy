@@ -16,7 +16,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import random
 
-import CompileList, SetModule
+import CompileList, SetModule, FrameworkDebugger
 AllFile = SetModule.getFile()
 for i in AllFile:
     exec('from '+ i + ' import*')
@@ -31,6 +31,7 @@ linearray = []                                          #(startbutton, endbutton
 linetype = 'true'
 linenum = 0
 figure = plt.figure()
+errormsg = '123'
 
 buttonlist = []
 
@@ -500,6 +501,7 @@ class rightcanvas(QWidget):
         super().__init__()
     
         global figure
+        global errormsg
         
         button_widget = QWidget()
         layout2 = QtWidgets.QHBoxLayout()
@@ -532,9 +534,12 @@ class rightcanvas(QWidget):
         
         self.canvas = FigureCanvas(figure)
         
+        self.errorlabel = QLabel(errormsg)
+        
         layout = QtWidgets.QGridLayout()
         layout.addWidget(self.canvas, 0 , 0, 10, 1)
         layout.addWidget(button_widget, 10, 0)
+        layout.addWidget(self.errorlabel, 12, 0)
         
         self.setLayout(layout)
         
@@ -812,6 +817,7 @@ class HelloWindow(QMainWindow):
         global label
         global windspeed
         global figure
+        global errormsg
 
         #rightlowlayout = QVBoxLayout()
         #self.canvas.draw()
@@ -1112,7 +1118,6 @@ class HelloWindow(QMainWindow):
         global leftwidget
         global buttonlist
         count = 0
-        
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
         for i in buttonlist:
@@ -1474,8 +1479,19 @@ class HelloWindow(QMainWindow):
 #                     f.write(str(buttonlist[i].loop_time))
 #                     f.write("],\n")
 # =============================================================================
-                    
-        CompileList.execBlockChart(finallist)
+        finallist = [
+                    ['Start', 'ExtremePointMode', [], ['line_0']],
+                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
+                    ['Decision', 'Decide', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 'ABC', '>=']],
+                    ['End0', 'ExtremePointMode', ['line_A'], []],
+                    ]
+        
+        errormsg = FrameworkDebugger.DecisionErrorException(finallist).getFinalErrMsg()
+        
+        if errormsg  != '':
+            rightwidget.errorlabel.setText(errormsg)
+        else:
+            CompileList.execBlockChart(finallist)
         
 # =============================================================================
 #         isPaintWindSpeed = True
@@ -1486,7 +1502,7 @@ class HelloWindow(QMainWindow):
         #print('print figure',figure)
 
 
-        HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
 # =============================================================================
 #         str_ylabel_2 = "RPM"
 #         str_ylabel_3 = "Power   ( W )"
