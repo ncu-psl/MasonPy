@@ -350,7 +350,7 @@ def TestErrorRaise(InputList):
     # 檢查線Loop是否設定正確              
     try:
         LoopErrorRaise(InputList)
-    except MissingBlockException as e:
+    except LoopErrorException as e:
         LoopErrormsg = str(sys.exc_info()[1])
         ALLErrMsg = ALLErrMsg + '\n' + LoopErrormsg    
 
@@ -498,7 +498,8 @@ if __name__ =='__main__':
              list_1=[
                      ['Start', 'ExtremePointMode', [], ['line_0']],
                      ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-                     ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],                     ]
+                     ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],                    
+                     ]
              ExtremePointList = MissingBlockException(list_1)
              self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 End\n')
          # 缺少 Start 缺少 End    
@@ -577,11 +578,13 @@ if __name__ =='__main__':
              self.assertEqual(LoopList.getFinalErrMsg(), '')    
             
 #    unittest.main()
+    
     list_1=[
-             ['Start', 'ExtremePointMode', [], ['line_0']],
+             ['Start', 'ExtremePointMode', [], ['line_0']], 
              ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-             ['Decision1', 'Decide', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 'ABC', '>=']],
+             ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], None],
              ['End0', 'ExtremePointMode', ['line_A'], []],
              ]
     Msg = TestErrorRaise(list_1)
     print(Msg)
+
