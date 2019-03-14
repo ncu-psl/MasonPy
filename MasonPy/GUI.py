@@ -1482,12 +1482,12 @@ class HelloWindow(QMainWindow):
         finallist = [
                     ['Start', 'ExtremePointMode', [], ['line_0']],
                     ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-                    ['Decision', 'Decide', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 'ABC', '>=']],
+                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], None],
                     ['End0', 'ExtremePointMode', ['line_A'], []],
                     ]
-        
-        errormsg = FrameworkDebugger.DecisionErrorException(finallist).getFinalErrMsg()
-        
+        print(5)
+        errormsg = FrameworkDebugger.TestErrorRaise(finallist)
+        print(5)
         if errormsg  != '':
             rightwidget.errorlabel.setText(errormsg)
         else:
