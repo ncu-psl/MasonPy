@@ -31,7 +31,7 @@ linearray = []                                          #(startbutton, endbutton
 linetype = 'true'
 linenum = 0
 figure = plt.figure()
-errormsg = '123'
+errormsg = ''
 
 buttonlist = []
 
@@ -1330,7 +1330,6 @@ class HelloWindow(QMainWindow):
             if i.mode == 'Loop':
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
-        print(finallist)
 # =============================================================================
 #         f = open('list_useinunitest.txt', 'w')
 #         for i in range(0, len(buttonlist)):
@@ -1479,15 +1478,9 @@ class HelloWindow(QMainWindow):
 #                     f.write(str(buttonlist[i].loop_time))
 #                     f.write("],\n")
 # =============================================================================
-        finallist = [
-                    ['Start', 'ExtremePointMode', [], ['line_0']],
-                    ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-                    ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], None],
-                    ['End0', 'ExtremePointMode', ['line_A'], []],
-                    ]
-        print(5)
+        
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
-        print(5)
+        
         if errormsg  != '':
             rightwidget.errorlabel.setText(errormsg)
         else:
