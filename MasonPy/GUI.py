@@ -1319,17 +1319,30 @@ class HelloWindow(QMainWindow):
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:
+                        if i.next_index == 'null':
+                            i.next_index = ''
                     pac = ["Mode_" + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
                 else:
                     if i.string == 'End':
                         pac = [i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, []]
                     else:
+                        if i.next_index == 'null':
+                            i.next_index = ''
                         pac = [i.string, 'ExtremePointMode', i.inputline, [i.next_index]]
             if i.mode == 'Decision': 
+                if i.true_index == 'null':
+                    i.true_index = ''
+                if i.false_index == 'null':
+                    i.false_index = ''
                 pac = [i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]]
             if i.mode == 'Loop':
+                if i.cont_index == 'null':
+                    i.cont_index = ''
+                if i.break_index =='null':
+                    i.break_index = ''
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
+        print(finallist)
 # =============================================================================
 #         f = open('list_useinunitest.txt', 'w')
 #         for i in range(0, len(buttonlist)):
