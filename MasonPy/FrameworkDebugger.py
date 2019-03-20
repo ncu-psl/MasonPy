@@ -80,7 +80,7 @@ class ProcessMissingLineException(MissingLineException):
         return ErrMsg
     
     def setOutputErrMsg(self):
-        ErrMsg = {'0': 'Process 缺少輸出線', '1': '', '2': ''}
+        ErrMsg = {'0': 'Process 缺少輸出線', '1': '', '2': 'Process 僅能一條輸出線'}
         return ErrMsg
 
 #==============================================================================
@@ -139,7 +139,7 @@ def MissingLineRaise(BlockName, InputNum, OutputNum):
 # Loop (n>=0)
 #==============================================================================    
 class MissingBlockException(Exception):
-    def __init__(self, InputList = [], err='Error: \"錯誤端點\"\n'):
+    def __init__(self, InputList = [], err='Error: \"端點錯誤\"\n'):
         ExtremePointList = self.getExtremePointBlock(InputList)
         StartErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'Start'), self.setStartErrMsg())
         EndErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'End'), self.setEndErrMsg())
@@ -273,9 +273,9 @@ class LoopErrorException(DecisionErrorException):
     def getwhichErrMsg(self, HasConditional, HasCounter):
         ErrMsg = ''
         if HasConditional is False and HasCounter is False:
-            ErrMsg = self.getParameterErrMsg() + '\n或\n' + self.getValueErrMsg()
-        
+            ErrMsg = '至少須設定 條件式 或 Counter'
         return ErrMsg    
+    
     
     def getParameterErrMsg(self):
         ErrMsg = 'Counter 錯誤'
@@ -406,17 +406,17 @@ if __name__ =='__main__':
          
          # Process (輸入線,輸出線)=(n>0, n>0)
          def test_Process_1_MissingLineRaise(self):
-             self.assertEqual(TestMissingLineRaise('Process', 1, 4), None)
+             self.assertEqual(TestMissingLineRaise('Process', 1, 4), 'Error: "連接線錯誤"\nProcess 僅能一條輸出線\n')
          def test_Process_2_MissingLineRaise(self):
              self.assertEqual(TestMissingLineRaise('Process', 5, 1), None)
          def test_Process_3_MissingLineRaise(self):
-             self.assertEqual(TestMissingLineRaise('Process', 3, 3), None)
+             self.assertEqual(TestMissingLineRaise('Process', 3, 3), 'Error: "連接線錯誤"\nProcess 僅能一條輸出線\n')
          # End 輸入線正確 輸出線錯誤
          def test_Process_4_MissingLineRaise(self):
              self.assertEqual(TestMissingLineRaise('Process', 3, 0), 'Error: "連接線錯誤"\nProcess 缺少輸出線\n')
          # End 輸入線錯誤 輸出線正確
          def test_Process_5_MissingLineRaise(self):
-             self.assertEqual(TestMissingLineRaise('Process', 0, 3), 'Error: "連接線錯誤"\nProcess 缺少輸入線\n')
+             self.assertEqual(TestMissingLineRaise('Process', 0, 3), 'Error: "連接線錯誤"\nProcess 缺少輸入線\nProcess 僅能一條輸出線\n')
          # End 輸入線錯誤 輸出線錯誤
          def test_Process_6_MissingLineRaise(self):
              self.assertEqual(TestMissingLineRaise('Process', 0, 0), 'Error: "連接線錯誤"\nProcess 缺少輸入線\nProcess 缺少輸出線\n')    
@@ -492,7 +492,7 @@ if __name__ =='__main__':
                      ['End0', 'ExtremePointMode', ['line_A'], []],
                      ]
              ExtremePointList = MissingBlockException(list_1)
-             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 Start\n')
+             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "端點錯誤"\n缺少 Start\n')
          # 缺少 End    
          def test_ExtremePoint_3_MissingBlockRaise(self):
              list_1=[
@@ -501,7 +501,7 @@ if __name__ =='__main__':
                      ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],                    
                      ]
              ExtremePointList = MissingBlockException(list_1)
-             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 End\n')
+             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "端點錯誤"\n缺少 End\n')
          # 缺少 Start 缺少 End    
          def test_ExtremePoint_4_MissingBlockRaise(self):
              list_1=[
@@ -509,7 +509,7 @@ if __name__ =='__main__':
                      ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_0'],['WindSpeed', 8, '>='], 200],
                      ]
              ExtremePointList = MissingBlockException(list_1)
-             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\n缺少 Start\n缺少 End\n')
+             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "端點錯誤"\n缺少 Start\n缺少 End\n')
          # 過多 Start 缺少 End
          def test_ExtremePoint_5_MissingBlockRaise(self):
              list_1=[
@@ -520,7 +520,7 @@ if __name__ =='__main__':
                      ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
                      ]
              ExtremePointList = MissingBlockException(list_1)
-             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "錯誤端點"\nStart 僅能有一個\n缺少 End\n')
+             self.assertEqual(ExtremePointList.getFinalErrMsg(), 'Error: "端點錯誤"\nStart 僅能有一個\n缺少 End\n')
              
          # Decision Error
          # Decision輸入參數正確
@@ -565,7 +565,7 @@ if __name__ =='__main__':
                     ['End0', 'ExtremePointMode', ['line_A'], []],
                     ]
              LoopList = LoopErrorException(list_1)
-             self.assertEqual(LoopList.getFinalErrMsg(), 'Error: \"Loop參數設定錯誤\"\nCounter 錯誤\n或\n條件式 比較值錯誤\n')
+             self.assertEqual(LoopList.getFinalErrMsg(), 'Error: "Loop參數設定錯誤"\n至少須設定 條件式 或 Counter\n')
          # 輸入正確    
          def test_2_LoopErrorRaise(self):
              list_1=[
@@ -577,14 +577,31 @@ if __name__ =='__main__':
              LoopList = LoopErrorException(list_1)
              self.assertEqual(LoopList.getFinalErrMsg(), '')    
             
-#    unittest.main()
+    unittest.main()
     
-    list_1=[
-             ['Start', 'ExtremePointMode', [], ['line_0']], 
-             ['Mode_A', 'Mode_Init', ['line_0'], ['line_1']],
-             ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], None],
-             ['End0', 'ExtremePointMode', ['line_A'], []],
-             ]
-    Msg = TestErrorRaise(list_1)
-    print(Msg)
+#==============================================================================
+#     list_1=[['Start', 'ExtremePointMode', [], ['line_0']],
+# ['Loop1', 'Loop', ['line_1'], ['line_2', 'line_3'],[None, None, None], 10],
+# ['Mode_A', 'testMode', ['line_0', 'line_3'], ['line_1']],
+# ['End1', 'ExtremePointMode', ['line_2'], []],
+#     ]
+#==============================================================================
+#==============================================================================
+#     list_2=[['Start', 'ExtremePointMode', [], ['line_0']],
+# ['Mode_A', 'testMode', ['line_1',], []],
+# ['End1', 'ExtremePointMode', [], []],
+#     ]
+#==============================================================================
+#==============================================================================
+#     list_3=[
+# 
+#  ['Mode_A', 'testMode', [], ['line_1']],
+#  ['Loop5', 'Loop', ['line_1'], ['line_A', 'line_B','line_C'],['A', 8, '<'], 5],
+#  ['End0', 'ExtremePointMode', ['line_A'], []],
+#  ['End1', 'ExtremePointMode', ['line_B'], []],
+#  ['End2', 'ExtremePointMode', ['line_C'], []],
+#      ]
+#     Msg = TestErrorRaise(list_3)
+#     print(Msg)
+#==============================================================================
 
