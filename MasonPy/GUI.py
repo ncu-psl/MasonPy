@@ -1319,8 +1319,8 @@ class HelloWindow(QMainWindow):
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:
-                        if i.next_index == 'null':
-                            i.next_index = ''
+                    if i.next_index == 'null':
+                        i.next_index = ''
                     pac = ["Mode_" + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
                 else:
                     if i.string == 'End':
