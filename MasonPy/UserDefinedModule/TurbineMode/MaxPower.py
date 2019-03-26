@@ -5,6 +5,7 @@ from UserDefinedModule.TurbineMode.WindTurbine import*
 class Mode_MaxPower(turbineMode):
     def CalculateValue(self):
         self.readFile()
+        self.left_data_size = self.lastMode.left_data_size -1
         self.currentTime  = self.lastMode.currentTime + 1
         self.WindSpeedList= self.lastMode.WindSpeedList
         self.WindSpeed    = self.WindSpeedList[self.currentTime]

@@ -176,7 +176,7 @@ class Decision_Button(QPushButton):
             self.compare_stuff = mod
             self.compare_symbol = compare
             self.setText(self.compare_stuff + '  '+ self.compare_symbol + ' ' + str(self.compare_num))
-            self.string = "Check_" + self.compare_stuff
+            self.string = "Decision_" + self.compare_stuff
     
     def errordialog(self):
         dia = QMessageBox.warning(self, "error", "Require a fuction connected ahead.", QMessageBox.Close) 
@@ -190,7 +190,7 @@ class Loop_Button(QPushButton):
     cont_index = 'null'
     break_index = 'null'
     nodenum = 0
-    loop_time = 200
+    loop_time = 0
     position = QPoint()
     mode = 'Loop'
     compare_num = None
@@ -866,7 +866,7 @@ class HelloWindow(QMainWindow):
                         f.write('ExtremePointMode ')
                         f.write('[')
                         for j in i.inputline:
-                           f.write(j+',')
+                           f.write(j+', ')
                         f.write('] ')
                         f.write('[')
                         f.write(i.next_index)
@@ -880,7 +880,10 @@ class HelloWindow(QMainWindow):
                     f.write(j+',')
                 f.write('] ')
                 f.write('[' + i.true_index + ',' + i.false_index + '] ')
-                f.write('[' + i.compare_stuff + ',' + str(i.compare_num) + ',' + i.compare_symbol + ']')
+                if i.compare_stuff != None and i.compare_num != None and i.compare_symbol != None:
+                    f.write('[' + i.compare_stuff + ',' + str(i.compare_num) +',' + i.compare_symbol + '] ')
+                else:
+                    f.write('[None,None,None] ')
                 
             elif i.mode == 'Loop':                                              #write i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [0, i.loop_time]
                 f.write(i.string + str(i.nodenum) + ' ')
@@ -890,7 +893,11 @@ class HelloWindow(QMainWindow):
                     f.write(j+',')
                 f.write('] ')
                 f.write('[' + i.cont_index + ',' + i.break_index + '] ')
-                f.write('[0,' + str(i.loop_time) + ']')
+                if i.compare_stuff != None and i.compare_num != None and i.compare_symbol != None:
+                    f.write('[' + i.compare_stuff + ',' + str(i.compare_num) +',' + i.compare_symbol + '] ')
+                else:
+                    f.write('[None,None,None] ')
+                f.write(str(i.loop_time))
             f.write('\n')
         f.close()
             
@@ -900,152 +907,149 @@ class HelloWindow(QMainWindow):
         
         linearray = []
         buttonlist = []
-        count = 1                                   #number of string line being imported in file
+        count = 0                                   #number of string line being imported in file
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
-        
-        null_button = Process_Button('123', self)
         
         f = open('windele.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
-            if(temp[0] == 'Start'):
-                exec("self.add_"+temp[0]+"()")
-                buttonlist[0].string = temp[0]
-                buttonlist[0].next_index = temp[4]
-                linearray.append([buttonlist[0],null_button,'true',temp[4]])
+            if temp[1] == 'ExtremePointMode':
+                if temp[0] == 'Start':
+                    exec('self.add_Start()')
+                    linearray.append([buttonlist[count],'','true',temp[3][1:-1]])
+                    count += 1
+                else:
+                    exec('self.add_End()')
+                    if len(temp[2]) != 2:
+                        input_line = temp[2][1:-2].split(',')
+                        for j in input_line:
+                            for i in linearray:
+                                if j == i[3]:
+                                    i[1] = buttonlist[count]
+                                    true_line_added = 'true'
+                            if true_line_added == 'false':
+                                linearray.append(['',buttonlist[count],'null',j])
+                            true_line_added = 'false'
+                    count += 1
+            elif temp[1] == 'Decide':
+                exec('self.add_Decision()')
                 
-                if(len(temp[5]) != 2):
-                    input_line = temp[5][1:-2].split(',')
+                element = temp[4][1:-1].split(',')
+                buttonlist[count].compare_stuff = element[0]
+                buttonlist[count].compare_num = float(element[1])
+                buttonlist[count].compare_symbol = element[2]
+                buttonlist[count].setText(buttonlist[count].compare_stuff + '  '+ buttonlist[count].compare_symbol + ' ' + str(buttonlist[count].compare_num))
+                buttonlist[count].string = "Decision_" + buttonlist[count].compare_stuff
+                
+                output_line = temp[3][1:-1].split(',')
+                for i in linearray:
+                    if output_line[0] == i[3]:
+                        i[0] = buttonlist[count]
+                        i[2] = 'true'
+                        true_line_added = 'true'
+                    if output_line[1] == i[3]:
+                        i[0] = buttonlist[count]
+                        i[2] = 'false'
+                        false_line_added = 'true'
+                if true_line_added == 'false':
+                    if output_line[0] != 'null':
+                        linearray.append([buttonlist[count],'','true',output_line[0]])
+                if false_line_added == 'false':
+                    if output_line[1] != 'null':
+                        linearray.append([buttonlist[count],'','false',output_line[1]])
+                true_line_added = 'false'
+                false_line_added = 'false'
+                
+                if len(temp[2]) != 2:
+                    input_line = temp[2][1:-2].split(',')
                     for j in input_line:
                         for i in linearray:
                             if j == i[3]:
-                                i[1] = buttonlist[0]
+                                i[1] = buttonlist[count]
                                 true_line_added = 'true'
-                        if(true_line_added == 'false'):
-                            linearray.append([null_button,buttonlist[0],'null',j])
+                        if true_line_added == 'false':
+                            linearray.append(['',buttonlist[count],'null',j])
                         true_line_added = 'false'
-                                    
-            else:
-                if(temp[0] == 'Comparisongreater'):
-                    exec("self.add_Decision()")
-                    compare = '>'
-                    
-                elif(temp[0] == 'Comparisongreaterorequal'):
-                    exec("self.add_Decision()")
-                    compare = '>='
-                elif(temp[0] == 'Loop'):
-                    exec("self.add_Loop()")
-                else:
-                    name = temp[0].split('_')
-                    exe_name = ''
-                    for i in name:
-                        if(i!='Mode'):
-                            exe_name = exe_name + '_' + i
-                    exec("self.add_Process(temp[0])")
+                count += 1
+            
+            elif temp[1] == 'Loop':
+                exec('self.add_Loop()')
+                buttonlist[count].loop_time = int(temp[5])
                 
-                if(temp[1] == 'process'):
-                    buttonlist[count].next_index = temp[4]
-                    
-                    for i in linearray:
-                        if temp[4] == i[3]:
-                            i[0] = buttonlist[count]
-                            i[2] = 'true'
-                            true_line_added = 'true'
-                    if(true_line_added == 'false'):
-                        if(temp[4] != 'null'):
-                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
-                    true_line_added = 'false'
-                    
-                    if(len(temp[5]) != 2):
-                        input_line = temp[5][1:-2].split(',')
-                        for j in input_line:
-                            for i in linearray:
-                                if j == i[3]:
-                                    i[1] = buttonlist[count]
-                                    true_line_added = 'true'
-                            if(true_line_added == 'false'):
-                                linearray.append([null_button,buttonlist[count],'null',j])
-                            true_line_added = 'false'
+                element = temp[4][1:-1].split(',')
+                if element[0] != 'None':
+                    buttonlist[count].compare_stuff = element[0]
+                if element[1] != 'None':
+                    buttonlist[count].compare_num = float(element[1])
+                if element[2] != 'None':
+                    buttonlist[count].compare_symbol = element[2]
+                
+                if buttonlist[count].loop_time == 0:
+                    if buttonlist[count].compare_stuff != None:
+                        buttonlist[count].setText(buttonlist[count].compare_stuff + ' '+ buttonlist[count].compare_symbol + ' ' + str(buttonlist[count].compare_num))
+                else:
+                    if buttonlist[count].compare_stuff != None:
+                        buttonlist[count].setText(buttonlist[count].compare_stuff + ' '+ buttonlist[count].compare_symbol + ' ' + str(buttonlist[count].compare_num) + ' or ' + 'Loop ' + str(buttonlist[count].loop_time) + ' times.')
+                    else:
+                        buttonlist[count].setText('Loop ' + str(buttonlist[count].loop_time) + ' times.')
                         
-                    count += 1
-                    
-                if(temp[1] == 'decision'):
-                    buttonlist[count].string = temp[0]
-                    buttonlist[count].true_index = temp[4]
-                    buttonlist[count].false_index = temp[5]
-                    buttonlist[count].compare_stuff = temp[7]
-                    buttonlist[count].compare_num = float(temp[8])
-                    buttonlist[count].setText(buttonlist[count].compare_stuff + '  '+ compare + ' ' + str(buttonlist[count].compare_num))
-                    
+                output_line = temp[3][1:-1].split(',')
+                for i in linearray:
+                    if output_line[0] == i[3]:
+                        i[0] = buttonlist[count]
+                        i[2] = 'true'
+                        true_line_added = 'true'
+                    if output_line[1] == i[3]:
+                        i[0] = buttonlist[count]
+                        i[2] = 'false'
+                        false_line_added = 'true'
+                if true_line_added == 'false':
+                    if output_line[0] != 'null':
+                        linearray.append([buttonlist[count],'','true',output_line[0]])
+                if false_line_added == 'false':
+                    if output_line[1] != 'null':
+                        linearray.append([buttonlist[count],'','false',output_line[1]])
+                true_line_added = 'false'
+                false_line_added = 'false'
+                
+                if len(temp[2]) != 2:
+                    input_line = temp[2][1:-2].split(',')
+                    for j in input_line:
+                        for i in linearray:
+                            if j == i[3]:
+                                i[1] = buttonlist[count]
+                                true_line_added = 'true'
+                        if true_line_added == 'false':
+                            linearray.append(['',buttonlist[count],'null',j])
+                        true_line_added = 'false'
+                count += 1
+            
+            else:
+                exec('self.add_Process(temp[1])')
+                
+                if len(temp[3]) != 2:
                     for i in linearray:
-                        if temp[4] == i[3]:
+                        if temp[3][1:-1] == i[3]:
                             i[0] = buttonlist[count]
                             i[2] = 'true'
                             true_line_added = 'true'
-                        if temp[5] == i[3]:
-                            i[0] = buttonlist[count]
-                            i[2] = 'false'
-                            false_line_added = 'true'
-                    if(true_line_added == 'false'):
-                        if(temp[4] != 'null'):
-                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
-                    if(false_line_added == 'false'):
-                        if(temp[5] != 'null'):
-                            linearray.append([buttonlist[count],null_button,'false',temp[5]])
+                    if true_line_added == 'false':
+                        linearray.append([buttonlist[count],'','true',temp[3][1:-1]])
                     true_line_added = 'false'
-                    false_line_added = 'false'
-                    
-                    if(len(temp[6]) != 2):
-                        input_line = temp[6][1:-2].split(',')
-                        for j in input_line:
-                            for i in linearray:
-                                if j == i[3]:
-                                    i[1] = buttonlist[count]
-                                    true_line_added = 'true'
-                            if(true_line_added == 'false'):
-                                linearray.append([null_button,buttonlist[count],'null',j])
-                            true_line_added = 'false'
-                        
-                    count += 1
-                    
-                if(temp[1] == 'loop'):
-                    buttonlist[count].string = temp[0]
-                    buttonlist[count].cont_index = temp[4]
-                    buttonlist[count].break_index = temp[5]
-                    buttonlist[count].loop_time = temp[7]
-                    buttonlist[count].setText('Loop ' + str(buttonlist[count].loop_time) + ' times')
-                    
-                    for i in linearray:
-                        if temp[4] == i[3]:
-                            i[0] = buttonlist[count]
-                            i[2] = 'true'
-                            true_line_added = 'true'
-                        if temp[5] == i[3]:
-                            i[0] = buttonlist[count]
-                            i[2] = 'false'
-                            false_line_added = 'true'
-                    if(true_line_added == 'false'):
-                        if(temp[4]!='null'):
-                            linearray.append([buttonlist[count],null_button,'true',temp[4]])
-                    if(false_line_added == 'false'):
-                        if(temp[4]!='null'):
-                            linearray.append([buttonlist[count],null_button,'false',temp[4]])
-                    true_line_added = 'false'
-                    false_line_added = 'false'
-                    
-                    if(len(temp[6]) != 2):
-                        input_line = temp[6][1:-2].split(',')
-                        for j in input_line:
-                            for i in linearray:
-                                if j == i[3]:
-                                    i[1] = buttonlist[count]
-                                    true_line_added = 'true'
-                            if(true_line_added == 'false'):
-                                linearray.append([null_button,buttonlist[count],'null',j])
-                            true_line_added = 'false'
-
-                    count += 1
+                
+                if len(temp[2]) != 2:
+                    input_line = temp[2][1:-2].split(',')
+                    for j in input_line:
+                        for i in linearray:
+                            if j == i[3]:
+                                i[1] = buttonlist[count]
+                                true_line_added = 'true'
+                        if true_line_added == 'false':
+                            linearray.append(['',buttonlist[count],'null',j])
+                        true_line_added = 'false'
+                count += 1
+                
         f.close()    
         
     def add_button(self):
@@ -1138,7 +1142,7 @@ class HelloWindow(QMainWindow):
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
-        leftwidget.button.setText('Loop ' + str(leftwidget.button.loop_time) + ' times')
+        leftwidget.button.setText('Loop')
         leftwidget.button.string = 'Loop'
         for i in buttonlist:
             if i.string == 'Loop':
@@ -1319,17 +1323,30 @@ class HelloWindow(QMainWindow):
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:
+                    if i.next_index == 'null':
+                        i.next_index = ''
                     pac = ["Mode_" + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
                 else:
                     if i.string == 'End':
                         pac = [i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, []]
                     else:
+                        if i.next_index == 'null':
+                            i.next_index = ''
                         pac = [i.string, 'ExtremePointMode', i.inputline, [i.next_index]]
             if i.mode == 'Decision': 
+                if i.true_index == 'null':
+                    i.true_index = ''
+                if i.false_index == 'null':
+                    i.false_index = ''
                 pac = [i.string+str(i.nodenum), 'Decide', i.inputline, [i.true_index, i.false_index], [i.compare_stuff, i.compare_num, i.compare_symbol]]
             if i.mode == 'Loop':
+                if i.cont_index == 'null':
+                    i.cont_index = ''
+                if i.break_index =='null':
+                    i.break_index = ''
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
+        print(finallist)
 # =============================================================================
 #         f = open('list_useinunitest.txt', 'w')
 #         for i in range(0, len(buttonlist)):
@@ -1478,13 +1495,16 @@ class HelloWindow(QMainWindow):
 #                     f.write(str(buttonlist[i].loop_time))
 #                     f.write("],\n")
 # =============================================================================
-        
+        print(5)
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
-        
+        print(5)
         if errormsg  != '':
             rightwidget.errorlabel.setText(errormsg)
+            print(6)
         else:
+            print(7)
             CompileList.execBlockChart(finallist)
+            print(5)
         
 # =============================================================================
 #         isPaintWindSpeed = True

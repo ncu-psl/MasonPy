@@ -209,7 +209,7 @@ class DecisionErrorException(Exception):
     def getErrMsg(self, DecisionList, ErrMsgDict):
         ErrFlag = 0
         for i in range(len(DecisionList)):
-            if type(DecisionList[i][4][1]) != int:
+            if type(DecisionList[i][4][1]) != int and type(DecisionList[i][4][1]) != float:
                 ErrFlag = -1
                 self.ErrFlag.append(DecisionList[i][0])
         err =  ErrMsgDict[str(ErrFlag)]
@@ -261,7 +261,7 @@ class LoopErrorException(DecisionErrorException):
         HasCounter = True
         
         for i in range(len(LoopList)):
-            if type(LoopList[i][4][1]) != int and type(LoopList[i][5]) != int:
+            if type(LoopList[i][4][1]) != int and type(LoopList[i][4][1]) != float and type(LoopList[i][5]) != int:
                 HasConditional = False
                 HasCounter = False
                 self.ErrFlag.append(LoopList[i][0])

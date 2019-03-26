@@ -86,7 +86,7 @@ def execBlockChart(list):
             number_ExtremePoint += 1
         if name.find('Mode')!= -1:
             number_Process += 1
-        if name.find('Check')!= -1:
+        if name.find('Decision')!= -1:
             number_Decision += 1 
         if name.find('Loop')!= -1:
             number_Loop += 1
@@ -251,6 +251,7 @@ if __name__=='__main__':
 
      list1=[
 ['Start', 'ExtremePointMode', [], ['line_0']],
+
 ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
 ['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
 ['End0', 'ExtremePointMode', ['line_A'], []],
