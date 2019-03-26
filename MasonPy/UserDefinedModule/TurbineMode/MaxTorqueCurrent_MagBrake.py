@@ -14,7 +14,7 @@ class Mode_MaxTorqueCurrent_MagBrake(Mode_MaxTorqueCurrent):
         self.Tsr          = self.CalculateTSR(self.lastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, self.database_MaxTorqueCurrent.Tsr, self.database_MaxTorqueCurrent.Cp)
         self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, self.lastMode.RPM)
-        self.Tg           = self.CalculateTg(self.lastMode.RPM, self.database_MaxTorqueCurrent.RPMtoTg, self.database_MaxTorqueCurrent.Tg)
+        self.Tg           = self.database_MaxTorqueCurrent.Tg
         self.Tm           = self.setTm(110)
         self.Tt           = self.CalculateTotalTorque(self.Tb, self.Tg, self.Tm)  
         self.eff_g        = self.CalculateEff_g(self.lastMode.RPM, self.database_MaxTorqueCurrent.RPMtoEffg, self.database_MaxTorqueCurrent.eff_g) 

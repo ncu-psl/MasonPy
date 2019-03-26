@@ -101,13 +101,13 @@ def ReadData_MaxPower():
 
 
 def ReadData_MaxTorqueCurrent():        
-    RPM_MaxTorqueCurrent, eff_g_MaxTorqueCurrent =  readData("./UserDefinedModule/TurbineData/dataMaxTorqueCurrent_RPMToEff_g.txt")
+    RPM_toEffgMaxTorqueCurrent, eff_g_MaxTorqueCurrent =  readData("./UserDefinedModule/TurbineData/dataMaxTorqueCurrent_RPMToEff_g.txt")
     #  setting in py
     # eff_e_MaxTorqueCurrent setting in py
     eff_e_MaxTorqueCurrent = 0.9
     TorqueGenerator_MaxTorqueCurrent = 110
     Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent = readData("./UserDefinedModule/TurbineData/data_TsrToCp.txt")
-    return RPM_MaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, TorqueGenerator_MaxTorqueCurrent, Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent
+    return RPM_toEffgMaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, TorqueGenerator_MaxTorqueCurrent, Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent
 
 
 if __name__=='__main__':

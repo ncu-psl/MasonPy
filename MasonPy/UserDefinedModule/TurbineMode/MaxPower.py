@@ -22,8 +22,8 @@ class Mode_MaxPower(turbineMode):
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
         
     def readFile(self):
-        self.WindSpeed_MaxPower, self.eff_g_MaxPower, self.eff_e_MaxPower, self.RPM_MaxPower , self.Tg_MaxPower, self.Tsr_MaxPower, self.Cp_MaxPower = ReadData_MaxPower()
-        self.database_MaxPower = referencedata(self.WindSpeed_MaxPower, None, self.eff_g_MaxPower, None, self.RPM_MaxPower , self.Tg_MaxPower, self.Tsr_MaxPower, self.Cp_MaxPower)
+        self.RPMtoEffg_MaxPower, self.eff_g_MaxPower, self.eff_e_MaxPower, self.RPMtoTG_MaxPower , self.Tg_MaxPower, self.Tsr_MaxPower, self.Cp_MaxPower = ReadData_MaxPower()
+        self.database_MaxPower = referencedata( None, self.RPMtoEffg_MaxPower, self.eff_g_MaxPower, self.eff_e_MaxPower, self.RPMtoTG_MaxPower , self.Tg_MaxPower, self.Tsr_MaxPower, self.Cp_MaxPower)
         
         
     

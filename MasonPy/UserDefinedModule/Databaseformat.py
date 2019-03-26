@@ -1,5 +1,5 @@
 class referencedata(object):
-    def __init__(self, WindSpeed=None, RPMtoEffg=None, eff_g=None, eff_e=None, RPMtoTg=None, Tg=None, Tsr=None, Cp=None):
+    def __init__(self, WindSpeed=None, RPMtoEffg=None, eff_g=None, eff_e=None, RPMtoTg=None, Tg=None, Tsr=None, Cp=None):        
         self.WindSpeed = WindSpeed
         self.RPMtoEffg = RPMtoEffg
         
