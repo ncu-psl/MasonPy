@@ -7,6 +7,7 @@ class turbineMode(originalMode):
     def setInit(self):
         parameters = []
 #        parameters.append(['WindSpeedList', WindSpeed])
+        parameters.append(['left_data_size', None])
         parameters.append(['MaxWindSpeed_ThreePhaseShortCircuit', 8])
         parameters.append(['TimeDelta', 0.01])
         parameters.append(['MonmentIntertia', 0.7])
@@ -55,6 +56,8 @@ class turbineMode(originalMode):
         
     def CalculateValue(self):
         # self.lastmode     = LastMode
+        
+        self.left_data_size = self.lastMode.left_data_size -1
         self.currentTime  = self.lastMode.currentTime + 1
         self.WindSpeed    = self.WindSpeedList[self.currentTime]
         self.mode         = self.namemode()
