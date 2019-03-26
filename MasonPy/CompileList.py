@@ -249,15 +249,43 @@ if __name__=='__main__':
 #     ]
 #==============================================================================
 
-     list=[
+     list1=[
 ['Start', 'ExtremePointMode', [], ['line_0']],
 ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
 ['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
 ['End0', 'ExtremePointMode', ['line_A'], []],
     ]
-
-     
-     print(len(execBlockChart(list)))
+     list2 = [['Start', 'ExtremePointMode', [], ['line_0']], 
+['Mode_Mode_Init1', 'Mode_Init', ['line_0'], ['line_1']], 
+['Mode_Mode_ThreePhaseShortCircuit2', 'Mode_ThreePhaseShortCircuit', ['line_1', 'line_8', 'line_9', 'line_24', 'line_38'], ['line_2']], 
+['Mode_Mode_ThreePhaseShortCircuit_MagBrake3', 'Mode_ThreePhaseShortCircuit_MagBrake', ['line_34', 'line_39'], ['line_35']], 
+['Mode_Mode_MaxPower4', 'Mode_MaxPower', ['line_10', 'line_17'], ['line_11']], 
+['Mode_Mode_MaxTorqueCurrent5', 'Mode_MaxTorqueCurrent', ['line_14', 'line_16', 'line_23'], ['line_18']], 
+['Mode_Mode_MaxTorqueCurrent6', 'Mode_MaxTorqueCurrent', ['line_5', 'line_21', 'line_29'], ['line_25']], 
+['Mode_Mode_MaxTorqueCurrent_MagBrake7', 'Mode_MaxTorqueCurrent_MagBrake', ['line_28', 'line_33'], ['line_30']], 
+['Decision_left_data_size0', 'Decide', ['line_2'], ['line_4', 'line_3'], ['left_data_size', 0.0, '>']], 
+['End8', 'ExtremePointMode', ['line_3'], []], 
+['Decision_RPM1', 'Decide', ['line_4'], ['line_5', 'line_6'], ['RPM', 42.0, '>']], 
+['Decision_left_data_size2', 'Decide', ['line_18'], ['line_19', 'line_20'], ['left_data_size', 0.0, '>']], 
+['Decision_RPM3', 'Decide', ['line_22'], ['line_23', 'line_24'], ['RPM', 42.0, '>']], 
+['Decision_RPM4', 'Decide', ['line_19'], ['line_21', 'line_22'], ['RPM', 400.0, '>=']], 
+['Decision_power5', 'Decide', ['line_15'], ['line_16', 'line_17'], ['power', 3300.0, '>=']], 
+['Decision_RPM6', 'Decide', ['line_12'], ['line_14', 'line_15'], ['RPM', 400.0, '>=']], 
+['Decision_left_data_size7', 'Decide', ['line_11'], ['line_12', 'line_13'], ['left_data_size', 0.0, '>']], 
+['Decision_WindSpeed8', 'Decide', ['line_6'], ['line_9', 'line_7'], ['WindSpeed', 8.0, '>']], 
+['Loop0', 'Loop', ['line_37'], ['line_38', 'line_39'], [None, None, None], 2000], 
+['Loop1', 'Loop', ['line_27'], ['line_28', 'line_29'], [None, None, None], 8], 
+['Loop2', 'Loop', ['line_7'], ['line_10', 'line_8'], [None, None, None], 200], 
+['End9', 'ExtremePointMode', ['line_13'], []], 
+['End10', 'ExtremePointMode', ['line_20'], []], 
+['Decision_left_data_size9', 'Decide', ['line_25'], ['line_27', 'line_26'], ['left_data_size', 0.0, '>']], 
+['End11', 'ExtremePointMode', ['line_26'], []], 
+['Decision_left_data_size10', 'Decide', ['line_30'], ['line_32', 'line_31'], ['left_data_size', 0.0, '>']], 
+['End12', 'ExtremePointMode', ['line_31'], []], 
+['Decision_RPM11', 'Decide', ['line_32'], ['line_33', 'line_34'], ['RPM', 42.0, '>']], 
+['End13', 'ExtremePointMode', ['line_36'], []], 
+['Decision_left_data_size12', 'Decide', ['line_35'], ['line_37', 'line_36'], ['left_data_size', 0.0, '>']]]
+     print(len(execBlockChart(list2)))
 #==============================================================================
 #     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
 #     print(type(newObj1))
