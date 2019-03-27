@@ -1,5 +1,6 @@
 from BasicModule.Mode import*
 from numpy import*
+import Parameter
 #from Databaseformat import*
 
 

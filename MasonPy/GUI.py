@@ -17,6 +17,7 @@ from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationTo
 import random
 
 import CompileList, SetModule, FrameworkDebugger
+import Parameter
 AllFile = SetModule.getFile()
 for i in AllFile:
     exec('from '+ i + ' import*')
@@ -1495,17 +1496,12 @@ class HelloWindow(QMainWindow):
 #                     f.write(str(buttonlist[i].loop_time))
 #                     f.write("],\n")
 # =============================================================================
-        print(5)
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
-        print(5)
+        
         if errormsg  != '':
             rightwidget.errorlabel.setText(errormsg)
-            print(6)
         else:
-            print(7)
             CompileList.execBlockChart(finallist)
-            print(5)
-        
 # =============================================================================
 #         isPaintWindSpeed = True
 #         isPaintRPM       = True
@@ -1566,40 +1562,37 @@ class HelloWindow(QMainWindow):
         figure.clf()
         
         str_ylabel_2 = "RPM"
-        #str_ylabel_3 = "Power   ( W )"
-        #y2X10  = [i*10 for i in Parameter.RPM]
+        str_ylabel_3 = "Power   ( W )"
+        y2X10  = [i*10 for i in Parameter.RPM]
      
         ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
+        
         if isPaintRPM is True:
-            ax1.plot([0,1],[0,2])
+            ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
             str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
         else:
             str_ylabel_2 = ""
         
-# =============================================================================
-#         if isPaintPower is True:
-#             ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
-#             str_ylabel_3 = str_ylabel_3 + "\n"
-#         else:
-#             str_ylabel_3 = ""
-#          
-#      
-#         ax1.set_title("Wind Turbine Control System")
-#         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
-#         ax1.set_xlabel("Time (s)")
-#         ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
-#         ax1.legend(loc=2) # upper left
-#         ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-#     
-#         if isPaintWindSpeed is True:  
-#             ax2 = ax1.twinx()
-#             ax2.plot(Parameter.TimeSeries, Parameter.WindSpeed, label = "WindSpeed (m/s)", color='g')
-#             ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-#             ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
-#             ax2.set_ylabel("WindSpeed (m/s)")
-#             ax2.legend(loc=1) # upper right        
-#         plt.savefig("123")
-# =============================================================================
+        if isPaintPower is True:
+            ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
+            str_ylabel_3 = str_ylabel_3 + "\n"
+        else:
+            str_ylabel_3 = ""
+     
+        ax1.set_title("Wind Turbine Control System")
+        ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
+        ax1.set_xlabel("Time (s)")
+        ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
+        ax1.legend(loc=2) # upper left
+        ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+        if isPaintWindSpeed is True:  
+            ax2 = ax1.twinx()
+            ax2.plot(Parameter.TimeSeries, Parameter.Wind_Speed, label = "WindSpeed (m/s)", color='g')
+            ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
+            ax2.set_ylim(min(Parameter.Wind_Speed),max(Parameter.Wind_Speed))
+            ax2.set_ylabel("WindSpeed (m/s)")
+            ax2.legend(loc=1) # upper right   
+        plt.savefig("123")
  
 if __name__ == "__main__":
     def run_app():

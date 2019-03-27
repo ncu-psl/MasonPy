@@ -7,8 +7,9 @@ class Mode_Init(turbineMode):
         
         WindSpeedSize, TimeSeries, WindSpeed = ReadWindSpeepData()
         
+        Parameter.TimeSeries = TimeSeries
         parameters = []
-        parameters.append(['left_data_size', WindSpeedSize])
+        parameters.append(['left_data_size', WindSpeedSize-1])
         parameters.append(['WindSpeedList', WindSpeed])
         parameters.append(['MaxWindSpeed_ThreePhaseShortCircuit', 8])
         parameters.append(['TimeDelta', 0.01])
@@ -45,8 +46,9 @@ class Mode_Init(turbineMode):
    
     def do(self):
         self.calculate()         
-        
-        
+        Parameter.RPM.append(0.0001)
+        Parameter.Wind_Speed.append(0)
+        Parameter.Power.append(0)
         
 if __name__=='__main__':
     FirstMode = Mode_Init()

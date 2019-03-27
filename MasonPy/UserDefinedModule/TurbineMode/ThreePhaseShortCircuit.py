@@ -21,6 +21,9 @@ class Mode_ThreePhaseShortCircuit(turbineMode):
         self.eff_e        = 0.9
         self.RPM          = 0
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
+        Parameter.RPM.append(self.RPM)
+        Parameter.Wind_Speed.append(self.WindSpeed)
+        Parameter.Power.append(self.power)
         
     def readFile(self):
         self.WindSpeed_ThreePhaseShortCircuit, self.eff_g_ThreePhaseShortCircuit, self.eff_e_ThreePhaseShortCircuit, self.RPM_ThreePhaseShortCircuit , self.Tg_ThreePhaseShortCircuit, self.Tsr_ThreePhaseShortCircuit, self.Cp_ThreePhaseShortCircuit = ReadData_ThreePhaseShortCircuit()
