@@ -286,7 +286,7 @@ if __name__=='__main__':
 ['Decision_RPM11', 'Decide', ['line_32'], ['line_33', 'line_34'], ['RPM', 42.0, '>']], 
 ['End13', 'ExtremePointMode', ['line_36'], []], 
 ['Decision_left_data_size12', 'Decide', ['line_35'], ['line_37', 'line_36'], ['left_data_size', 0.0, '>']]]
-     print(len(execBlockChart(list2)))
+     execBlockChart(list2)
 #==============================================================================
 #     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
 #     print(type(newObj1))
