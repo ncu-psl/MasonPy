@@ -2,6 +2,7 @@ from numpy import*
 
 class originalMode(object):
     def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=''):
+        self.setintro()
         self.name = name
         self.lastMode = lastMode
         self.inputLines = inputLines
@@ -10,6 +11,8 @@ class originalMode(object):
         self.AllVariables = []
         self.setInit()
         
+    def setintro(self):
+        self.intro_str = ''
         
     def setInit(self):
         self.setInitValue()
