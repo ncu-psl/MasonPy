@@ -1201,6 +1201,8 @@ class HelloWindow(QMainWindow):
             if i.mode == 'Loop_end':
                 count = count + 1
         leftwidget.button.nodenum = count
+        leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
+        leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px")
         buttonlist.append(leftwidget.button)
         leftwidget.button.setGeometry(240, 100, 210, 30)
         leftwidget.button.position.setX(240)
