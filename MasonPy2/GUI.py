@@ -1310,7 +1310,7 @@ class HelloWindow(QMainWindow):
             errorlabel.setText(errormsg)
         else:
             a = CompileList.execBlockChart(finallist)
-            t = eval(a[len(a)-1].mode + '()')
+            t = eval(a[len(a)-1].__class__.__name__ + '()')
             parameter_name = t.AllVariables
             parameter_value = []
             for i in range(len(parameter_name)):
