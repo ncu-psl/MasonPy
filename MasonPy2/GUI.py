@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import importlib.util
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtWidgets import QScrollArea, QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
-from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
+from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap, QIcon
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import random
@@ -33,6 +33,7 @@ linetype = 'true'
 linenum = 0
 figure = plt.figure()
 errormsg = ''
+scrollarealayout = QVBoxLayout()
 
 buttonlist = []
 
@@ -90,9 +91,21 @@ class Process_Button(QPushButton):
                         button.dragable = 0
                 self.dragable = 1
             else:
-                self.showdialog()
-            
-            QPushButton.mousePressEvent(self, e)
+                pos = e.pos()
+ 
+                topRight = self.rect().topRight()
+                bottomRight = self.rect().bottomRight()
+     
+                hotspotTopLeft = QtCore.QPoint(topRight.x()-25, topRight.y())
+     
+                hotspotRect = QtCore.QRect(hotspotTopLeft, bottomRight)
+                
+                if hotspotRect.contains(pos):
+                    QtWidgets.QPushButton.mousePressEvent(self, e)
+                else:
+                    self.blockSignals(True)
+                    self.showdialog()
+                    self.blockSignals(False)
     
     def showdialog(self):
         inputlist, result = ProcessDialog(self.parameter_name, self.parameter_value).getdata(self.parameter_name, self.parameter_value)
@@ -180,7 +193,7 @@ class Decision_Button(QPushButton):
             self.string = "Decision_" + self.compare_stuff
     
     def errordialog(self):
-        dia = QMessageBox.warning(self, "error", "Require a fuction connected ahead.", QMessageBox.Close) 
+        dia = QMessageBox.warning(self, "error", "Require a fuction connected ahead.", QMessageBox.Close)
         
 class Loop_Button(QPushButton):
     global buttonlist
@@ -261,7 +274,6 @@ class Loop_Button(QPushButton):
                         self.showdialog()
                     else:
                         self.showdecisiondialog()
-                    QtWidgets.QPushButton.mousePressEvent(self, e)
                     self.blockSignals(False)
     
     def showdialog(self):
@@ -351,7 +363,6 @@ class Loop_end(QPushButton):
             if e.buttons() == Qt.LeftButton:
                 paintarray.append(self)
             
-            #print(self.position)
         else :
             if e.buttons() == Qt.RightButton:
                 for button in buttonlist:
@@ -497,11 +508,11 @@ class loopdialog(QDialog):
         return (mode, compare, num, times, result)    
     
 class rightcanvas(QWidget):
-    
     def __init__(self):
         super().__init__()
     
         global figure
+        global scrollarealayout
         
         self.setStyleSheet("background: aqua")
         button_widget = QWidget()
@@ -521,22 +532,17 @@ class rightcanvas(QWidget):
         layout2.addWidget(rpm_check)
         layout2.addWidget(power_check)
         
-        
-# =============================================================================
-#         self.button1 = QtWidgets.QPushButton('fresh')
-#         self.button1.clicked.connect(self.paintEvent)
-#         
-# =============================================================================
-#        self.axes = figure.add_subplot(111)
-#        self.axes.hold(False)
-        
-#        data = [random.random() for i in range(25)]
-#        self.axes.plot(data, '*-')
-        
         self.canvas = FigureCanvas(figure)
         
+        self.scrollarea = QScrollArea(self)
+        self.scrollarea.setWidgetResizable(True)
+        self.scrollareacontents = QWidget(self.scrollarea)
+        self.scrollarea.setWidget(self.scrollareacontents)        
+        
+        self.scrollareacontents.setLayout(scrollarealayout)
+        
         layout = QtWidgets.QGridLayout()
-        layout.addWidget(self.canvas, 0 , 0, 20, 1)
+        layout.addWidget(self.scrollarea, 0 , 0, 20, 1)
         layout.addWidget(button_widget, 21, 0)
         layout.setContentsMargins(0,0,0,0)
         
@@ -548,7 +554,6 @@ class rightcanvas(QWidget):
     def mouseReleaseEvent(self, e):
         self.repaint()
     def wind_show(self, state):
-        #HelloWindow.draw_fig(state == QtCore.Qt.Checked, )
         if state == QtCore.Qt.Checked:
             HelloWindow.isPaintWindSpeed = True
             HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
@@ -592,12 +597,6 @@ class setleftwidget(QWidget):
         
         global buttonlist
         
-     #   self.button = Process_Button('Start', self)
-      #  self.button.string = 'Start'
-       # self.button.next_inda = 'null'
-        #self.button.move(100, 65)
-
-     #   buttonlist.append(self.button)
         self.setGeometry(300, 300, 280, 150)
         
     def paintEvent(self, e):
@@ -673,8 +672,8 @@ class setleftwidget(QWidget):
 
         global buttonlist
         position = e.pos()
-        x = position.x()+235
-        y = position.y()+77
+        x = position.x() + 110
+        y = position.y() + 77
         position2 = QPoint(x, y)
         
         for button in buttonlist:
@@ -686,19 +685,6 @@ class setleftwidget(QWidget):
         e.accept()
         self.repaint()
         
-# =============================================================================
-#     def dropEvent(self, e):
-# 
-#         global buttonlist
-#         
-#         for button in buttonlist:
-#             if button.dragable == 1:
-#                 button.dragable = 0
-#         
-#         e.setDropAction(Qt.MoveAction)
-#         e.accept()
-#         
-# =============================================================================
     def mouseReleaseEvent(self, e):
         self.repaint()
     
@@ -722,70 +708,48 @@ class HelloWindow(QMainWindow):
         self.setleftwidget()
         self.setrightwidget()
         
-        finallayout = QHBoxLayout()
+        finallayout = QGridLayout()
         finallayout.setSpacing(0)
-        finallayout.addWidget(leftwidget)
-        finallayout.addWidget(rightwidget)
+        finallayout.addWidget(leftwidget, 0, 0, 1, 40)
+        finallayout.addWidget(rightwidget, 0, 41, 1, 30)
         
         centralWidget.setLayout(finallayout)                                   #set final layout
         
         toolbarBox = QtWidgets.QToolBar(self)
-        toolbarBox.setFixedWidth(220)
+        toolbarBox.setFixedWidth(100)
         toolbarBox.setMovable(False)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
         
-        add_Start_action = toolbarBox.addAction('Start')
+        button = QPushButton()
+        button.setStyleSheet("background: aqua; border: none")
+        menu = QMenu()
+        add_Start_action = menu.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
-        add_End_action = toolbarBox.addAction('End')
+        add_End_action = menu.addAction('End')
         add_End_action.triggered.connect(self.add_End)
-        
-# =============================================================================
-#         with open('PrintTest.py', encoding = 'utf8') as f:                      #import function.py
-#             for line in f:
-#                 cleanline = line.strip()
-#                 if cleanline.find("class ") != -1:
-#                     temp = cleanline.split()
-#                     temp = temp[1].split('(')
-#                     add_function_action = toolbarBox.addAction(temp[0])
-#                     add_function_action.triggered.connect(lambda checked, string = temp[0]:self.add_Process(string))
-#                     
-# =============================================================================
         moduleclass = SetModule.getClass()
         moduleclass.remove('ExtremePointMode')
         moduleclass.remove('originalMode')
         moduleclass.remove('Decide')
         moduleclass.remove('Loop')
         for i in range(len(moduleclass)):
-            add_function_action = toolbarBox.addAction(moduleclass[i])
+            add_function_action = menu.addAction(moduleclass[i])
             add_function_action.triggered.connect(lambda checked, string = moduleclass[i]:self.add_Process(string))
-# =============================================================================
-#         
-#         add_ThreePhaseShortCircuit_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit')
-#         add_ThreePhaseShortCircuit_action.triggered.connect(self.add_ThreePhaseShortCircuit)
-#                 
-#         add_MaxPower_action = toolbarBox.addAction('mode_MaxPower')
-#         add_MaxPower_action.triggered.connect(self.add_MaxPower)
-#         
-#         add_MaxTorqueCurrent_action = toolbarBox.addAction('mode_MaxTorqueCurrent')
-#         add_MaxTorqueCurrent_action.triggered.connect(self.add_MaxTorqueCurrent)
-#         
-#         add_MaxTorqueCurrent_MagBrake_action = toolbarBox.addAction('mode_MaxTorqueCurrent_MagBrake')
-#         add_MaxTorqueCurrent_MagBrake_action.triggered.connect(self.add_MaxTorqueCurrent_MagBrake)
-#         
-#         add_ThreePhaseShortCircuit_MagBrake_action = toolbarBox.addAction('mode_ThreePhaseShortCircuit_MagBrake')
-#         add_ThreePhaseShortCircuit_MagBrake_action.triggered.connect(self.add_ThreePhaseShortCircuit_MagBrake)
-#         
-# =============================================================================
-        add_decision_action = toolbarBox.addAction('Decision')
+        button.setMenu(menu)
+        button.setIcon(QIcon('Process.png'))
+        
+        toolbarBox.addWidget(button)
+        
+        add_decision_action = toolbarBox.addAction(QIcon('Decision.png'), 'Decision')
         add_decision_action.triggered.connect(self.add_Decision)
         
-        add_Loop_action = toolbarBox.addAction('Loop')
+        add_Loop_action = toolbarBox.addAction(QIcon('Loop.png'), 'Loop')
         add_Loop_action.triggered.connect(self.add_Loop)
         
-        add_line_action = toolbarBox.addAction('true line')
+        add_line_action = toolbarBox.addAction(QIcon('TLine.png'), 'true line')
         add_line_action.triggered.connect(self.add_line)
         
-        add_fline_action = toolbarBox.addAction('false line')
+        add_fline_action = toolbarBox.addAction(QIcon('FLine.png'), 'false line')
         add_fline_action.triggered.connect(self.add_false_line)
         
         menu = self.menuBar().addMenu('File')
@@ -794,14 +758,11 @@ class HelloWindow(QMainWindow):
         write_action = menu.addAction('Export')
         write_action.triggered.connect(self.Write_File)
         
-        add_draw_action = self.menuBar().addAction('run')
+        add_draw_action = self.menuBar().addAction('Run')
         add_draw_action.triggered.connect(self.start_run)
         
-        menu_changefigure = self.menuBar().addMenu('Figure')
-        RPM_action = menu_changefigure.addAction('RPM')
-        RPM_action.triggered.connect(self.show_WindSpeed)
-        WindSpeed_action = menu_changefigure.addAction('WindSpeed')
-        WindSpeed_action.triggered.connect(self.show_WindSpeed)
+        intro_action = self.menuBar().addAction('Intro')
+        intro_action.triggered.connect(self.draw_intro)
         
     
     
@@ -823,8 +784,6 @@ class HelloWindow(QMainWindow):
         
         leftwidget.setStyleSheet("background: white")
         label.setStyleSheet("background: aqua")
-        
-       # leftwidget.setLayout(leftlayout)
     
     def setrightwidget(self):                                       #set drow area layout
         global rightwidget
@@ -843,28 +802,13 @@ class HelloWindow(QMainWindow):
         canvas = rightcanvas()
         
         errorlabel.setStyleSheet("background: white")
-        #rightlowlayout = QVBoxLayout()
-        #self.canvas.draw()
         
-        #self.toolbar = NavigationToolbar(self.canvas, self)
-        #self.toolbar.hide()
-        
-        #label.setText("1235497")
-        #right_low_widget = QWidget()
-        #right_low_widget.setLayout(rightlowlayout)
         rightlayout.addWidget(label1,0,0)
         rightlayout.addWidget(canvas,1,0,30,1)
         rightlayout.addWidget(label2,31,0)
         rightlayout.addWidget(errorlabel,32,0,10,1)
         
         rightwidget.setLayout(rightlayout)
-        
-        
-        #rightlayout = QVBoxLayout()
-        
-        #rightlayout.addWidget(label)
-        
-        #rightwidget.setLayout(rightlayout)
         
     def Write_File(self):
         global buttonlist
@@ -1133,6 +1077,14 @@ class HelloWindow(QMainWindow):
         else:
             leftwidget.button = Process_Button(name, self)
             leftwidget.button.string = name
+            
+        menu = QMenu(self)
+        intro_action = QAction(menu)
+        intro_action.setText('Introduction')
+        menu.addAction(intro_action)
+        intro_action.triggered.connect(lambda checked, string = leftwidget.button.string:self.show_intro(string))
+        leftwidget.button.setMenu(menu)
+        leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
         leftwidget.button.setStyleSheet("background-color: DodgerBlue; border-style: outset; border-radius: 10px")
         for i in buttonlist:
             if i.mode == 'process':
@@ -1187,7 +1139,6 @@ class HelloWindow(QMainWindow):
         leftwidget.button.position.setX(240)
         leftwidget.button.position.setY(100)
         leftwidget.button.show()
-        #leftlayout.addWidget(leftwidget.button)
         
     def add_Loop_end(self, Loop_name):                                                      #insert name of loop will be ended
         global leftwidget
@@ -1208,6 +1159,11 @@ class HelloWindow(QMainWindow):
         leftwidget.button.position.setX(240)
         leftwidget.button.position.setY(100)
         leftwidget.button.show()
+        
+    def show_intro(self, name):
+        t = eval(name + '()')
+        block_intro = t.intro_str
+        dia = QMessageBox.information(self, "intro", block_intro, QMessageBox.Close)
         
     def add_line(self):
         global linemode
@@ -1265,6 +1221,13 @@ class HelloWindow(QMainWindow):
         else:
             self.start_run.isPaintPower = True
             
+    def draw_intro(self):
+        dia = QMessageBox()
+        dia.setIconPixmap(QPixmap("123.png"))
+        dia.setStandardButtons(QMessageBox.Close)
+        dia.setWindowTitle('Intro')
+        dia.exec()
+            
     def full_buttonlist(self):
         global buttonlist
         global linearray
@@ -1308,45 +1271,11 @@ class HelloWindow(QMainWindow):
         global linearray
         global figure
         global errorlabel
+        global scrollarealayout
         
         
         finallist = []
         
-# =============================================================================
-#         for i in buttonlist:
-#             a = []
-#             if i.mode == 'process': 
-#                 for j in range(len(linearray)):
-#                     if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
-#                         a.append(linearray[j][3])
-#                     if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
-#                         i.next_index = linearray[j][3]
-#     
-#             if i.mode == 'decision': 
-#                 for j in range(len(linearray)):
-#                     if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
-#                         a.append(linearray[j][3])
-#                     if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
-#                         
-#                         if linearray[j][2] == 'true':
-#                             i.true_index = linearray[j][3]
-#                                 
-#                         else:
-#                             i.false_index = linearray[j][3]
-#                             
-#             if i.mode == 'loop': 
-#                 for j in range(len(linearray)):
-#                     if linearray[j][1].string == i.string and linearray[j][1].nodenum == i.nodenum:
-#                         a.append(linearray[j][3])
-#                     if linearray[j][0].string == i.string and linearray[j][0].nodenum == i.nodenum:           #找線
-#                         
-#                         if linearray[j][2] == 'true':
-#                             i.cont_index = linearray[j][3]
-#                                 
-#                         else:
-#                             i.break_index = linearray[j][3]
-#             i.inputline = a
-# =============================================================================
         self.full_buttonlist()
         for i in buttonlist:
             if i.mode == 'process':
@@ -1374,214 +1303,34 @@ class HelloWindow(QMainWindow):
                     i.break_index = ''
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
-# =============================================================================
-#         f = open('list_useinunitest.txt', 'w')
-#         for i in range(0, len(buttonlist)):
-#             if(i == len(buttonlist)-1):
-#                 if buttonlist[i].mode == 'process':
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].next_index)
-#                     f.write("']]")
-#                                 
-#                 if buttonlist[i].mode == 'decision': 
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].true_index)
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].false_index)
-#                     f.write("']]")
-#                         
-#                 if buttonlist[i].mode == 'loop':
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].cont_index)
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].break_index)
-#                     f.write("'], ")
-#                     f.write("0, ")
-#                     f.write(str(buttonlist[i].loop_time))
-#                     f.write("]")
-#             else:    
-#                 if buttonlist[i].mode == 'process':
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].next_index)
-#                     f.write("']],\n")
-#                                 
-#                 if buttonlist[i].mode == 'decision': 
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].true_index)
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].false_index)
-#                     f.write("']],\n")
-#                         
-#                 if buttonlist[i].mode == 'loop':
-#                     f.write("['")
-#                     f.write(buttonlist[i].string+str(buttonlist[i].nodenum))
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].string)
-#                     f.write("', [")
-#                     if(len(buttonlist[i].inputline) != 0):
-#                         for count in range(0, len(buttonlist[i].inputline)):
-#                             if (count == len(buttonlist[i].inputline)-1):
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("'")
-#                             else:
-#                                 f.write("'")
-#                                 f.write(buttonlist[i].inputline[count])
-#                                 f.write("', ")
-#                     f.write("], ['")
-#                     f.write(buttonlist[i].cont_index)
-#                     f.write("', ")
-#                     f.write("'")
-#                     f.write(buttonlist[i].break_index)
-#                     f.write("'], ")
-#                     f.write("0, ")
-#                     f.write(str(buttonlist[i].loop_time))
-#                     f.write("],\n")
-# =============================================================================
+            
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
         
         if errormsg  != '':
             errorlabel.setText(errormsg)
         else:
-            CompileList.execBlockChart(finallist)
-# =============================================================================
-#         isPaintWindSpeed = True
-#         isPaintRPM       = True
-#         isPaintPower     = True 
-# =============================================================================
-        #figure = Paint.PaintDiagram("Wind Turbine Control System", "Time (s)", "WindSpeed (m/s)", "RPM", "Power   ( W )", Parameter.TimeSeries,  isPaintWindSpeed, Parameter.WindSpeed, isPaintRPM, Parameter.RPM, isPaintPower, Parameter.Power)
-        #print('print figure',figure)
-
-
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-# =============================================================================
-#         str_ylabel_2 = "RPM"
-#         str_ylabel_3 = "Power   ( W )"
-#         y2X10  = [i*10 for i in Parameter.RPM]
-#      
-#         ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
-#         if isPaintRPM is True:
-#             ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
-#             str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
-#         else:
-#             str_ylabel_2 = ""
-#         
-#         if isPaintPower is True:
-#             ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
-#             str_ylabel_3 = str_ylabel_3 + "\n"
-#         else:
-#             str_ylabel_3 = ""
-#          
-#      
-#         ax1.set_title("Wind Turbine Control System")
-#         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
-#         ax1.set_xlabel("Time (s)")
-#         ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
-#         ax1.legend(loc=2) # upper left
-#         ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-#     
-#         if isPaintWindSpeed is True:  
-#             ax2 = ax1.twinx()
-#             ax2.plot(Parameter.TimeSeries, Parameter.WindSpeed, label = "WindSpeed (m/s)", color='g')
-#             ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-#             ax2.set_ylim(min(Parameter.WindSpeed),max(Parameter.WindSpeed))
-#             ax2.set_ylabel("WindSpeed (m/s)")
-#             ax2.legend(loc=1) # upper right
-# =============================================================================
+            a = CompileList.execBlockChart(finallist)
+            t = eval(a[len(a)-1].mode + '()')
+            parameter_name = t.AllVariables
+            parameter_value = []
+            for i in range(len(parameter_name)):
+                parameter_value.append(eval('a[len(a)-1].' + parameter_name[i]))
             
-#        plt.savefig("123")
-        
-        #ExportData.ExportExcelData(Parameter.TimeSeries, Parameter.WindSpeed, Parameter.RPM, Parameter.Power, Parameter.CpStack, Parameter.eff_gStack, Parameter.ModeStack)
-        
-        
-# =============================================================================
-#         for i in finallist:
-#             print(i)
-# =============================================================================
+            widget = QWidget()
+            layout = QHBoxLayout(widget)
+            layout.addWidget(QLabel('Name'))
+            layout.addWidget(QLabel('Value'))
+            scrollarealayout.addWidget(widget)
+            
+            for i in range(len(parameter_name)):
+                widget = QWidget()
+                layout = QHBoxLayout(widget)
+                layout.addWidget(QLabel(parameter_name[i]))
+                layout.addWidget(QLabel(str(parameter_value[i])))
+                scrollarealayout.addWidget(widget)
+
+            #HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
+            
     def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
         global figure
         

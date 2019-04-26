@@ -21,6 +21,9 @@ class Mode_MaxTorqueCurrent(turbineMode):
         self.eff_e        = 0.9
         self.RPM          = self.CalculateRPM(self.lastMode.RPM, self.Tt, self.TimeDelta, self.MonmentIntertia)
         self.power        = self.CalculatePower(self.RPM, self.eff_g, self.eff_e, self.Tg)
+        Parameter.RPM.append(self.RPM)
+        Parameter.Wind_Speed.append(self.WindSpeed)
+        Parameter.Power.append(self.power)
         
     def readFile(self):
 #        RPM_toEffgMaxTorqueCurrent, eff_g_MaxTorqueCurrent, eff_e_MaxTorqueCurrent, TorqueGenerator_MaxTorqueCurrent, Tsr_MaxTorqueCurrent, Cp_MaxTorqueCurrent
