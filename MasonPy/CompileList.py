@@ -139,7 +139,6 @@ def execBlockChart(list):
             
             nextBlock, name = list[flag][1], list[flag][0]
             
-           
             
                 
         elif name.find('Decision') != -1:
@@ -249,13 +248,14 @@ if __name__=='__main__':
 #     ]
 #==============================================================================
 
-     list1=[
+     list=[
 ['Start', 'ExtremePointMode', [], ['line_0']],
 
 ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
 ['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
 ['End0', 'ExtremePointMode', ['line_A'], []],
     ]
+<<<<<<< HEAD
      list2 = [['Start', 'ExtremePointMode', [], ['line_0']], 
 ['Mode_Mode_Init1', 'Mode_Init', ['line_0'], ['line_1']], 
 ['Mode_Mode_ThreePhaseShortCircuit2', 'Mode_ThreePhaseShortCircuit', ['line_1', 'line_8', 'line_9', 'line_24', 'line_38'], ['line_2']], 
@@ -287,6 +287,11 @@ if __name__=='__main__':
 ['End13', 'ExtremePointMode', ['line_36'], []], 
 ['Decision_left_data_size12', 'Decide', ['line_35'], ['line_37', 'line_36'], ['left_data_size', 0.0, '>']]]
      execBlockChart(list2)
+=======
+
+     
+     print(len(execBlockChart(list)))
+>>>>>>> 30e451e6de7b12a597e008a3afc8cd754817d019
 #==============================================================================
 #     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
 #     print(type(newObj1))

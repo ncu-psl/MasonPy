@@ -360,6 +360,7 @@ def TestErrorRaise(InputList):
 if __name__ =='__main__':
 
 #==============================================================================
+<<<<<<< HEAD
 #     import unittest    
 #     class test(unittest.TestCase): 
 # 
@@ -579,6 +580,31 @@ if __name__ =='__main__':
 #              self.assertEqual(LoopList.getFinalErrMsg(), '')    
 #             
 #     unittest.main()
+=======
+#     list_1=[['Start', 'ExtremePointMode', [], ['line_0']],
+# ['Loop1', 'Loop', ['line_1'], ['line_2', 'line_3'],[None, None, None], 10],
+# ['Mode_A', 'testMode', ['line_0', 'line_3'], ['line_1']],
+# ['End1', 'ExtremePointMode', ['line_2'], []],
+#     ]
+#==============================================================================
+#==============================================================================
+#     list_2=[['Start', 'ExtremePointMode', [], ['line_0']],
+# ['Mode_A', 'testMode', ['line_1',], []],
+# ['End1', 'ExtremePointMode', [], []],
+#     ]
+#==============================================================================
+#==============================================================================
+#     list_3=[
+# 
+#  ['Mode_A', 'testMode', [], ['line_1']],
+#  ['Loop5', 'Loop', ['line_1'], ['line_A', 'line_B','line_C'],['A', 8, '<'], 5],
+#  ['End0', 'ExtremePointMode', ['line_A'], []],
+#  ['End1', 'ExtremePointMode', ['line_B'], []],
+#  ['End2', 'ExtremePointMode', ['line_C'], []],
+#      ]
+#     Msg = TestErrorRaise(list_3)
+#     print(Msg)
+>>>>>>> 30e451e6de7b12a597e008a3afc8cd754817d019
 #==============================================================================
     
     list_1=[['Start', 'ExtremePointMode', [], ['line_0']],
