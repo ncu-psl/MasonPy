@@ -543,7 +543,7 @@ class rightcanvas(QWidget):
         
         layout = QtWidgets.QGridLayout()
         layout.addWidget(self.scrollarea, 0 , 0, 20, 1)
-        layout.addWidget(button_widget, 21, 0)
+        #layout.addWidget(button_widget, 21, 0)
         layout.setContentsMargins(0,0,0,0)
         
         self.setLayout(layout)
@@ -720,25 +720,32 @@ class HelloWindow(QMainWindow):
         toolbarBox.setMovable(False)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
         
-        button = QPushButton()
-        button.setStyleSheet("background: aqua; border: none")
-        menu = QMenu()
-        add_Start_action = menu.addAction('Start')
+        endpoint_button = QPushButton()
+        endpoint_button.setStyleSheet("background: aqua; border: none")
+        endpoint_menu = QMenu()
+        add_Start_action = endpoint_menu.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
-        add_End_action = menu.addAction('End')
+        add_End_action = endpoint_menu.addAction('End')
         add_End_action.triggered.connect(self.add_End)
+        endpoint_button.setMenu(endpoint_menu)
+        endpoint_button.setIcon(QIcon('EenPoint.png'))
+        
+        process_button = QPushButton()
+        process_button.setStyleSheet("background: aqua; border: none")
+        process_menu = QMenu()
         moduleclass = SetModule.getClass()
         moduleclass.remove('ExtremePointMode')
         moduleclass.remove('originalMode')
         moduleclass.remove('Decide')
         moduleclass.remove('Loop')
         for i in range(len(moduleclass)):
-            add_function_action = menu.addAction(moduleclass[i])
+            add_function_action = process_menu.addAction(moduleclass[i])
             add_function_action.triggered.connect(lambda checked, string = moduleclass[i]:self.add_Process(string))
-        button.setMenu(menu)
-        button.setIcon(QIcon('Process.png'))
+        process_button.setMenu(process_menu)
+        process_button.setIcon(QIcon('Process.png'))
         
-        toolbarBox.addWidget(button)
+        toolbarBox.addWidget(endpoint_button)
+        toolbarBox.addWidget(process_button)
         
         add_decision_action = toolbarBox.addAction(QIcon('Decision.png'), 'Decision')
         add_decision_action.triggered.connect(self.add_Decision)
@@ -1310,7 +1317,9 @@ class HelloWindow(QMainWindow):
             errorlabel.setText(errormsg)
         else:
             a = CompileList.execBlockChart(finallist)
+            print(5)
             t = eval(a[len(a)-1].__class__.__name__ + '()')
+            print(5)
             parameter_name = t.AllVariables
             parameter_value = []
             for i in range(len(parameter_name)):
