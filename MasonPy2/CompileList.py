@@ -98,7 +98,8 @@ def execBlockChart(list):
  
     
     flag = 0
-    if list[0][0] == 'Start':
+    name = list[0][0]
+    if name.find('Start') != -1:
         nextline = list[0][3][0]
         
         newObj = buildObj(list[0][1], True, [], nextline)
