@@ -140,6 +140,7 @@ def MissingLineRaise(BlockName, InputNum, OutputNum):
 #==============================================================================    
 class MissingBlockException(Exception):
     def __init__(self, InputList = [], err='Error: \"端點錯誤\"\n'):
+        
         ExtremePointList = self.getExtremePointBlock(InputList)
         StartErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'Start'), self.setStartErrMsg())
         EndErrMsg = self.getErrMsg(self.checkErrFlag(ExtremePointList, 'End'), self.setEndErrMsg())
@@ -310,6 +311,11 @@ def TestMissingLineRaise(BlockName, x, y):
 
 
 def TestErrorRaise(InputList):
+    
+    for i in range(len(InputList)):
+        if InputList[i][3][0]=='':
+            InputList[i][3]=[]
+    
     ALLErrMsg = ''
     
     # 檢查是否缺端點
@@ -592,16 +598,14 @@ if __name__ =='__main__':
 # ['End1', 'ExtremePointMode', [], []],
 #     ]
 #==============================================================================
-#==============================================================================
-#     list_3=[
-# 
-#  ['Mode_A', 'testMode', [], ['line_1']],
-#  ['Loop5', 'Loop', ['line_1'], ['line_A', 'line_B','line_C'],['A', 8, '<'], 5],
-#  ['End0', 'ExtremePointMode', ['line_A'], []],
-#  ['End1', 'ExtremePointMode', ['line_B'], []],
-#  ['End2', 'ExtremePointMode', ['line_C'], []],
-#      ]
-#     Msg = TestErrorRaise(list_3)
-#     print(Msg)
-#==============================================================================
+    list_3=[
+
+ ['Mode_A', 'testMode', [], []],
+ ['Loop5', 'Loop', ['line_1'], ['line_A', 'line_B','line_C'],['A', 8, '<'], 5],
+ ['End0', 'ExtremePointMode', ['line_A'], []],
+ ['End1', 'ExtremePointMode', ['line_B'], []],
+ ['End2', 'ExtremePointMode', ['line_C'], []],
+     ]
+    Msg = TestErrorRaise(list_3)
+    print(Msg)
 
