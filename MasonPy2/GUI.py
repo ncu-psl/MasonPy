@@ -1310,12 +1310,13 @@ class HelloWindow(QMainWindow):
                     i.break_index = ''
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
-            
+        errormsg = ''    
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
         
         if errormsg  != '':
             errorlabel.setText(errormsg)
         else:
+            errorlabel.setText(errormsg)
             a = CompileList.execBlockChart(finallist)
             t = eval(a[len(a)-1].__class__.__name__ + '()')
             parameter_name = t.AllVariables
