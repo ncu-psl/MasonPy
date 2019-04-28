@@ -120,9 +120,13 @@ def execBlockChart(list):
         if name.find('Mode') != -1:
             nextline = list[flag][3][0]
           
-
+            if len(list[flag]) == 5:
+                inputData = list[flag][4]
+            else:
+                inputData =[]
             
-            newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline)
+            newObj = buildObj(nextBlock, nextBlock, newObj, newObj.outputLines, nextline, inputData)
+            
             
             finalData.append(newObj)
             newObj.do()
@@ -250,11 +254,10 @@ if __name__=='__main__':
 #==============================================================================
 
      list=[
-['Start', 'ExtremePointMode', [], ['line_0']],
-
+['Start0', 'ExtremePointMode', [], ['line_0']],
 ['Loop1', 'Loop', ['line_1'], ['line_A', 'line_2'],[None, None, None], 5],
-['Mode_A', 'testMode', ['line_0', 'line_2'], ['line_1']],
-['End0', 'ExtremePointMode', ['line_A'], []],
+['Mode2', 'testMode', ['line_0', 'line_2'], ['line_1']],
+['End3', 'ExtremePointMode', ['line_A'], []],
     ]
 
      
