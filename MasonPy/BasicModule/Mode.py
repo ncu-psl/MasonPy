@@ -14,6 +14,7 @@ class originalMode(object):
         
     def setintro(self):
         self.intro_str = ''
+        return self.intro_str
         
     def setInit(self):
         self.setInitValue()
