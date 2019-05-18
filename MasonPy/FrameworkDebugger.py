@@ -323,14 +323,6 @@ def TestErrorRaise(InputList):
                 if InputList[i][3][1]=='':
                     InputList[i][3].pop(1)
             
-               
-#==============================================================================
-#         if  and '' in InputList[i][3]:
-#             InputList[i][3].remove('')
-#==============================================================================
-            
-            
-    print('VVVVVVVVV',InputList)
     ALLErrMsg = ''
     
     # 檢查是否缺端點
