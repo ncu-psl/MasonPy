@@ -701,7 +701,7 @@ class HelloWindow(QMainWindow):
         centralWidget = QWidget(self)          
         self.setCentralWidget(centralWidget)  
         
-        self.setWindowTitle("Wind turbine control system") 
+        self.setWindowTitle("Flow Chart DSL System") 
         self.setStyleSheet("QMainWindow {background: aqua}")
         
         
@@ -804,7 +804,7 @@ class HelloWindow(QMainWindow):
         
         label1 = QLabel('Result')
         
-        label2 = QLabel('Console')
+        label2 = QLabel('Error Messenger')
         
         canvas = rightcanvas()
         
@@ -1310,8 +1310,10 @@ class HelloWindow(QMainWindow):
                     i.break_index = ''
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
+        
         errormsg = ''    
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
+
         
         if errormsg  != '':
             errorlabel.setText(errormsg)
@@ -1362,7 +1364,7 @@ class HelloWindow(QMainWindow):
         else:
             str_ylabel_3 = ""
      
-        ax1.set_title("Wind Turbine Control System")
+        ax1.set_title("Flow Chart DSL System")
         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
         ax1.set_xlabel("Time (s)")
         ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
