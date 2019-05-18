@@ -261,7 +261,7 @@ if __name__=='__main__':
     ]
 
      
-     print(len(execBlockChart(list)))
+     execBlockChart(list)
 #==============================================================================
 #     newObj1 = buildObj('ExtremePointMode', True, [], 'line_0')
 #     print(type(newObj1))
