@@ -1,7 +1,7 @@
 from numpy import*
 
 class originalMode(object):
-    def __init__(self, name = '', lastMode = None, inputLines=[], outputLines='', userSetVals=[]):
+    def __init__(self, name = '', lastMode = None, inputLines=[], outputLines=''):
         self.setintro()
         self.name = name
         self.lastMode = lastMode
@@ -10,7 +10,6 @@ class originalMode(object):
         self.calculate()
         self.AllVariables = []
         self.setInit()
-        self.SetVals(userSetVals)
         
     def setintro(self):
         self.intro_str = ''
@@ -18,12 +17,6 @@ class originalMode(object):
     def setInit(self):
         self.setInitValue()
         pass
-    
-    def SetVals(self, userSetVals=[]):
-        if len(userSetVals) > 0:
-            for i in range(len(userSetVals)):
-                exec('self.'+str(userSetVals[i][0])+'='+str(userSetVals[i][1]))
-        
     
     def do(self):
         pass
