@@ -19,7 +19,8 @@ def getFile():
     for f in filesFolder:
         AllFile.extend(findFile(f))
     for i in range(len(AllFile)):
-        AllFile[i] = AllFile[i].replace('/', '.') 
+        AllFile[i] = AllFile[i].replace('/', '.')
+    print(AllFile)    
     return AllFile 
 
 def findFile(folder = None):
@@ -47,14 +48,17 @@ def getClass():
     # ClassList =  [ClassName]
     BasicClass = ['ExtremePointMode', 'originalMode', 'Decide', 'Loop'] 
     
-    #TEST = ['testMode']
+    TEST = ['testMode','HeronFormula']
+    UserdefinedClass = ['YtoYbus','ZtoYbus', 'threePhaseData_Z', 'threePhaseData_Y','Gauss_Seidel']
     
-    UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 
-    'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake']  
+#==============================================================================
+#     UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 
+#     'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake']  
+#==============================================================================
     
     AllClass = []
     AllClass.extend(BasicClass)
-    #AllClass.extend(TEST)
+    AllClass.extend(TEST)
     AllClass.extend(UserdefinedClass)
     return AllClass
 
