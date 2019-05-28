@@ -695,7 +695,6 @@ class HelloWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        
         QMainWindow.__init__(self)
   
         centralWidget = QWidget(self)          
@@ -728,7 +727,7 @@ class HelloWindow(QMainWindow):
         add_End_action = endpoint_menu.addAction('End')
         add_End_action.triggered.connect(self.add_End)
         endpoint_button.setMenu(endpoint_menu)
-        endpoint_button.setIcon(QIcon('EenPoint.png'))
+        endpoint_button.setIcon(QIcon('picture/EndPoint.png'))
         
         process_button = QPushButton()
         process_button.setStyleSheet("background: aqua; border: none")
@@ -742,21 +741,21 @@ class HelloWindow(QMainWindow):
             add_function_action = process_menu.addAction(moduleclass[i])
             add_function_action.triggered.connect(lambda checked, string = moduleclass[i]:self.add_Process(string))
         process_button.setMenu(process_menu)
-        process_button.setIcon(QIcon('Process.png'))
+        process_button.setIcon(QIcon('picture/Process.png'))
         
         toolbarBox.addWidget(endpoint_button)
         toolbarBox.addWidget(process_button)
         
-        add_decision_action = toolbarBox.addAction(QIcon('Decision.png'), 'Decision')
+        add_decision_action = toolbarBox.addAction(QIcon('picture/Decision.png'), 'Decision')
         add_decision_action.triggered.connect(self.add_Decision)
         
-        add_Loop_action = toolbarBox.addAction(QIcon('Loop.png'), 'Loop')
+        add_Loop_action = toolbarBox.addAction(QIcon('picture/Loop.png'), 'Loop')
         add_Loop_action.triggered.connect(self.add_Loop)
         
-        add_line_action = toolbarBox.addAction(QIcon('TLine.png'), 'true line')
+        add_line_action = toolbarBox.addAction(QIcon('picture/TLine.png'), 'true line')
         add_line_action.triggered.connect(self.add_line)
         
-        add_fline_action = toolbarBox.addAction(QIcon('FLine.png'), 'false line')
+        add_fline_action = toolbarBox.addAction(QIcon('picture/FLine.png'), 'false line')
         add_fline_action.triggered.connect(self.add_false_line)
         
         menu = self.menuBar().addMenu('File')
@@ -1230,7 +1229,7 @@ class HelloWindow(QMainWindow):
             
     def draw_intro(self):
         dia = QMessageBox()
-        dia.setIconPixmap(QPixmap("123.png"))
+        dia.setIconPixmap(QPixmap("picture/123.png"))
         dia.setStandardButtons(QMessageBox.Close)
         dia.setWindowTitle('Intro')
         dia.exec()
@@ -1311,9 +1310,9 @@ class HelloWindow(QMainWindow):
                 pac = [i.string+str(i.nodenum), i.string, i.inputline, [i.cont_index, i.break_index], [i.compare_stuff, i.compare_num, i.compare_symbol], i.loop_time]
             finallist.append(pac)
         
-        errormsg = ''    
+        errormsg = ''
+        
         errormsg = FrameworkDebugger.TestErrorRaise(finallist)
-
         
         if errormsg  != '':
             errorlabel.setText(errormsg)
