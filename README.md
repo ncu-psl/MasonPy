@@ -23,7 +23,7 @@ Python
 [DSL 指令說明及範例](https://github.com/ncu-psl/MasonPy-System.wiki.git)
 ***
 ## 自定義領域功能塊
-[自定義領域功能塊](https://github.com/ncu-psl/MasonPy-System.wiki.git)
+[自定義領域功能塊方法](https://github.com/ncu-psl/MasonPy-System.wiki.git)
 ***
 ## MasonPy Debugger 簡介
 [Debugger](https://github.com/ncu-psl/MasonPy-System.wiki.git)
