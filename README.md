@@ -2,7 +2,7 @@
 # MasonPy-System
 ***
 ## 簡介
-本研究為設計一套流程圖式特定領域語言。
+本研究為一套流程圖式特定領域語言。
 
 [摘要](https://github.com/ncu-psl/MasonPy-System.wiki.git)
 
