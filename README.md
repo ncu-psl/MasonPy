@@ -2,7 +2,8 @@
 # MasonPy-System
 ***
 ## 簡介
-[簡介](https://github.com/ncu-psl/MasonPy-System.wiki.git)
+本研究為設計一套流程圖式特定領域語言。
+[摘要](https://github.com/ncu-psl/MasonPy-System.wiki.git)
 ***
 ## MasonPy 架構
 [MasonPy 架構](https://github.com/ncu-psl/MasonPy-System.wiki.git)
@@ -24,3 +25,5 @@ Python
 ***
 ## MasonPy Debugger 簡介
 [Debugger](https://github.com/ncu-psl/MasonPy-System.wiki.git)
+***
+
