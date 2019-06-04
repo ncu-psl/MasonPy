@@ -871,7 +871,7 @@ class HelloWindow(QMainWindow):
         
         self.full_buttonlist()
 
-        f = open('windele.txt', 'w')
+        f = open('flow_chart.txt', 'w')
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:                                         #write 'Mode_' + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]
@@ -941,7 +941,7 @@ class HelloWindow(QMainWindow):
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
-        f = open('windele.txt', 'r')    
+        f = open('flow_chart.txt', 'r')    
         for line in f:
             temp = line.strip().split(' ')
             if temp[1] == 'ExtremePointMode':
