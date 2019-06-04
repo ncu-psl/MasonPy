@@ -729,14 +729,6 @@ class HelloWindow(QMainWindow):
         
         add_draw_action = self.menuBar().addAction('run')
         add_draw_action.triggered.connect(self.start_run)
-        
-        menu_changefigure = self.menuBar().addMenu('Figure')
-        RPM_action = menu_changefigure.addAction('RPM')
-        RPM_action.triggered.connect(self.show_WindSpeed)
-        WindSpeed_action = menu_changefigure.addAction('WindSpeed')
-        WindSpeed_action.triggered.connect(self.show_WindSpeed)
-        
-    
     
     def setleftwidget(self):                                        #set work area layout
         global leftwidget
