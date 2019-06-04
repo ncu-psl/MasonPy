@@ -1618,7 +1618,7 @@ class HelloWindow(QMainWindow):
             ax2.set_ylim(min(Parameter.Wind_Speed),max(Parameter.Wind_Speed))
             ax2.set_ylabel("WindSpeed (m/s)")
             ax2.legend(loc=1) # upper right   
-        plt.savefig("123")
+        plt.savefig("result")
  
 if __name__ == "__main__":
     def run_app():
