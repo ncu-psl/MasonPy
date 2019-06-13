@@ -17,7 +17,7 @@ from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationTo
 import random
 
 import CompileList, SetModule, FrameworkDebugger
-import Parameter
+
 AllFile = SetModule.getFile()
 for i in AllFile:
     exec('from '+ i + ' import*')
