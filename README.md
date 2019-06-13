@@ -14,7 +14,7 @@
 Python
 ***
 ## 下載及操作
-下載MasonPy-System中的MasonPy_DSL及MasonPy_Framwork兩個檔案，MasonPy_DSL的GUI.py為主程式，MasonPy System/MasonPy_Framwork/UserDefineModule(example)為範例自定義功能塊。
+下載MasonPy-System中的MasonPy_DSL及MasonPy_Framwork兩個檔案，將MasonPy_DSL內容全部複製至MasonPy_Framwork，MasonPy_DSL的GUI.py為主程式，MasonPy System/MasonPy_Framwork/UserDefineModule_example為範例自定義功能塊。
 ***
 ## 流程圖基本功能塊簡介
 [流程圖功能塊簡介](https://github.com/ncu-psl/MasonPy-System/wiki/%E6%B5%81%E7%A8%8B%E5%9C%96DSL-%E5%8A%9F%E8%83%BD%E5%A1%8A-%E7%B0%A1%E4%BB%8B)
