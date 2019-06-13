@@ -515,22 +515,6 @@ class rightcanvas(QWidget):
         global scrollarealayout
         
         self.setStyleSheet("background: aqua")
-        button_widget = QWidget()
-        layout2 = QtWidgets.QHBoxLayout()
-        button_widget.setLayout(layout2)
-        wind_check = QCheckBox('Wind_Speed', self)
-        wind_check.setCheckState(QtCore.Qt.Checked)
-        wind_check.stateChanged.connect(self.wind_show)
-        rpm_check = QCheckBox('RPM', self)
-        rpm_check.setCheckState(QtCore.Qt.Checked)
-        rpm_check.stateChanged.connect(self.rpm_show)
-        power_check = QCheckBox('Power', self)
-        power_check.setCheckState(QtCore.Qt.Checked)
-        power_check.stateChanged.connect(self.power_show)
-        
-        layout2.addWidget(wind_check)
-        layout2.addWidget(rpm_check)
-        layout2.addWidget(power_check)
         
         self.canvas = FigureCanvas(figure)
         
@@ -543,7 +527,6 @@ class rightcanvas(QWidget):
         
         layout = QtWidgets.QGridLayout()
         layout.addWidget(self.scrollarea, 0 , 0, 20, 1)
-        #layout.addWidget(button_widget, 21, 0)
         layout.setContentsMargins(0,0,0,0)
         
         self.setLayout(layout)
@@ -552,35 +535,7 @@ class rightcanvas(QWidget):
         self.canvas.draw()
         
     def mouseReleaseEvent(self, e):
-        self.repaint()
-    def wind_show(self, state):
-        if state == QtCore.Qt.Checked:
-            HelloWindow.isPaintWindSpeed = True
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-        else:
-            HelloWindow.isPaintWindSpeed = False
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-    def rpm_show(self, state):
-        if state == QtCore.Qt.Checked:
-            HelloWindow.isPaintRPM = True
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-        else:
-            HelloWindow.isPaintRPM = False
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-    def power_show(self, state):
-        if state == QtCore.Qt.Checked:
-            HelloWindow.isPaintPower = True
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-        else:
-            HelloWindow.isPaintPower = False
-            HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            self.canvas.draw()
-        
+        self.repaint()        
         
 class setleftwidget(QWidget):
     
@@ -1325,58 +1280,20 @@ class HelloWindow(QMainWindow):
             for i in range(len(parameter_name)):
                 parameter_value.append(eval('a[len(a)-1].' + parameter_name[i]))
             
+            templayout = QVBoxLayout()
             widget = QWidget()
             layout = QHBoxLayout(widget)
             layout.addWidget(QLabel('Name'))
             layout.addWidget(QLabel('Value'))
-            scrollarealayout.addWidget(widget)
+            templayout.addWidget(widget)
             
             for i in range(len(parameter_name)):
                 widget = QWidget()
                 layout = QHBoxLayout(widget)
                 layout.addWidget(QLabel(parameter_name[i]))
                 layout.addWidget(QLabel(str(parameter_value[i])))
-                scrollarealayout.addWidget(widget)
-
-            #HelloWindow.draw_fig(HelloWindow.isPaintWindSpeed, HelloWindow.isPaintRPM, HelloWindow.isPaintPower)
-            
-    def draw_fig(isPaintWindSpeed, isPaintRPM, isPaintPower):
-        global figure
-        
-        figure.clf()
-        
-        str_ylabel_2 = "RPM"
-        str_ylabel_3 = "Power   ( W )"
-        y2X10  = [i*10 for i in Parameter.RPM]
-     
-        ax1 = figure.add_subplot(111) #(dpi  (16*80)*(9*80) = 1240*720)
-        
-        if isPaintRPM is True:
-            ax1.plot(Parameter.TimeSeries , y2X10, label = str_ylabel_2, color='b')
-            str_ylabel_2 = str_ylabel_2 + "     X  10" + "\n"
-        else:
-            str_ylabel_2 = ""
-        
-        if isPaintPower is True:
-            ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
-            str_ylabel_3 = str_ylabel_3 + "\n"
-        else:
-            str_ylabel_3 = ""
-     
-        ax1.set_title("Flow Chart DSL System")
-        ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
-        ax1.set_xlabel("Time (s)")
-        ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)
-        ax1.legend(loc=2) # upper left
-        ax1.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-        if isPaintWindSpeed is True:  
-            ax2 = ax1.twinx()
-            ax2.plot(Parameter.TimeSeries, Parameter.Wind_Speed, label = "WindSpeed (m/s)", color='g')
-            ax2.set_xlim(min(Parameter.TimeSeries), max(Parameter.TimeSeries))
-            ax2.set_ylim(min(Parameter.Wind_Speed),max(Parameter.Wind_Speed))
-            ax2.set_ylabel("WindSpeed (m/s)")
-            ax2.legend(loc=1) # upper right   
-        plt.savefig("123")
+                templayout.addWidget(widget)
+            scrollarealayout = templayout
  
 if __name__ == "__main__":
     def run_app():
