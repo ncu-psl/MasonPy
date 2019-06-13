@@ -1,6 +1,0 @@
-Start ExtremePointMode [] [line_0]
-Mode_threePhaseData_init_11 threePhaseData_Z [line_0,] [line_1]
-Mode_ZtoYbus2 ZtoYbus [line_1,] [line_2]
-Mode_Gauss_Seidel3 Gauss_Seidel [line_2,line_5,] [line_3]
-Loop0 Loop [line_3,] [line_4,line_5] [None,None,None] 5
-End4 ExtremePointMode [line_4,] []
