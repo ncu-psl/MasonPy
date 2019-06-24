@@ -1,0 +1,91 @@
+loop = 0
+t = 0
+mp = 0
+mc = 0
+tm = 0
+mcm = 0
+t = 1
+rt = 0
+do i = 1 , 1800
+do j = 1 , 100
+if(t.eq.1) then
+  call threephaseshortcircuit()
+  if(RPM.le.42) then
+    if(windspeed.lt.8) then
+      if(loop.eq.100) then
+        t = 0
+        mp = 1
+        loop = 0
+      else
+        loop = loop + 1
+      endif
+    else if(windspeed.ge.8) then
+      loop = 0
+      t = 1
+    endif
+  else if(RPM.gt.42) then
+    mc = 1
+    t = 0
+    loop = 0
+  endif
+if(mp.eq.1) then
+  call maxpower()
+  if(power.lt.3300) then
+    if(RPM.ge.400) then
+      mc = 1
+      mp = 0
+    else if(RPM.lt.400) then
+      mp = 1
+    endif
+  else if(power.ge.3300) then
+    mc = 1
+    mp = 0
+  endif
+if(mc.eq.1) then
+  rt = RPM
+  call maxtorquecurrent()
+  if(windspeed.ge.8) then
+  if(RPM.gt.42) then
+    if(RPM.gt.rt) then
+        mcm = 1
+        mc = 0
+    else if(RPM.le.rt) then
+      mc = 1
+    endif
+  else if(RPM.le.42) then
+    t = 1
+    mc = 0
+  endif
+  else if(windspeed.lt.8) then
+    mp = 1
+    mc = 0
+endif
+if(mcm.eq.1) then
+  call maxtorquecurrent_magbreak()
+  if(RPM.gt.42) then
+    mcm = 1
+   else if(RPM.le.42) then
+     tm = 1
+    mcm = 0
+   endif
+endif
+id(tm.eq.1) then
+  rt = RPM
+  call threephaseshortcircuit_magbreak()
+  if(RPM.gt.rt) then
+    mcm = 1
+    tm = 0
+    loop = 0
+   else if(RPM.le.rt) then
+  if(loop.eq.300) then
+    loop = 0
+    t = 1
+    tm = 0
+   else if(loop.lt.300) then
+     loop = loop + 1
+   endif
+  endif
+endif
+enddo
+enddo
+end

@@ -1,0 +1,98 @@
+	time = 0
+	count = 0
+	contime = 0
+1	CALL threephaseshortcircuit()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 6
+	ENDIF
+	IF(RPM.GT.42) THEN
+		contime = 0
+		GO TO 5
+	ELSE
+		IF(windspeed.LT.8) THEN
+			contime = contime+1
+			IF(contime.GE.200) THEN
+				contime = 0
+				GO TO 2
+			ENDIF
+		ELSE
+			contime = 0
+			GO TO 1
+		ENDIF
+	ENDIF
+2	CALL maxpower()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 6
+	ENDIF
+	IF(RPM.GE.400) THEN
+		GO TO 3
+	ELSE
+		IF(power.GT.3300) THEN
+			GO TO 3
+		ELSE
+			GO TO 2
+		ENDIF
+	ENDIF
+3	temp = RPM
+	CALL maxtorquecurrent()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 6
+	ENDIF
+	IF(RPM.LE.42) THEN
+		GO TO 1
+	ELSE
+		IF(RPM.GT.temp) THEN
+			GO TO 4
+		ELSE
+			GO TO 3
+		ENDIF
+	ENDIF
+4	CALL maxtorquecurrent_magbreak()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 6
+	ENDIF
+	IF(RPM.GT.42) THEN
+		GO TO 4
+	ELSE
+		GO TO 5
+5	CALL threephaseshortcircuit_magbreak()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 6
+	ENDIF
+	IF(contime.GE.2000) THEN
+		contime = 0 
+		GO TO 1
+	ELSE
+		contime = contime+1
+		GO TO 5
+6	END

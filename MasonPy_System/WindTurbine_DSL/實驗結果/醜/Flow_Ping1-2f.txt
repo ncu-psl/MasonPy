@@ -1,0 +1,23 @@
+mode =1
+DO i =1,1800
+	DO j =1,100
+		IF(mode.EQ.1) THEN
+			IF(RPM.GT.350) THEN
+				mode =2
+			ELSE
+				mode =3
+			ENDIF
+		ENDIF
+		IF(mode.EQ.3)
+			IF(RPM.GT.350) THEN
+				mode =2
+			ENDIF
+		ENDIF
+		IF(mode.EQ.2) THEN
+			IF(RPM.LE.350) THEN
+				mode =3
+			ENDIF
+		ENDIF
+	ENDDO
+ENDDO
+END

@@ -1,0 +1,84 @@
+TS = 1
+TSMB = 0
+MP = 0
+MTC = 0
+MTCMB = 0
+T = 0
+DO I=1,1800
+DO J=1,10
+T=I*10-J
+NEWWINDSPEED(T) = windspeed(I)
+ENDDO
+ENDDO
+time = 0
+DO I=1,18000
+	IF(TS.EQ.1) THEN
+		CALL threephaseshortcircuit()
+		IF(RPM.GT.42) THEN
+		TS = 0
+		TSMB = 1
+		ENDIF
+		IF(RPM.LE.42) THEN
+			IF(windspeed.LT.8) THEN
+			IF(time.EQ.100) THEN
+				TS = 0
+				MP = 1
+				time = 0
+			ELSE
+				time = time+1
+			ENDIF
+			ELSE
+				time = 0
+			ENDIF
+		ELSE
+			time = 0
+			MTC = 1
+			TS = 0
+		ENDIF
+	ELSE IF(MP.EQ.1) THEN
+		CALL maxpower()
+		IF((RPM.GE.400).OR.(power.GE.3300)) THEN
+		MTC = 1
+		MP = 0
+		ENDIF
+	ELSE IF(MTC.EQ.1) THEN
+		RPM0 = RPM
+		CALL maxtorquecurrent()
+		IF(windspeed.LT.8) THEN
+			MP = 1
+			MTC = 0
+		ELSE
+		IF(RPM.GT.42) THEN
+			IF(RPM.GT.RPM0) THEN
+			MTCMB = 1
+			MTC = 0
+			ENDIF
+		ELSE
+			TS = 1
+			MTC = 0
+		ENDIF
+		ENDIF
+	ELSE IF(MTCMB.EQ.1) THEN
+		CALL maxtorquecurrent_magbreak()
+		IF(RPM.LE.42) THEN
+		TSMB = 1
+		MTCMB = 0
+		ENDIF
+	ELSE
+		RPM0 = RPM
+		CALL threephaseshortcircuit_magbreak()
+		IF(RPM.LE.RPM0) THEN
+		IF(time.EQ.300) THEN
+			time = 0
+			TS = 1
+			TSMB = 0
+		ELSE
+			time = time+1
+		ENDIF
+		ELSE
+			time = 0
+			MTCMB = 1
+			TSMB = 0
+	ENDIF
+ENDDO
+END

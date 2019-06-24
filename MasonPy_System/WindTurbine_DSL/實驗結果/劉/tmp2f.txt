@@ -1,0 +1,69 @@
+state=0
+count=0
+do i=1,1800
+	do j=1,100
+		if(state.eq.0) then
+			call threephaseshortcircuit()
+			if(RPM.le.42) then
+				if(windspeed.lt.8) then
+					if(count.eq.100) then
+						state=1
+						count=0
+					else
+						count=count+1
+					endif
+				else if(windspeed.ge.8) then
+					count=0
+				endif
+			else if(RPM.gt.42) then
+				count=0
+				state=2
+			endif
+		else if(state.eq.1) then
+			call maxpower()
+			if(RPM.ge.400) then
+				state=2
+			else
+				if(power.ge.3300) then
+					state=2
+				endif
+			endif
+		else if(state.eq.2) then
+			rpmtemp=RPM
+			call maxtorquecurrent()
+			if(windspeed.gt.8) then
+			if(RPM.gt.42) then
+				if(RPM.gt.rpmtemp) then
+					state=3
+				endif
+			else if(RPM.le.42) then
+				state=0
+			endif
+			else if(windspeed.le.8) then
+				state=1
+			endif
+		else if(state.eq.3) then
+			call maxtorquecurrent_magbreak()
+			if(RPM.gt.42) then
+				state=3
+			else if(RPM.le.42) then
+				state=4
+			endif
+		else if(state.eq.4) then
+			rpmtemp=RPM
+			call threephaseshortcircuit_magbreak()
+			if(RPM.gt.rpmtemp) then
+				state=3
+				count=0
+			else if(RPM.le.rpmtemp) then
+			if(count.eq.300) then
+				state=0
+				count=0
+			else
+				count=count+1
+			endif
+			endif
+		endif
+	enddo
+enddo
+end
