@@ -5,7 +5,7 @@
 2.打開SetModule.py，將第51行TEST = ['testMode','HeronFormula']跟第61行AllClass.extend(TEST)刪除，再將第51行的UserdefinedClass的內容用下列列表取代['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake']。  
 3.執行GUI.py就可使用，[範例GUI使用說明](https://github.com/ncu-psl/MasonPy-System/wiki/%E9%99%84%E5%B8%B6GUI%E4%B9%8B%E4%BB%8B%E7%B4%B9)，本GUI與範例有些不同，左側功能區沒有用圖形摺疊，都以文字表示。右上資訊區是顯示參數在各個時間所組成的折線圖。
 ## 實驗設計
-本實驗分為3部分  
+本實驗每個受試者需完成3部分  
 第一部分：讓受試者使用fortran、DSL及使用GUI分別寫出控制邏輯的程式碼，本部分再細分為2個階段，第一階段使用較簡單之流程圖，第二階段使用較複雜之流程圖。  
 第二部分：受試者會拿到一張由第一部分第二階段的流程圖所修改成的新流程圖，受試者須用第一部分第二階段他們所寫的2份程式碼及GUI所畫的流程圖來更改為新的流程圖。  
 第三部分：受試者會拿到2份新流程圖所轉成的程式碼，1份為fortran所寫的；1份為DSL所寫的，但受試者不知道2份是相同的流程圖。受試者需要從程式碼繪製出原本的流程圖。  
