@@ -38,7 +38,7 @@ Python
 此DSL有6個功能塊，Init、MaxPower、MaxTorqueCurrent、ThreePhaseShortCircuit、MaxTorqueCurrent_MagBrake、ThreePhaseShortCircuit_MagBrake 
 ***
 ## 下載與操作
-1.下載MasonPy System中的MasonPy_Framwork及WindTurbine_DSL資料夾，將WindTurbine_DSL中的檔案與資料夾放入MasonPy_Framwork資料夾，再將MasonPy_Framwork中的UserDefineModule(example)資料夾刪除。  
+1.下載MasonPy System中的MasonPy_Framwork及WindTurbine_DSL資料夾，將WindTurbine_DSL中的檔案與資料夾放入MasonPy_Framwork資料夾，再將MasonPy_Framwork中的UserDefineModule_example資料夾刪除。  
   
 2.打開SetModule.py，將第51行TEST = ['testMode','HeronFormula']跟第61行AllClass.extend(TEST)刪除，再將第51行的UserdefinedClass的內容用下列列表取代['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake']。  
   
