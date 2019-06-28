@@ -12,7 +12,10 @@ MasonPy提供自定義功能塊功能，可藉此定義所應用領域的一系�
 [MasonPy 架構](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-%E6%9E%B6%E6%A7%8B)
 ***
 ## 程式語言
-Python
+Python3
+***
+## IDE
+Spyder
 ***
 ## 下載及操作
 下載MasonPy-System中的MasonPy_DSL及MasonPy_Framwork兩個檔案，將MasonPy_DSL內容全部複製至MasonPy_Framwork，MasonPy_DSL的GUI.py為主程式，MasonPy System/MasonPy_Framwork/UserDefineModule_example為範例自定義功能塊。
