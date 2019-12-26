@@ -13,7 +13,9 @@ MasonPy provides the user defined functional units to create customized DSL whic
 
 ***
 ## 架構 MasonPy Architecture
-[架構 MasonPy Architecture](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-%E6%9E%B6%E6%A7%8B)
+[MasonPy 架構 Chinese version](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-%E6%9E%B6%E6%A7%8B)
+
+[MasonPy Architecture English version](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-Structure)
 ***
 ## Programming Language
 Python3
@@ -64,6 +66,6 @@ There are six funtional units. Such as Init, MaxPower, MaxTorqueCurrent, ThreePh
 
 2. For SetModule.py, delete TEST = ['testMode','HeronFormula'] of line 51 and AllClass.extend(TEST) of line 61, and replace the contents of UserdefinedClass of line 51 with the following list ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake'].
 
-3. Run GUI.py to execute. [GUI example](https://github.com/ncu-psl/MasonPy-System/wiki/%E9%99%84%E5%B8%B6GUI%E4%B9%8B%E4%BB%8B%E7%B4%B9)
+3. Run GUI.py to execute. [GUI introduction](https://github.com/ncu-psl/MasonPy-System/wiki/%E9%99%84%E5%B8%B6GUI%E4%B9%8B%E4%BB%8B%E7%B4%B9)
 This is a little different from the example. The left-side function area is not folded with graphics, but is represented by text. The upper right information area is a line chart showing the parameters at various times.
 ***
