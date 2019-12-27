@@ -6,16 +6,16 @@
 MasonPy提供自定義功能塊功能，可藉此定義所應用領域的一系列功能塊，達到建構一套自己的DSL。並將這套功能塊提供End-User藉由UI拖拉拼接流程，完成程式。
 
 We are developing a domain-specific language (DSL)  framework along with flow diagram.
-MasonPy provides the user defined functional units to create customized DSL which consists of a series of funtional units for the specific topic. End-User can drag and drop the units to complete a program.
+MasonPy provides the user defined functional blocks to create customized DSL which consists of a series of funtional blocks for the specific topic. End-User can drag and drop the units to complete a program.
 
 
 [摘要 Abstract](https://github.com/ncu-psl/MasonPy-System/wiki)
 
 ***
 ## 架構 MasonPy Architecture
-[MasonPy 架構 Chinese version](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-%E6%9E%B6%E6%A7%8B)
+[MasonPy 架構 (Chinese)](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-%E6%9E%B6%E6%A7%8B)
 
-[MasonPy Architecture English version](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-Structure)
+[MasonPy Architecture (English)](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-Structure)
 ***
 ## Programming Language
 Python3
@@ -28,16 +28,16 @@ Spyder
 
 1. Download MasonPy_DSL and MasonPy_Framwork in MasonPy-System.
 2. Copy the contents of MasonPy_DSL to MasonPy_Framwork.
-3. GUI.py in MasonPy_DSL is the main program. MasonPy System, MasonPy_Framwork, and UserDefineModule_example are the examples of user defined functional units.
+3. GUI.py in MasonPy_DSL is the main program. MasonPy System, MasonPy_Framwork, and UserDefineModule_example are the examples of user defined functional blocks.
 ***
-## 流程圖基本功能塊簡介 Flowchart basic functional unit introduction
-[流程圖基本功能塊簡介 Flowchart basic functional unit introduction](https://github.com/ncu-psl/MasonPy-System/wiki/%E6%B5%81%E7%A8%8B%E5%9C%96DSL-%E5%8A%9F%E8%83%BD%E5%A1%8A-%E7%B0%A1%E4%BB%8B)
+## 流程圖基本功能塊簡介 Flowchart basic functional block introduction
+[流程圖基本功能塊簡介 Flowchart basic functional block introduction](https://github.com/ncu-psl/MasonPy-System/wiki/%E6%B5%81%E7%A8%8B%E5%9C%96DSL-%E5%8A%9F%E8%83%BD%E5%A1%8A-%E7%B0%A1%E4%BB%8B)
 ***
 ## 指令說明及範例 MasonPy DSL instruction description and examples
 [指令說明及範例 instruction description and examples](https://github.com/ncu-psl/MasonPy-System/wiki/MasonPy-DSL-%E6%8C%87%E4%BB%A4%E8%AA%AA%E6%98%8E%E5%8F%8A%E7%AF%84%E4%BE%8B)
 ***
-## 自定義領域功能塊 User defined functional unit
-[自定義領域功能塊方法 Method for user defined functional unit](https://github.com/ncu-psl/MasonPy-System/wiki/%E5%8A%9F%E8%83%BD%E5%A1%8A-%E8%87%AA%E5%AE%9A%E7%BE%A9)
+## 自定義領域功能塊 User defined functional block
+[自定義領域功能塊方法 Method for user defined functional block](https://github.com/ncu-psl/MasonPy-System/wiki/%E5%8A%9F%E8%83%BD%E5%A1%8A-%E8%87%AA%E5%AE%9A%E7%BE%A9)
 ***
 ## 簡介 MasonPy Debugger introduction
 [Debugger](https://github.com/ncu-psl/MasonPy-System/wiki/Debugger-%E7%B0%A1%E4%BB%8B)
@@ -51,7 +51,7 @@ Spyder
 此DSL有6個功能塊，Init、MaxPower、MaxTorqueCurrent、ThreePhaseShortCircuit、MaxTorqueCurrent_MagBrake、ThreePhaseShortCircuit_MagBrake 
 
 This domain-specific language is based on MasonPy about the field of wind power.
-There are six funtional units. Such as Init, MaxPower, MaxTorqueCurrent, ThreePhaseShortCircuit, MaxTorqueCurrent_MagBrake and ThreePhaseShortCircuit_MagBrake.
+There are six funtional blocks. Such as Init, MaxPower, MaxTorqueCurrent, ThreePhaseShortCircuit, MaxTorqueCurrent_MagBrake and ThreePhaseShortCircuit_MagBrake.
 
 ***
 ## 操作說明 How to use
