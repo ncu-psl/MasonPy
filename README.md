@@ -28,7 +28,7 @@ Spyder
 
 1. Download MasonPy_DSL and MasonPy_Framwork in MasonPy-System.
 2. Copy the contents of MasonPy_DSL to MasonPy_Framwork.
-3. GUI.py in MasonPy_DSL is the main program. MasonPy System, MasonPy_Framwork, and UserDefineModule_example are the examples of user defined functional blocks.
+3. GUI.py in MasonPy_DSL is the main program. MasonPy_System/MasonPy_Framwork/UserDefineModule_example are the examples of user defined functional blocks.
 ***
 ## 流程圖基本功能塊簡介 Flowchart basic functional block introduction
 [流程圖基本功能塊簡介 Flowchart basic functional block introduction](https://github.com/ncu-psl/MasonPy-System/wiki/%E6%B5%81%E7%A8%8B%E5%9C%96DSL-%E5%8A%9F%E8%83%BD%E5%A1%8A-%E7%B0%A1%E4%BB%8B)
