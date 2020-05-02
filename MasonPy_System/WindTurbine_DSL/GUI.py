@@ -35,6 +35,7 @@ figure = plt.figure()
 errormsg = ''
 
 buttonlist = []
+buttoncount = 0
 
 class Process_Button(QPushButton):
     global buttonlist
@@ -673,14 +674,14 @@ class setleftwidget(QWidget):
 
         global buttonlist
         position = e.pos()
-        x = position.x()+235
+        x = position.x()+120
         y = position.y()+77
         position2 = QPoint(x, y)
         
         for button in buttonlist:
             if button.dragable == 1:
                 button.move(position2)
-                button.position = position
+                button.position = position2
         
         e.setDropAction(Qt.MoveAction)
         e.accept()
@@ -1093,20 +1094,25 @@ class HelloWindow(QMainWindow):
         global leftlayout
         global leftwidget
         global buttonlist
-        
+        global buttonlist
+        global buttoncount
         leftwidget.button0 = Process_Button('Start', self)
         leftwidget.button0.setStyleSheet("background-color: Gray; border-style: outset; border-radius: 10px")
         leftwidget.button0.string = 'Start'
         leftwidget.button0.ExtremePoint = 1
         buttonlist.append(leftwidget.button0)
-        leftwidget.button0.setGeometry(240, 100, 210, 30)
-        leftwidget.button0.position.setX(240)
-        leftwidget.button0.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button0.setGeometry(X, Y,  210, 30)
+        leftwidget.button0.position.setX(X)
+        leftwidget.button0.position.setY(Y)
+        buttoncount += 1
         leftwidget.button0.show()
         
     def add_End(self):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         
         leftwidget.button = Process_Button('End', self)
@@ -1118,14 +1124,18 @@ class HelloWindow(QMainWindow):
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Process(self, name):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         if name == False:        
             leftwidget.button = Process_Button('Process', self)
@@ -1139,14 +1149,18 @@ class HelloWindow(QMainWindow):
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Decision(self):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
@@ -1156,15 +1170,19 @@ class HelloWindow(QMainWindow):
         leftwidget.button.nodenum = count
         leftwidget.button.setStyleSheet("background-color: beige; border-color: black; border-width: 2px; border-style: outset; border-radius: 10px")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Loop(self):
         global leftwidget
         global buttonlist
         global figure
+        global buttoncount
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
@@ -1183,9 +1201,12 @@ class HelloWindow(QMainWindow):
         leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
         leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
@@ -1193,6 +1214,7 @@ class HelloWindow(QMainWindow):
         global leftwidget
         global buttonlist
         global figure
+        global buttoncount
         count = 0
         
         leftwidget.button = Loop_end('Loop End', self)
@@ -1204,9 +1226,13 @@ class HelloWindow(QMainWindow):
         leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
         leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
         
     def add_line(self):
@@ -1622,11 +1648,11 @@ class HelloWindow(QMainWindow):
  
 if __name__ == "__main__":
     def run_app():
-        app = QApplication(sys.argv)
+        #app = QApplication(sys.argv)
         mainWin = HelloWindow()
         mainWin.setMinimumWidth(1200)
-        mainWin.setMinimumHeight(500)
+        mainWin.setMinimumHeight(900)
         mainWin.show()
-        sys.exit(app.exec_())
+        #sys.exit(app.exec_())
     run_app()
     
