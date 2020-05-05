@@ -10,6 +10,7 @@ import numpy as np
 import importlib.util
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
 from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -872,7 +873,10 @@ class HelloWindow(QMainWindow):
         
         self.full_buttonlist()
 
-        f = open('windele.txt', 'w')
+        openfile_name, filetype = QFileDialog.getSaveFileName(self,"檔案儲存","./","All Files (*);;Text Files (*.txt)")
+        f = open(openfile_name, 'w')
+        
+        #f = open('windele.txt', 'w')
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:                                         #write 'Mode_' + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]
@@ -942,7 +946,10 @@ class HelloWindow(QMainWindow):
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
-        f = open('windele.txt', 'r')    
+        openfile_name, filetype = QFileDialog.getOpenFileName(self,'選擇文件','','Excel files(*.txt)')
+        f = open(openfile_name, 'r')
+        
+        #f = open('windele.txt', 'r')     
         for line in f:
             temp = line.strip().split(' ')
             if temp[1] == 'ExtremePointMode':
