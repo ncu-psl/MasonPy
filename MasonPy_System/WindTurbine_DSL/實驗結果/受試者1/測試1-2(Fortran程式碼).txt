@@ -1,0 +1,33 @@
+MTC = 1
+MP = 0
+MTCMG = 0
+DO I=1,1800
+DO J=1,10
+T=I*10-J
+NEWWINDSPEED(T) = windspeed(I)
+ENDDO
+ENDDO
+DO I=1,18000
+	IF(MTC.EQ.1) THEN
+		CALL maxtorquecurrent()
+		IF(RPM.GT.350) THEN
+		MTCMG = 1
+		MTC = 0
+		ELSE
+		MP = 1
+		MTC = 0
+		ENDIF
+	ELSE IF(MP.EQ.1) THEN
+		CALL maxpower()
+		IF(RPM.GT.350) THEN
+		MTCMG = 1
+		MTC = 0
+	ELSE
+		CALL maxtorquecurrent_magbreak()
+		IF(RPM.LE.350) THEN
+		MP = 1
+		MTC = 0
+		ENDIF
+	ENDIF
+ENDDO
+END

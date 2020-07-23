@@ -1,0 +1,29 @@
+state=0
+count=0
+do i=1,1800
+	do j=1,100
+		if(state.eq.0) then
+			call maxtorquecurrent()
+			if(RPM.gt.350) then
+				state=2
+			else if(RPM.le.350) then
+				state=1
+			endif
+		else if(state.eq.1) then
+			call maxpower()
+			if(RPM.gt.350) then
+				state=2
+			else if(RPM.le.350) then
+				state=1
+			endif
+		else if(state.eq.2) then
+			call maxtorquecurrent_magbreak()
+			if(RPM.gt.350) then
+				state=2
+			else if(RPM.le.350) then
+				state=1
+			endif
+		endif
+	enddo
+enddo
+end

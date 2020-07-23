@@ -1,0 +1,38 @@
+2.6
+0.7
+135 2.4
+94.4 25.
+524 1601
+0.87 0.92
+
+
+
+
+
+
+
+
+
+      READ(2,*) DIA
+      READ(2,*) BI
+      READ(2,*) TM3,RPM83
+      READ(2,*) TMG
+      READ(2,*) OUTRPM,OUTP
+      READ(2,*) GPER,EPER
+
+
+
+
+
+
+
+
+
+
+
+葉片直徑 (M)
+葉片轉動慣量 (單位???? KgM^2)
+三相短路最大TORQUE時之RPM (G brake T-N curve); 8m/s風0RPM葉片之Torque對應發電機三相短路TNcurve之轉速(RPM)
+發電機最大扭力(Nm)  發電機最抽載電流(A)
+CUT OUT RPM, CUT OUT OUTPUT (W)
+發電機效率,電控效率

@@ -1,0 +1,34 @@
+mc = 0
+mp = 0
+mcm = 0
+mc = 1
+do i = 1 , 1800
+do j = 1 , 100
+if(mc.eq.1) then
+  if(RPM.le.350) then
+    mp = 1
+    mc = 0
+   else if(RPM.gt.350) then
+    mcm = 1
+    mc = 0
+   endif
+endif
+if(mp.eq.1) then
+  if(RPM.le.350) then
+    mp = 1
+   else if(RPM.gt.350) then
+    mcm = 1
+    mp = 0
+   endif
+endif
+if(mcm.eq.1) then
+  if(RPM.le.350) then
+    mp = 1
+    mcm = 0
+   else if(RPM.gt.350) then
+    mcm = 1
+   endif
+endif
+enddo
+enddo
+end

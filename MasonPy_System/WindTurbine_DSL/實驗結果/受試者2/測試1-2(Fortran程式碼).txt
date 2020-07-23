@@ -1,0 +1,48 @@
+	time = 0
+	count = 0
+1	CALL maxtorquecurrent()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 4
+	ENDIF
+	IF(RPM.GT.350)
+		GO TO 3
+	ELSE
+		GO TO 2
+	ENDIF
+2	CALL maxpower()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 4
+	ENDIF
+	IF(RPM.GT.350) THEN
+		GO TO 3
+	ELSE
+		GO TO 2
+	ENDIF
+3	CALL maxtorquecurrent_magbreak()
+	IF(count.GT.9) THEN
+		time = time+1
+		count = 0
+	ELSE
+		count = count+1
+	ENDIF
+	IF(time.GT.1800) THEN
+		GO TO 4
+	ENDIF
+	IF(RPM.GT.350) THEN
+		GO TO 3
+	ELSE
+		GO TO 2
+	ENDIF
+4	END

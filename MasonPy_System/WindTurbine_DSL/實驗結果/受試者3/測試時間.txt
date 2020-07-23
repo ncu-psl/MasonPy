@@ -1,0 +1,16 @@
+第一部分
+1-1：
+Fortran:18分    結果：測試1-1(Fortran程式碼).txt
+DSL:12分	結果：測試1-1(DSL程式碼).txt	
+GUI:6分
+1-2：
+Fortran:89分	結果：測試1-2(Fortran程式碼).txt
+DSL:68分	結果：測試1-2(DSL程式碼).txt
+GUI:10分	
+第二部分
+Fortran:42分	結果：測試2(Fortran程式碼).txt
+DSL:27分	結果：測試2(DSL程式碼).txt
+GUI:1分	
+第三部分	結果：測試3結果.jpg
+Fortran:26分
+DSL:8分	
