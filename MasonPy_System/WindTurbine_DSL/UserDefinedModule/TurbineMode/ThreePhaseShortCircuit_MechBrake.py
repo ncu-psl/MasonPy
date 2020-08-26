@@ -2,14 +2,14 @@ from UserDefinedModule.TurbineMode.ThreePhaseShortCircuit import*
 from UserDefinedModule.TurbineMode.ThreePhaseShortCircuit import*
 from UserDefinedModule.OpenFile import*
 
-class Mode_ThreePhaseShortCircuit_MagBrake(Mode_ThreePhaseShortCircuit):
+class ThreePhaseShortCircuit_MechBrake(ThreePhaseShortCircuit):
     def CalculateValue(self):
         self.readFile()
         self.left_data_size = self.lastMode.left_data_size -1
         self.currentTime  = self.lastMode.currentTime + 1
         self.WindSpeedList= self.lastMode.WindSpeedList
         self.WindSpeed    = self.WindSpeedList[self.currentTime]
-        self.mode         = self.namemode('Mode_ThreePhaseShortCircuit_MagBrake')
+        self.mode         = self.namemode('ThreePhaseShortCircuit_MechBrake')
         self.Tsr          = self.CalculateTSR(self.lastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, self.database_ThreePhaseShortCircuit.Tsr, self.database_ThreePhaseShortCircuit.Cp)
         self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, self.lastMode.RPM)

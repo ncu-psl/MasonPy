@@ -2,14 +2,14 @@ from UserDefinedModule.Databaseformat import*
 from UserDefinedModule.OpenFile import*
 from UserDefinedModule.TurbineMode.WindTurbine import*
 
-class Mode_MaxPower(turbineMode):
+class MaxPower(turbineMode):
     def CalculateValue(self):
         self.readFile()
         self.left_data_size = self.lastMode.left_data_size -1
         self.currentTime  = self.lastMode.currentTime + 1
         self.WindSpeedList= self.lastMode.WindSpeedList
         self.WindSpeed    = self.WindSpeedList[self.currentTime]
-        self.mode         = self.namemode('Mode_MaxPower')
+        self.mode         = self.namemode('MaxPower')
         self.Tsr          = self.CalculateTSR(self.lastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, self.database_MaxPower.Tsr, self.database_MaxPower.Cp)
         self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, self.lastMode.RPM)

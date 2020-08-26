@@ -8,14 +8,14 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import importlib.util
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMessageBox, QAction, QMenu, QLineEdit, QComboBox, QDialogButtonBox, QMainWindow, QLabel, QGridLayout, QWidget, QPushButton, QCheckBox, QWidget, QApplication, QInputDialog, QVBoxLayout, QFormLayout, QHBoxLayout, QGraphicsLineItem, QStyleOptionGraphicsItem, QDialog
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRect, QPoint, QPointF, QLineF, QLine
-from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap
+from PyQt5.QtGui import QDrag, QPen, QPainter, QPixmap, QColor
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 import random
-
 import CompileList, SetModule, FrameworkDebugger
 import Parameter
 AllFile = SetModule.getFile()
@@ -35,6 +35,9 @@ figure = plt.figure()
 errormsg = ''
 
 buttonlist = []
+buttoncount = 0
+painted_top = {}
+painted_bot = {}
 
 class Process_Button(QPushButton):
     global buttonlist
@@ -56,6 +59,8 @@ class Process_Button(QPushButton):
         self.parameter_name = []
         self.parameter_value = []
         if title != 'Start' and title != 'End':
+            if(title.startswith("Mode_")):
+                title = title[5:]
             t = eval(title + '()')
             self.parameter_name = t.AllVariables
             for i in range(len(self.parameter_name)):
@@ -503,7 +508,7 @@ class rightcanvas(QWidget):
     
         global figure
         
-        self.setStyleSheet("background: aqua")
+        self.setStyleSheet("background: lightgray")
         button_widget = QWidget()
         layout2 = QtWidgets.QHBoxLayout()
         button_widget.setLayout(layout2)
@@ -598,32 +603,137 @@ class setleftwidget(QWidget):
         #self.button.move(100, 65)
 
      #   buttonlist.append(self.button)
-        self.setGeometry(300, 300, 280, 150)
-        
+        #self.setGeometry(300, 300, 280, 150)
+        self.setGeometry(240, 100, 210, 30)
     def paintEvent(self, e):
         global linemode
         global paintarray
         global linearray
         global linetype
         global linenum
+        global painted_top
+        global painted_bot
         
         painter = QPainter(self)
+        spaceline = 0
         
         if linetype == 'true':
-            pen = QPen(Qt.green, 3)
+            pen = QPen(Qt.black, 3)
+            pen.setColor(QColor(34, 140, 34))
+            
         if linetype == 'false':
-            pen = QPen(Qt.red, 3)
+            pen = QPen(Qt.black, 3)
+            pen.setColor(QColor(240, 128, 128))
+            
             
         painter.setPen(pen)
         
         for i in range(len(linearray)) :
+            #if linearray[i][2] == 'true':
             if linearray[i][2] == 'true':
-                pen=QPen(Qt.green, 3)
+                
+                pen = QPen(Qt.black, 3)
+                pen.setColor(QColor(34, 140, 34))
                 painter.setPen(pen)
                 s = linearray[i][1].position.x()
-                endpos = QPoint(s + linearray[i][1].width()/2 - 5, linearray[i][1].position.y() + 5)
-                startpos = QPoint(linearray[i][0].position.x() + linearray[i][0].width()/2 - 5, linearray[i][0].position.y() + linearray[i][0].height() + 5) 
-                painter.drawLine(startpos, endpos)
+                sx = linearray[i][0].position.x() +5
+                sy = linearray[i][0].position.y() +5
+                ex = linearray[i][1].position.x() +5
+                ey = linearray[i][1].position.y() +5
+                he = linearray[i][0].height()
+                wi = linearray[i][0].width()
+            if linearray[i][2] == 'false':
+                pen = QPen(Qt.black, 3)
+                pen.setColor(QColor(240, 128, 128))
+                painter.setPen(pen)
+                s = linearray[i][1].position.x()
+                sx = linearray[i][0].position.x() -5
+                sy = linearray[i][0].position.y() +5
+                ex = linearray[i][1].position.x() -5
+                ey = linearray[i][1].position.y() +5
+                he = linearray[i][0].height()
+                wi = linearray[i][0].width()
+                
+            if(True):                                  
+                if(ey>sy):
+                    if linearray[i][1] in painted_top:
+                        painted_top[linearray[i][1]] += 1
+                    else:
+                        painted_top.setdefault(linearray[i][1],1)
+                    if linearray[i][0] in painted_bot:
+                        painted_bot[linearray[i][0]] += 1
+                    else:
+                        painted_bot.setdefault(linearray[i][0],1)
+                        
+                    startpos = QPoint(sx+wi/2,sy+he)
+                    endpos = QPoint(ex+wi/2,ey)
+                    bbsx = sx+wi/2
+                    bbex = ex+wi/2
+                    bbsy = sy+he
+                    bbey = ey
+                else:
+                    if linearray[i][0] in painted_top:
+                        painted_top[linearray[i][0]] += 1
+                    else:
+                        painted_top.setdefault(linearray[i][0],1)
+                    if linearray[i][1] in painted_bot:
+                        painted_bot[linearray[i][1]] += 1
+                    else:
+                        painted_bot.setdefault(linearray[i][1],1)
+                    
+                    startpos = QPoint(sx+wi/2,sy)
+                    endpos = QPoint(ex+wi/2,ey+he)
+                    bbsx = sx+wi/2
+                    bbex = ex+wi/2
+                    bbsy = sy
+                    bbey = ey+he
+                                   
+                #if(bbsx==bbex):
+                if(bbsx-bbex < wi/2 and bbsx-bbex >-wi/2):
+                    painter.drawLine(startpos, endpos)
+                    x = QLineF(endpos, startpos)
+                #elif(linearray[i][0].position.y()==linearray[i][1].position.y()):
+                elif(sy-ey <3 and sy-ey >-3):
+                    yy=linearray[i][0].position.y() + linearray[i][0].height()/2
+                    if(bbsx<bbex):                       
+                        endpos = QPoint(s, yy)
+                        startpos = QPoint(linearray[i][0].position.x() + linearray[i][0].width()- 5,yy) 
+                        painter.drawLine(startpos, endpos)
+                        x = QLineF(endpos, startpos)
+                    else:
+                        endpos = QPoint(s+wi, yy)
+                        startpos = QPoint(linearray[i][0].position.x(),yy) 
+                        painter.drawLine(startpos, endpos)
+                        x = QLineF(endpos, startpos)
+                        
+                else:
+                    medipos = QPoint(bbsx,bbey)
+                    if(bbsx>bbex+wi/2):
+                            endpos = QPoint(ex+wi,bbey)
+                    elif(bbsx<bbex-wi/2):
+                            endpos = QPoint(ex,bbey)
+                    else:
+                            endpos =endpos
+                        
+                    painter.drawLine(startpos, medipos)
+                    painter.drawLine(medipos, endpos)
+                    x = QLineF(endpos, medipos)
+                
+                #x = QLineF(endpos, startpos)
+                x.setLength(15)
+                y = QLineF(x.p2(), endpos)
+                x1 = y.normalVector()
+                x1.setLength(x1.length() * 0.5)
+                x2 = x1.normalVector().normalVector()
+                p1 = y.p2()
+                p2 = x1.p2()
+                p3 = x2.p2()
+                painter.drawLine(p2, p1)
+                painter.drawLine(p3, p1)
+                
+                #endpos = QPoint(s + linearray[i][1].width()/2 - 5, linearray[i][1].position.y() + 5)
+                #startpos = QPoint(linearray[i][0].position.x() + linearray[i][0].width()/2 - 5, linearray[i][0].position.y() + linearray[i][0].height() + 5) 
+                """
                 x = QLineF(endpos, startpos)
                 x.setLength(10)
                 y = QLineF(x.p2(), endpos)
@@ -635,8 +745,7 @@ class setleftwidget(QWidget):
                 p3 = x2.p2()
                 painter.drawLine(p2, p1)
                 painter.drawLine(p3, p1)
-                
-                
+                       
             if linearray[i][2] == 'false':
                 pen = QPen(Qt.red, 3)
                 painter.setPen(pen)
@@ -655,7 +764,7 @@ class setleftwidget(QWidget):
                 p3 = x2.p2()
                 painter.drawLine(p2, p1)
                 painter.drawLine(p3, p1)
-        
+                """
         if linemode == 1:
             if len(paintarray) == 2:
                 linename = 'line_' + str(linenum)
@@ -715,8 +824,8 @@ class HelloWindow(QMainWindow):
         centralWidget = QWidget(self)          
         self.setCentralWidget(centralWidget)  
         
-        self.setWindowTitle("Wind turbine control system") 
-        self.setStyleSheet("QMainWindow {background: aqua}")
+        self.setWindowTitle("MasonPy Visual Editor") 
+        self.setStyleSheet("QMainWindow {background: lightgray}")
         
         
         self.setleftwidget()
@@ -733,6 +842,8 @@ class HelloWindow(QMainWindow):
         toolbarBox.setFixedWidth(220)
         toolbarBox.setMovable(False)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, toolbarBox)
+        toolbarBox.setStyleSheet("background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #f5f5f5, stop: 0.4 #dcdcdc,stop: 0.5 #d3d3d3, stop: 1.0 #c0c0c0);\
+                                border-radius: 6px; color: black; font:14px Impact; width:220; height:35;")
         
         add_Start_action = toolbarBox.addAction('Start')
         add_Start_action.triggered.connect(self.add_Start)
@@ -782,10 +893,10 @@ class HelloWindow(QMainWindow):
         add_Loop_action = toolbarBox.addAction('Loop')
         add_Loop_action.triggered.connect(self.add_Loop)
         
-        add_line_action = toolbarBox.addAction('true line')
+        add_line_action = toolbarBox.addAction('True line')
         add_line_action.triggered.connect(self.add_line)
         
-        add_fline_action = toolbarBox.addAction('false line')
+        add_fline_action = toolbarBox.addAction('False line')
         add_fline_action.triggered.connect(self.add_false_line)
         
         menu = self.menuBar().addMenu('File')
@@ -794,7 +905,7 @@ class HelloWindow(QMainWindow):
         write_action = menu.addAction('Export')
         write_action.triggered.connect(self.Write_File)
         
-        add_draw_action = self.menuBar().addAction('run')
+        add_draw_action = self.menuBar().addAction('Run')
         add_draw_action.triggered.connect(self.start_run)
         
         menu_changefigure = self.menuBar().addMenu('Figure')
@@ -811,7 +922,7 @@ class HelloWindow(QMainWindow):
         
         leftlayout = QGridLayout()
         
-        label = QLabel('Canvas')
+        label = QLabel('Flowchart')
         
         draw_widget = setleftwidget()
         
@@ -822,7 +933,7 @@ class HelloWindow(QMainWindow):
         leftwidget.setLayout(leftlayout)
         
         leftwidget.setStyleSheet("background: white")
-        label.setStyleSheet("background: aqua")
+        label.setStyleSheet("background: lightgray")
         
        # leftwidget.setLayout(leftlayout)
     
@@ -871,11 +982,14 @@ class HelloWindow(QMainWindow):
         
         self.full_buttonlist()
 
-        f = open('windele.txt', 'w')
+        openfile_name, filetype = QFileDialog.getSaveFileName(self,"檔案儲存","./","All Files (*);;Text Files (*.txt)")
+        f = open(openfile_name, 'w')
         for i in buttonlist:
             if i.mode == 'process':
                 if i.ExtremePoint == 0:                                         #write 'Mode_' + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]
                     f.write('Mode_' + i.string + str(i.nodenum) + ' ')
+                    #f.write(i.string + str(i.nodenum) + ' ')
+                    f.write(i.string + str(i.nodenum) + ' ')
                     f.write(i.string+' ')
                     f.write('[')
                     for j in i.inputline:
@@ -941,7 +1055,8 @@ class HelloWindow(QMainWindow):
         true_line_added = 'false'                   #check if line is in linearray
         false_line_added = 'false'
         
-        f = open('windele.txt', 'r')    
+        openfile_name, filetype = QFileDialog.getOpenFileName(self,'選擇文件','','Excel files(*.txt)')
+        f = open(openfile_name, 'r')    
         for line in f:
             temp = line.strip().split(' ')
             if temp[1] == 'ExtremePointMode':
@@ -1056,6 +1171,10 @@ class HelloWindow(QMainWindow):
                 count += 1
             
             else:
+                if temp[1].startswith("Mode_"):
+                    temp[1] = temp[1][5:]
+                if temp[1].endswith("MagBrake"):
+                    temp[1] = temp[1].replace("Mag","Mech")
                 exec('self.add_Process(temp[1])')
                 
                 if len(temp[3]) != 2:
@@ -1093,24 +1212,28 @@ class HelloWindow(QMainWindow):
         global leftlayout
         global leftwidget
         global buttonlist
-        
+        global buttoncount
         leftwidget.button0 = Process_Button('Start', self)
-        leftwidget.button0.setStyleSheet("background-color: Gray; border-style: outset; border-radius: 10px")
+        leftwidget.button0.setStyleSheet("background-color: Gray; border-style: outset; border-radius: 10px; color: white; font:Bold")
         leftwidget.button0.string = 'Start'
         leftwidget.button0.ExtremePoint = 1
         buttonlist.append(leftwidget.button0)
-        leftwidget.button0.setGeometry(240, 100, 210, 30)
-        leftwidget.button0.position.setX(240)
-        leftwidget.button0.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button0.setGeometry(X, Y,  210, 30)
+        leftwidget.button0.position.setX(X)
+        leftwidget.button0.position.setY(Y)
+        buttoncount += 1
         leftwidget.button0.show()
         
     def add_End(self):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         
         leftwidget.button = Process_Button('End', self)
-        leftwidget.button.setStyleSheet("background-color: Gray; border-style: outset; border-radius: 10px")
+        leftwidget.button.setStyleSheet("background-color: Gray; border-style: outset; border-radius: 10px; color: white; font:Bold")
         leftwidget.button.string = 'End'
         leftwidget.button.ExtremePoint = 1
         for i in buttonlist:
@@ -1118,14 +1241,18 @@ class HelloWindow(QMainWindow):
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Process(self, name):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         if name == False:        
             leftwidget.button = Process_Button('Process', self)
@@ -1133,20 +1260,26 @@ class HelloWindow(QMainWindow):
         else:
             leftwidget.button = Process_Button(name, self)
             leftwidget.button.string = name
-        leftwidget.button.setStyleSheet("background-color: DodgerBlue; border-style: outset; border-radius: 10px")
+        leftwidget.button.resize(leftwidget.button.sizeHint().width(), leftwidget.button.sizeHint().height())
+        leftwidget.button.setStyleSheet("background-color: lightskyblue; border-style: outset; border-radius: 10px; color: black; font:Bold")
         for i in buttonlist:
             if i.mode == 'process':
                 count = count + 1
         leftwidget.button.nodenum = count
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        textlength = max(leftwidget.button.sizeHint().width()+5, 210)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  textlength, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Decision(self):
         global leftwidget
         global buttonlist
+        global buttoncount
         count = 0
         leftwidget.button = Decision_Button('Decision', self)
         leftwidget.button.string = 'Decision'
@@ -1154,17 +1287,21 @@ class HelloWindow(QMainWindow):
             if i.mode == 'Decision':
                 count = count + 1
         leftwidget.button.nodenum = count
-        leftwidget.button.setStyleSheet("background-color: beige; border-color: black; border-width: 2px; border-style: outset; border-radius: 10px")
+        leftwidget.button.setStyleSheet("background-color: beige; border-radius: 10px; border-style: outset; border-radius: 10px; font:Bold")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
     
     def add_Loop(self):
         global leftwidget
         global buttonlist
         global figure
+        global buttoncount
         count = 0
         
         leftwidget.button = Loop_Button('Loop', self)
@@ -1181,11 +1318,14 @@ class HelloWindow(QMainWindow):
         end_action.triggered.connect(lambda checked, string = leftwidget.button.string + str(leftwidget.button.nodenum):self.add_Loop_end(string))
         leftwidget.button.setMenu(menu)
         leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
-        leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px")
+        leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px; font:Bold")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
         #leftlayout.addWidget(leftwidget.button)
         
@@ -1193,6 +1333,7 @@ class HelloWindow(QMainWindow):
         global leftwidget
         global buttonlist
         global figure
+        global buttoncount
         count = 0
         
         leftwidget.button = Loop_end('Loop End', self)
@@ -1202,11 +1343,14 @@ class HelloWindow(QMainWindow):
                 count = count + 1
         leftwidget.button.nodenum = count
         leftwidget.button.setStyleSheet("QPushButton::menu-indicator{image:none;}")
-        leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px")
+        leftwidget.button.setStyleSheet("background-color: Orange; border-style: outset; border-radius: 10px; font:Bold")
         buttonlist.append(leftwidget.button)
-        leftwidget.button.setGeometry(240, 100, 210, 30)
-        leftwidget.button.position.setX(240)
-        leftwidget.button.position.setY(100)
+        X = 240 + buttoncount // 20 * 210
+        Y = 70 + buttoncount % 20 * 35
+        leftwidget.button.setGeometry(X, Y,  210, 30)
+        leftwidget.button.position.setX(X)
+        leftwidget.button.position.setY(Y)
+        buttoncount += 1
         leftwidget.button.show()
         
     def add_line(self):
@@ -1354,6 +1498,8 @@ class HelloWindow(QMainWindow):
                     if i.next_index == 'null':
                         i.next_index = ''
                     pac = ["Mode_" + i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
+                    #pac = [i.string + str(i.nodenum), i.string, i.inputline, [i.next_index]]
+                
                 else:
                     if i.string == 'End':
                         pac = [i.string+str(i.nodenum), 'ExtremePointMode', i.inputline, []]
@@ -1601,11 +1747,11 @@ class HelloWindow(QMainWindow):
         
         if isPaintPower is True:
             ax1.plot(Parameter.TimeSeries, Parameter.Power, label = str_ylabel_3, color='r')
-            str_ylabel_3 = str_ylabel_3 + "\n"
+            str_ylabel_3 = str_ylabel_3
         else:
             str_ylabel_3 = ""
      
-        ax1.set_title("Wind Turbine Control System")
+        ax1.set_title("Wind turbine control system")
         ax1.set_ylim(min(min(y2X10), min(Parameter.Power)),max(max(y2X10), max(Parameter.Power)))
         ax1.set_xlabel("Time (s)")
         ax1.set_ylabel(str_ylabel_2 + str_ylabel_3)

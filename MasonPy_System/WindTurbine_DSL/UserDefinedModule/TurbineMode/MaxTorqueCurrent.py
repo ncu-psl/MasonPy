@@ -2,7 +2,7 @@ from UserDefinedModule.Databaseformat import*
 from UserDefinedModule.OpenFile import*
 from UserDefinedModule.TurbineMode.WindTurbine import*
 
-class Mode_MaxTorqueCurrent(turbineMode):
+class MaxTorqueCurrent(turbineMode):
     def CalculateValue(self):
         self.readFile()
         
@@ -10,7 +10,7 @@ class Mode_MaxTorqueCurrent(turbineMode):
         self.currentTime  = self.lastMode.currentTime + 1
         self.WindSpeedList= self.lastMode.WindSpeedList
         self.WindSpeed    = self.WindSpeedList[self.currentTime]
-        self.mode         = self.namemode('Mode_MaxTorqueCurrent')
+        self.mode         = self.namemode('MaxTorqueCurrent')
         self.Tsr          = self.CalculateTSR(self.lastMode.RPM, self.D, self.WindSpeed)
         self.Cp           = self.CalculateCp(self.Tsr, self.database_MaxTorqueCurrent.Tsr, self.database_MaxTorqueCurrent.Cp)
         self.Tb           = self.CalculateTorqueBlade(self.Cp, self.Rho, self.A, self.WindSpeed, self.lastMode.RPM)

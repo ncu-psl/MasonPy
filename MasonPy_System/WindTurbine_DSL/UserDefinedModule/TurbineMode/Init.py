@@ -2,7 +2,7 @@ from UserDefinedModule.Databaseformat import*
 from UserDefinedModule.OpenFile import*
 from UserDefinedModule.TurbineMode.WindTurbine import*
 
-class Mode_Init(turbineMode):
+class Init(turbineMode):
     def setInit(self):
         
         WindSpeedSize, TimeSeries, WindSpeed = ReadWindSpeepData()
@@ -51,7 +51,8 @@ class Mode_Init(turbineMode):
         Parameter.Power.append(0)
         
 if __name__=='__main__':
-    FirstMode = Mode_Init()
+    #FirstMode = Mode_Init()
+    FirstMode = Init()
     
 #    print(dir(FirstMode))
     print(FirstMode.RPM)

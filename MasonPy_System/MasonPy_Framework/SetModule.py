@@ -52,8 +52,8 @@ def getClass():
     UserdefinedClass = ['YtoYbus','ZtoYbus', 'threePhaseData_Z', 'threePhaseData_Y','Gauss_Seidel']
     
 #==============================================================================
-#     UserdefinedClass = ['Mode_Init', 'Mode_ThreePhaseShortCircuit', 'Mode_ThreePhaseShortCircuit_MagBrake', 'Mode_MaxPower', 
-#     'Mode_MaxTorqueCurrent', 'Mode_MaxTorqueCurrent_MagBrake']  
+#     UserdefinedClass = ['Init', 'ThreePhaseShortCircuit', 'ThreePhaseShortCircuit_MechBrake', 'MaxPower', 
+#     'MaxTorqueCurrent', 'MaxTorqueCurrent_MechBrake']  
 #==============================================================================
     
     AllClass = []
